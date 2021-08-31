@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -21,9 +22,9 @@ public class DataLoaderCsv {
     public static <T> List<T> loadObjectList(Class<T> type, String fileName) {
         try {
             CsvMapper mapper = new CsvMapper();
-            File file = new ClassPathResource(fileName).getFile();
+            InputStream inputStream = new ClassPathResource(fileName).getInputStream();
             CsvSchema bootstrapSchema = mapper.schemaWithHeader().withHeader().withColumnSeparator(',');
-            MappingIterator<T> readValues = mapper.readerFor(type).with(bootstrapSchema).readValues(file);
+            MappingIterator<T> readValues = mapper.readerFor(type).with(bootstrapSchema).readValues(inputStream);
             return readValues.readAll();
         } catch (Exception e) {
             System.err.println(e.getMessage());
