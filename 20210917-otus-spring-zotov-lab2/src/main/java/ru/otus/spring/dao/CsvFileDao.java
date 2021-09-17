@@ -1,9 +1,7 @@
 package ru.otus.spring.dao;
 
-import ru.otus.spring.model.Answer;
 import ru.otus.spring.utils.DataLoaderCsv;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 /**
@@ -13,7 +11,7 @@ import java.util.List;
 public abstract class CsvFileDao<T> {
     protected List<T> data;
 
-    protected CsvFileDao(String pathCsvFile,Class<T> type) {
+    protected CsvFileDao(String pathCsvFile, Class<T> type) {
         data = DataLoaderCsv.loadObjectList(type, pathCsvFile);
     }
 }

@@ -27,8 +27,8 @@ class AnswerServiceImplTest {
     @Test
     @DisplayName("Вывод на печать списка вариантов ответов")
     void printConsoleAnswerByQuestionIdTest() {
-        when(answerDao.findByQuestionId(anyInt())).thenReturn(List.of(new Answer(1,1,"test"),
-                new Answer(2,2,"test2"),new Answer(3,1,"test3")));
+        when(answerDao.findByQuestionId(anyInt())).thenReturn(List.of(new Answer(1,1,"test",false),
+                new Answer(2,2,"test2",false),new Answer(3,1,"test3",false)));
 
         answerService.printConsoleAnswerByQuestionId(1);
 

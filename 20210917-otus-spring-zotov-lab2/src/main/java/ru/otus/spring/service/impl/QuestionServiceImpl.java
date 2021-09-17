@@ -1,6 +1,7 @@
 package ru.otus.spring.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.otus.spring.dao.QuestionDao;
 import ru.otus.spring.service.AnswerService;
 import ru.otus.spring.service.QuestionService;
@@ -9,6 +10,7 @@ import ru.otus.spring.service.QuestionService;
  * @author Created by ZotovES on 30.08.2021
  * Реализация сервиса вопросов
  */
+@Service
 @RequiredArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionDao questionDao;
