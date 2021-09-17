@@ -1,6 +1,6 @@
 "id","questionText"
-1,"What is your name"
-2,"Programming languages"
-3,"Frameworks"
-4,"Data base"
-5,"OS"
+1,What is your name?
+2,How to declare a class?
+3,What is the NEW operator used for?
+4,What does the extends keyword mean?
+5,What does method overloading mean in Java (overload)?

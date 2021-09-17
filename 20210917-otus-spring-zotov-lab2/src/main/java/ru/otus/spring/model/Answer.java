@@ -16,16 +16,17 @@ public class Answer {
     /**
      * Идентификатор
      */
-//    @JsonProperty("id")
     private Integer id;
     /**
      * Ид вопроса
      */
-//    @JsonProperty("questionId")
     private Integer questionId;
     /**
      * Текст варианта ответа
      */
-//    @JsonProperty("answerText")
     private String answerText;
+    /**
+     * Признак правильного ответа
+     */
+    private Boolean isRight;
 }
