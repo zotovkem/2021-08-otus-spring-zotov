@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Created by ZotovES on 30.08.2021
- * Реализация сервисаа вариантов ответов на вопрос
+ * Реализация сервиса вариантов ответов на вопрос
  */
 @Service
 @RequiredArgsConstructor
