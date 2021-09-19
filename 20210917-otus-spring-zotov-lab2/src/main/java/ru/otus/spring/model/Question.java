@@ -20,4 +20,8 @@ public class Question {
      * Текст вопроса
      */
     private String questionText;
+    /**
+     * Правильный ответ
+     */
+    private String rightAnswer;
 }

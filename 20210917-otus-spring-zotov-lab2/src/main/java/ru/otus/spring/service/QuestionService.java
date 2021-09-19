@@ -6,7 +6,7 @@ package ru.otus.spring.service;
  */
 public interface QuestionService {
     /**
-     * Вывод на печать в консоль всех вопросов
+     * Получить кол-во правильных ответов из теста
      */
-    void printConsoleAllQuestions();
+    Integer getCountRightAnswerConsole();
 }
