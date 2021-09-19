@@ -11,13 +11,6 @@ import java.util.Optional;
  */
 public interface AnswerService {
     /**
-     * Вывод всех вариантов ответов по ид вопроса
-     *
-     * @param questionId ид вопроса
-     */
-    void printConsoleAnswerByQuestionId(@NonNull Integer questionId);
-
-    /**
      * Получить ответ по ид введенного м консоли
      *
      * @param questionId ид вопроса

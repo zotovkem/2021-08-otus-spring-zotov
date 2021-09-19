@@ -5,9 +5,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import ru.otus.spring.config.PropertyService;
+import ru.otus.spring.service.InputService;
 import ru.otus.spring.service.QuestionService;
-
-import java.util.Scanner;
 
 /**
  * @author Created by ZotovES on 29.08.2021
@@ -21,10 +20,10 @@ public class Main {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
         QuestionService questionService = context.getBean(QuestionService.class);
         PropertyService propertyService = context.getBean(PropertyService.class);
+        InputService inputService = context.getBean(InputService.class);
 
-        Scanner scanner = new Scanner(System.in);
         System.out.print("Please write you name: ");
-        String userName = scanner.nextLine().trim();
+        String userName = inputService.getConsoleStrValue();
 
         Integer countRightAnswerConsole = questionService.getCountRightAnswerConsole();
 
