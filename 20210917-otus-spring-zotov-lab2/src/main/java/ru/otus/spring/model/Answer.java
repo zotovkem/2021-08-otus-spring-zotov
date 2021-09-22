@@ -1,14 +1,14 @@
 package ru.otus.spring.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
  * @author Created by ZotovES on 30.08.2021
  * Варианты ответа на вопрос
  */
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Answer {
