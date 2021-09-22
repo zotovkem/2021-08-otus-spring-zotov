@@ -1,4 +1,4 @@
-"id","questionText",rightAnswer
+"id","questionText","rightAnswer"
 1,Condition operator?,if
 2,How to declare a class?,class MyClass {}
 3,What is the NEW operator used for?,Creating an instance of the class.

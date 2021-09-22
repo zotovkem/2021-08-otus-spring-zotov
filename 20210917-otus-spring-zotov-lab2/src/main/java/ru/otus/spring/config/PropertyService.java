@@ -2,6 +2,7 @@ package ru.otus.spring.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,23 +13,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class PropertyService {
     /**
-     * Имя csv файла с ответами
+     * Ресурс файла с ответами
      */
-    private final String answerDataFile;
+    private final Resource answerDataFile;
     /**
-     * Имя csv файла с вопросами
+     * Ресурс файла с вопросами
      */
-    private final String questionDataFile;
+    private final Resource questionDataFile;
     /**
      * Кол-во правильных ответов для зачета теста
      */
     private final Integer countRightAnswer;
 
-    public PropertyService(@Value("${app.csv-file-path.answer}") String answerDataFile,
-            @Value("${app.csv-file-path.question}") String questionDataFile,
+    public PropertyService(@Value("${app.csv-file-path.answer}") Resource answerDataFile,
+            @Value("${app.csv-file-path.question}") Resource questionDataFile,
             @Value("${app.count-right-answer}") String countRightAnswer) {
         this.answerDataFile = answerDataFile;
         this.questionDataFile = questionDataFile;
         this.countRightAnswer = Integer.parseInt(countRightAnswer);
+
     }
 }

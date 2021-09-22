@@ -1,10 +1,11 @@
 package ru.otus.spring.dao.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.config.PropertyService;
-import ru.otus.spring.dao.CsvFileDao;
 import ru.otus.spring.dao.QuestionDao;
 import ru.otus.spring.model.Question;
+import ru.otus.spring.service.DataLoaderService;
 
 import java.util.List;
 
@@ -13,10 +14,11 @@ import java.util.List;
  * Реализация репозитория вопросов
  */
 @Service
-public class QuestionDaoImpl extends CsvFileDao<Question> implements QuestionDao {
-    public QuestionDaoImpl(PropertyService propertyService) {
-        super(propertyService.getQuestionDataFile(), Question.class);
-    }
+@RequiredArgsConstructor
+public class QuestionDaoImpl implements QuestionDao {
+    private final DataLoaderService dataLoaderService;
+    private final PropertyService propertyService;
+    private List<Question> data;
 
     /**
      * Получить все вопросы
@@ -25,6 +27,16 @@ public class QuestionDaoImpl extends CsvFileDao<Question> implements QuestionDao
      */
     @Override
     public List<Question> findByAll() {
+        loadData();
         return data;
+    }
+
+    /**
+     * Загрузить записи
+     */
+    private void loadData() {
+        if (data == null) {
+            data = dataLoaderService.loadObjectList(Question.class, propertyService.getQuestionDataFile());
+        }
     }
 }
