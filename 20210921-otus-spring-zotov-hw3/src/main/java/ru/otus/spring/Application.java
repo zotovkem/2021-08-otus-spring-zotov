@@ -1,23 +1,17 @@
 package ru.otus.spring;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import ru.otus.spring.config.PropertyService;
 import ru.otus.spring.service.InputService;
 import ru.otus.spring.service.QuestionService;
 
-/**
- * @author Created by ZotovES on 29.08.2021
- */
-@Configuration
-@ComponentScan
-@PropertySource("classpath:application.properties")
-public class Main {
+@SpringBootApplication
+public class Application {
 
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
+        ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
         QuestionService questionService = context.getBean(QuestionService.class);
         PropertyService propertyService = context.getBean(PropertyService.class);
         InputService inputService = context.getBean(InputService.class);
@@ -31,4 +25,5 @@ public class Main {
 
         System.out.printf("Dear %s, count right answer %s. Test %s.%n", userName, countRightAnswerConsole, resultTest);
     }
+
 }

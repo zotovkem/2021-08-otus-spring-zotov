@@ -1,0 +1,5 @@
+app:
+  csv-file-path:
+    answer: answer-data.csv
+    question: question-data.csv
+  count-right-answer: 3
