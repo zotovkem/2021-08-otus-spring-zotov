@@ -1,27 +1,30 @@
 package ru.otus.spring.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * @author Created by ZotovES on 30.08.2021
  * Модель вопроса
  */
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Question {
+    public Question(Integer id, String questionText, String rightAnswer) {
+        this.id = id;
+        this.questionText = questionText;
+        this.rightAnswer = rightAnswer;
+    }
+
     /**
      * Идентификатор
      */
-    private Integer id;
+    private final Integer id;
     /**
      * Текст вопроса
      */
-    private String questionText;
+    private final String questionText;
+
     /**
      * Правильный ответ
      */
-    private String rightAnswer;
+    private final String rightAnswer;
 }
