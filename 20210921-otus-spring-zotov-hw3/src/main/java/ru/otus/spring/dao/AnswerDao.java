@@ -12,7 +12,6 @@ import java.util.List;
 public interface AnswerDao {
     /**
      * Получить варианты ответов по ид вопроса
-     *
      * @param questionId ид вопроса
      * @return список ответов
      */

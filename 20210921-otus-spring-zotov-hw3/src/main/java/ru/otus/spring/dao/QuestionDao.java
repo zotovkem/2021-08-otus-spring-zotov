@@ -11,7 +11,6 @@ import java.util.List;
 public interface QuestionDao {
     /**
      * Получить все вопросы
-     *
      * @return список вопросов
      */
     List<Question> findByAll();
