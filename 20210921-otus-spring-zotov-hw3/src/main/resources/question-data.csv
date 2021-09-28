@@ -1,6 +1,0 @@
-"id","questionText",rightAnswer
-1,Condition operator?,if
-2,How to declare a class?,class MyClass {}
-3,What is the NEW operator used for?,Creating an instance of the class.
-4,What does the extends keyword mean?,This class inherits from another.
-5,What does method overloading mean in Java (overload)?,Several methods with the same name but different set of parameters.
