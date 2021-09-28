@@ -57,9 +57,9 @@ class DataLoadServiceImplTest {
     @Test
     @DisplayName("Загрузка файла c ответами")
     void loadAnswerListTest() throws IOException {
-        String mockFile = "\"id\";\"questionId\";\"answerText\";\"isRight\"\n" +
-                "1;2;class MyClass {};true\n" +
-                "2;2;new class MyClass {};false\n";
+        String mockFile = "\"id\";\"questionId\";\"answerText\"\n" +
+                "1;2;class MyClass {}\n" +
+                "2;2;new class MyClass {}\n";
         InputStream is = new ByteArrayInputStream(mockFile.getBytes());
         when(resource.getInputStream()).thenReturn(is);
 
