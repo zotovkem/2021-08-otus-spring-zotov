@@ -6,6 +6,7 @@ import ru.otus.spring.dao.AnswerDao;
 import ru.otus.spring.model.Answer;
 import ru.otus.spring.service.AnswerService;
 import ru.otus.spring.service.InputService;
+import ru.otus.spring.service.LocalizationService;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class AnswerServiceImpl implements AnswerService {
             "=========================================================================";
     private final AnswerDao answerDao;
     private final InputService inputService;
+    private final LocalizationService localizationService;
 
     /**
      * Получить ответ по ид введенного м консоли
@@ -32,13 +34,14 @@ public class AnswerServiceImpl implements AnswerService {
     public Optional<Answer> getConsoleAnswerByQuestionId(Integer questionId) {
         List<Answer> answers = answerDao.findByQuestionId(questionId);
         if (answers.isEmpty()) {
-            System.out.print(" - Please input your answer: ");
-            return Optional.of(new Answer(1, questionId, inputService.getConsoleStrValue(), true));
+            System.out.print(localizationService.getLocalizationTextByTag("tag.answer.input"));
+            return Optional.of(new Answer(1, questionId, inputService.getConsoleStrValue().toLowerCase()));
         }
         AtomicInteger i = new AtomicInteger(1);
         answers.forEach(answer -> System.out.printf("%s %s%n", i.getAndIncrement(), answer.getAnswerText()));
 
-        System.out.printf(" - Please input number answer 1-%s: ", i.get() - 1);
+        String countVersionAnswer = String.valueOf(i.get() - 1);
+        System.out.print(localizationService.getLocalizationTextByTag("tag.number.answer.input", List.of(countVersionAnswer)));
         int numberAnswer = inputService.getConsoleIntValue();
         if (numberAnswer <= 0 || numberAnswer - 1 > answers.size()) {
             return Optional.empty();

@@ -19,7 +19,7 @@ public class InputServiceImpl implements InputService {
      * @return строковое значение
      */
     public String getConsoleStrValue() {
-        return scanner.nextLine().trim().toLowerCase();
+        return scanner.nextLine().trim();
     }
 
     /**
