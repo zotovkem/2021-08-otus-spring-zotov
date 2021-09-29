@@ -21,6 +21,10 @@ public class Answer {
      */
     private Integer questionId;
     /**
+     * Номер ответа по порядку
+     */
+    private Integer numberAnswer;
+    /**
      * Текст варианта ответа
      */
     private String answerText;
