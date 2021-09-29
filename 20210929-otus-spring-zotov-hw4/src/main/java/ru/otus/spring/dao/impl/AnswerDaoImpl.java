@@ -9,6 +9,7 @@ import ru.otus.spring.dao.DataLoader;
 import ru.otus.spring.model.Answer;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -32,5 +33,33 @@ public class AnswerDaoImpl implements AnswerDao {
         return dataLoaderService.loadObjectList(Answer.class, propertyService.getAnswerDataFile()).stream()
                 .filter(answer -> questionId.equals(answer.getQuestionId()))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Получить вариант ответа по ид вопроса и номеру варианта
+     *
+     * @param questionId ид вопроса
+     * @param number     номер варианта ответа
+     * @return список ответов
+     */
+    @Override
+    public Optional<Answer> findByQuestionIdAndNumber(@NonNull Integer questionId, @NonNull Integer number) {
+        return dataLoaderService.loadObjectList(Answer.class, propertyService.getAnswerDataFile()).stream()
+                .filter(answer -> questionId.equals(answer.getQuestionId()) && number.equals(answer.getNumberAnswer()))
+                .findAny();
+    }
+
+    /**
+     * Получить вариант ответа по ид вопроса и номеру варианта
+     *
+     * @param questionId ид вопроса
+     * @param number     номер варианта ответа
+     * @return список ответов
+     */
+    @Override
+    public Optional<Answer> findByQuestionIdAndNumber(@NonNull Integer questionId, @NonNull String number) {
+        return dataLoaderService.loadObjectList(Answer.class, propertyService.getAnswerDataFile()).stream()
+                .filter(answer -> questionId.equals(answer.getQuestionId()) && number.equals(answer.getNumberAnswer().toString()))
+                .findAny();
     }
 }

@@ -8,6 +8,7 @@ import ru.otus.spring.dao.QuestionDao;
 import ru.otus.spring.model.Question;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Created by ZotovES on 30.08.2021
@@ -27,5 +28,17 @@ public class QuestionDaoImpl implements QuestionDao {
     @Override
     public List<Question> findByAll() {
         return dataLoaderService.loadObjectList(Question.class, propertyService.getQuestionDataFile());
+    }
+
+    /**
+     * Получить вопрос по ид
+     *
+     * @param id ид
+     * @return вопрос
+     */
+    @Override
+    public Optional<Question> findById(Integer id) {
+        return dataLoaderService.loadObjectList(Question.class, propertyService.getQuestionDataFile())
+                .stream().filter(question -> question.getId().equals(id)).findAny();
     }
 }

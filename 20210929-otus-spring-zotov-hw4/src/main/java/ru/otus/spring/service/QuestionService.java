@@ -6,7 +6,18 @@ package ru.otus.spring.service;
  */
 public interface QuestionService {
     /**
-     * Получить кол-во правильных ответов из теста
+     * Напечатать вопрос по ид
+     *
+     * @param id ид
      */
-    Integer getCountRightAnswerConsole();
+    void printQuestionById(Integer id);
+
+    /**
+     * Проверить ответ на вопрос
+     *
+     * @param questionId ид вопроса
+     * @param answer     ответ
+     * @return результат проверки
+     */
+    boolean checkAnswer(Integer questionId, String answer);
 }

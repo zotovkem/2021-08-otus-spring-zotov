@@ -16,11 +16,17 @@
     <properties>
         <java.version>11</java.version>
         <jackson-dataformat-csv.version>2.12.5</jackson-dataformat-csv.version>
+        <spring-shell-starter.version>2.0.1.RELEASE</spring-shell-starter.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-starter</artifactId>
+            <version>${spring-shell-starter.version}</version>
         </dependency>
 
         <dependency>

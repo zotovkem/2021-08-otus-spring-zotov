@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.dao.QuestionDao;
 import ru.otus.spring.model.Answer;
+import ru.otus.spring.model.Question;
 import ru.otus.spring.service.AnswerService;
+import ru.otus.spring.service.LocalizationService;
 import ru.otus.spring.service.QuestionService;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 
 /**
  * @author Created by ZotovES on 30.08.2021
@@ -18,23 +20,40 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionDao questionDao;
     private final AnswerService answerService;
+    private final LocalizationService localizationService;
 
     /**
-     * Вывод на печать в консоль всех вопросов
+     * Напечатать вопрос по ид
+     *
+     * @param id ид
      */
     @Override
-    public Integer getCountRightAnswerConsole() {
-        AtomicInteger countRightAnswer = new AtomicInteger(0);
-        questionDao.findByAll()
-                .forEach(question -> {
-                    System.out.println(question.getQuestionText());
-                    answerService.getConsoleAnswerByQuestionId(question.getId())
-                            .map(Answer::getAnswerText)
-                            .map(String::toLowerCase)
-                            .filter(answerText -> answerText.equals(question.getRightAnswer().toLowerCase()))
-                            .ifPresent(answer -> countRightAnswer.incrementAndGet());
-                });
+    public void printQuestionById(Integer id) {
+        questionDao.findById(id).ifPresentOrElse(question -> {
+            System.out.println(question.getQuestionText());
+            answerService.printAnswersByQuestionId(question.getId());
+        }, () -> System.out.println(localizationService.getLocalizationTextByTag("taq.question.ended")));
+    }
 
-        return countRightAnswer.get();
+    /**
+     * Проверить ответ на вопрос
+     *
+     * @param questionId ид вопроса
+     * @param answer     ответ
+     * @return результат проверки
+     */
+    @Override
+    public boolean checkAnswer(Integer questionId, String answer) {
+        return questionDao.findById(questionId)
+                .map(Question::getRightAnswer)
+                .filter(checkAnswerByNumberPredicate(questionId, answer))
+                .isPresent();
+    }
+
+    private Predicate<String> checkAnswerByNumberPredicate(Integer questionId, String answer) {
+        return rightAnswerText -> rightAnswerText.equals(answer) ||
+                answerService.findByQuestionIdAndNumber(questionId, answer).stream()
+                        .map(Answer::getAnswerText)
+                        .anyMatch(rightAnswerText::equals);
     }
 }

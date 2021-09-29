@@ -5,12 +5,11 @@ import org.springframework.stereotype.Service;
 import ru.otus.spring.dao.AnswerDao;
 import ru.otus.spring.model.Answer;
 import ru.otus.spring.service.AnswerService;
-import ru.otus.spring.service.InputService;
 import ru.otus.spring.service.LocalizationService;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Created by ZotovES on 30.08.2021
@@ -19,35 +18,49 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 @RequiredArgsConstructor
 public class AnswerServiceImpl implements AnswerService {
-    private static final String DELIMITER_QUESTION_STRING =
-            "=========================================================================";
     private final AnswerDao answerDao;
-    private final InputService inputService;
     private final LocalizationService localizationService;
 
     /**
-     * Получить ответ по ид введенного м консоли
+     * Вывести на печать варианты ответа по ид вопроса
      *
      * @param questionId ид вопроса
      */
-    @Override
-    public Optional<Answer> getConsoleAnswerByQuestionId(Integer questionId) {
+    public void printAnswersByQuestionId(Integer questionId) {
         List<Answer> answers = answerDao.findByQuestionId(questionId);
         if (answers.isEmpty()) {
-            System.out.print(localizationService.getLocalizationTextByTag("tag.answer.input"));
-            return Optional.of(new Answer(1, questionId, inputService.getConsoleStrValue().toLowerCase()));
+            System.out.println(localizationService.getLocalizationTextByTag("tag.answer.input"));
+            return;
         }
-        AtomicInteger i = new AtomicInteger(1);
-        answers.forEach(answer -> System.out.printf("%s %s%n", i.getAndIncrement(), answer.getAnswerText()));
+        answers.sort(Comparator.comparingInt(Answer::getNumberAnswer));
+        answers.forEach(answer -> System.out.printf("%s %s%n", answer.getNumberAnswer(), answer.getAnswerText()));
 
-        String countVersionAnswer = String.valueOf(i.get() - 1);
-        System.out.print(localizationService.getLocalizationTextByTag("tag.number.answer.input", List.of(countVersionAnswer)));
-        int numberAnswer = inputService.getConsoleIntValue();
-        if (numberAnswer <= 0 || numberAnswer - 1 > answers.size()) {
-            return Optional.empty();
-        }
-        System.out.println(DELIMITER_QUESTION_STRING);
+        int countVersionAnswer = answers.stream().mapToInt(Answer::getNumberAnswer).max().orElse(1);
+        System.out.println(localizationService.getLocalizationTextByTag("tag.number.answer.input",
+                List.of(Integer.toString(countVersionAnswer))));
+    }
 
-        return Optional.ofNullable(answers.get(numberAnswer - 1));
+    /**
+     * Поиск варианта ответа по ид вопроса и номеру ответа
+     *
+     * @param questionId ид вопроса
+     * @param number     номер варианта ответа
+     * @return ответ
+     */
+    @Override
+    public Optional<Answer> findByQuestionIdAndNumber(Integer questionId, Integer number) {
+        return answerDao.findByQuestionIdAndNumber(questionId, number);
+    }
+
+    /**
+     * Поиск варианта ответа по ид вопроса и номеру ответа
+     *
+     * @param questionId ид вопроса
+     * @param number     номер варианта ответа
+     * @return ответ
+     */
+    @Override
+    public Optional<Answer> findByQuestionIdAndNumber(Integer questionId, String number) {
+        return answerDao.findByQuestionIdAndNumber(questionId, number);
     }
 }
