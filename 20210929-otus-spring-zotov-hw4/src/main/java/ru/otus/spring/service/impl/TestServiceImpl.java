@@ -9,7 +9,6 @@ import ru.otus.spring.service.TestService;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -23,7 +22,6 @@ public class TestServiceImpl implements TestService {
     private final ApplicationProperties propertyService;
     private final LocalizationService localizationService;
 
-    private String userName;
     private Set<Integer> rightQuestionIds = new HashSet<>();
     private int currentQuestion = 0;
 
@@ -33,7 +31,6 @@ public class TestServiceImpl implements TestService {
     @Override
     public void start(String userName) {
         clearResult();
-        this.userName = userName;
         System.out.println(localizationService.getLocalizationTextByTag("tag.your.name", List.of(userName)));
     }
 
@@ -61,7 +58,7 @@ public class TestServiceImpl implements TestService {
      * Закончить тест
      */
     @Override
-    public void finish() {
+    public void finish(String userName) {
         var resultTest = rightQuestionIds.size() > propertyService.getCountRightAnswer() ? "tag.test.passed" : "tag.test.failed";
         resultTest = localizationService.getLocalizationTextByTag(resultTest);
         String resultTestText = localizationService.getLocalizationTextByTag("tag.test.result",
@@ -71,20 +68,9 @@ public class TestServiceImpl implements TestService {
     }
 
     /**
-     * Получить имя пользователя
-     *
-     * @return имя пользователя
-     */
-    @Override
-    public Optional<String> qetUserName() {
-        return Optional.ofNullable(userName);
-    }
-
-    /**
      * Очищаем результат тестирования
      */
     private void clearResult() {
-        userName = null;
         rightQuestionIds = new HashSet<>();
         currentQuestion = 0;
     }

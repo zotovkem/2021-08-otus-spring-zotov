@@ -1,7 +1,5 @@
 package ru.otus.spring.service;
 
-import java.util.Optional;
-
 /**
  * @author Created by ZotovES on 22.09.2021
  * Сервис тестирования
@@ -26,13 +24,10 @@ public interface TestService {
 
     /**
      * Закончить тест
-     */
-    void finish();
-
-    /**
-     * Получить имя пользователя
      *
-     * @return имя пользователя
+     * @param userName имя пользователя
      */
-    Optional<String> qetUserName();
+    void finish(String userName);
+
+
 }

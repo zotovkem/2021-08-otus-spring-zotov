@@ -1,6 +1,8 @@
 package ru.otus.spring.shell;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -8,6 +10,8 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 import ru.otus.spring.service.LocalizationService;
 import ru.otus.spring.service.TestService;
+
+import java.util.Optional;
 
 /**
  * @author Created by ZotovES on 29.09.2021
@@ -19,9 +23,13 @@ import ru.otus.spring.service.TestService;
 public class ShellCommandController {
     private final TestService testService;
     private final LocalizationService localizationService;
+    @Getter
+    @Setter
+    private String userName;
 
     @ShellMethod(value = "Login command", key = {"l", "login"})
     public void login(@ShellOption(defaultValue = "Anonymous") String userName) {
+        setUserName(userName);
         testService.start(userName);
     }
 
@@ -39,12 +47,12 @@ public class ShellCommandController {
 
     @ShellMethodAvailability(value = "isLoginUser")
     @ShellMethod(value = "Finish test", key = {"f", "finish"})
-    private void finishTest() {
-        testService.finish();
+    public void finishTest() {
+        testService.finish(userName);
     }
 
     private Availability isLoginUser() {
-        return testService.qetUserName()
+        return Optional.ofNullable(getUserName())
                 .map(u -> Availability.available())
                 .orElseGet(() -> Availability.unavailable(localizationService.getLocalizationTextByTag("tag.login.error")));
     }
