@@ -20,17 +20,8 @@ public interface AnswerService {
      * Поиск варианта ответа по ид вопроса и номеру ответа
      *
      * @param questionId ид вопроса
-     * @param number     номер варианта ответа
+     * @param answer     ответ
      * @return ответ
      */
-    Optional<Answer> findByQuestionIdAndNumber(Integer questionId, Integer number);
-
-    /**
-     * Поиск варианта ответа по ид вопроса и номеру ответа
-     *
-     * @param questionId ид вопроса
-     * @param number     номер варианта ответа
-     * @return ответ
-     */
-    Optional<Answer> findByQuestionIdAndNumber(Integer questionId, String number);
+    Optional<Answer> findByQuestionIdAndNumber(Integer questionId, String answer);
 }

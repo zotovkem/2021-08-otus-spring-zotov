@@ -44,23 +44,11 @@ public class AnswerServiceImpl implements AnswerService {
      * Поиск варианта ответа по ид вопроса и номеру ответа
      *
      * @param questionId ид вопроса
-     * @param number     номер варианта ответа
+     * @param answer     ответ
      * @return ответ
      */
     @Override
-    public Optional<Answer> findByQuestionIdAndNumber(Integer questionId, Integer number) {
-        return answerDao.findByQuestionIdAndNumber(questionId, number);
-    }
-
-    /**
-     * Поиск варианта ответа по ид вопроса и номеру ответа
-     *
-     * @param questionId ид вопроса
-     * @param number     номер варианта ответа
-     * @return ответ
-     */
-    @Override
-    public Optional<Answer> findByQuestionIdAndNumber(Integer questionId, String number) {
-        return answerDao.findByQuestionIdAndNumber(questionId, number);
+    public Optional<Answer> findByQuestionIdAndNumber(Integer questionId, String answer) {
+        return answerDao.findByQuestionIdAndNumber(questionId, answer);
     }
 }

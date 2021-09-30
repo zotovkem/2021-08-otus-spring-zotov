@@ -43,19 +43,6 @@ class AnswerServiceImplTest {
     }
 
     @Test
-    @DisplayName("Поиск ответа по номеру вопроса и варианту ответа")
-    void findByQuestionIdAndNumberTest() {
-        Optional<Answer> answer = Optional.of(new Answer(1, 1, 1, "test"));
-        when(answerDao.findByQuestionIdAndNumber(anyInt(), anyInt())).thenReturn(answer);
-
-        Optional<Answer> result = answerService.findByQuestionIdAndNumber(1, 1);
-
-        assertThat(result).isPresent().isEqualTo(answer);
-
-        verify(answerDao).findByQuestionIdAndNumber(1, 1);
-    }
-
-    @Test
     @DisplayName("Поиск ответа по номеру вопроса и тексту ответа")
     void findByQuestionIdAndNumberStringTest() {
         Optional<Answer> answer = Optional.of(new Answer(1, 1, 1, "test"));
