@@ -6,16 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.spring.dao.QuestionDao;
-import ru.otus.spring.model.Answer;
 import ru.otus.spring.model.Question;
 import ru.otus.spring.service.AnswerService;
+import ru.otus.spring.service.LocalizationService;
 
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Created by ZotovES on 30.08.2021
@@ -25,19 +24,17 @@ import static org.mockito.Mockito.*;
 class QuestionServiceImplTest {
     @MockBean private AnswerService answerService;
     @MockBean private QuestionDao questionDao;
+    @MockBean private LocalizationService localizationService;
     @Autowired private QuestionServiceImpl questionService;
 
     @Test
-    @DisplayName("Вывод на печать всех вопросов")
-    void printConsoleAllQuestionsTest() {
-        when(answerService.getConsoleAnswerByQuestionId(anyInt())).thenReturn(Optional.of(new Answer(1, 1, "test")));
-        when(questionDao.findByAll()).thenReturn(List.of(new Question(1, "testQuestion", "test"),
-                new Question(2, "testQuestion2", "test1")));
-        Integer countRightAnswerConsole = questionService.getCountRightAnswerConsole();
+    @DisplayName("Вывод на печать вопроса по id")
+    void printQuestionByIdTest() {
+        when(questionDao.findById(anyInt())).thenReturn(Optional.of(new Question(1, "testQuestion", "test")));
 
-        assertEquals(1, countRightAnswerConsole);
+        questionService.printQuestionById(1);
 
-        verify(questionDao).findByAll();
-        verify(answerService, times(2)).getConsoleAnswerByQuestionId(anyInt());
+        verify(questionDao).findById(anyInt());
+        verify(answerService).printAnswersByQuestionId(anyInt());
     }
 }

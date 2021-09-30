@@ -7,14 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.spring.dao.AnswerDao;
 import ru.otus.spring.model.Answer;
-import ru.otus.spring.service.InputService;
 import ru.otus.spring.service.LocalizationService;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,25 +23,20 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = AnswerServiceImpl.class)
 class AnswerServiceImplTest {
     @MockBean private AnswerDao answerDao;
-    @MockBean private InputService inputService;
     @MockBean private LocalizationService localizationService;
     @Autowired private AnswerServiceImpl answerService;
 
     @Test
-    @DisplayName("Вывод на печать списка вариантов ответов")
-    void printConsoleAnswerByQuestionIdTest() {
-        when(inputService.getConsoleIntValue()).thenReturn(1);
+    @DisplayName("Вывод на печать вариантов ответов по ид вопроса")
+    void printAnswersByQuestionIdTest() {
         when(localizationService.getLocalizationTextByTag(anyString(), anyList())).thenReturn("localizationTestText");
-        when(answerDao.findByQuestionId(anyInt())).thenReturn(List.of(new Answer(1, 1, "test"),
-                new Answer(2, 2, "test2"), new Answer(3, 1, "test3")));
+        List<Answer> answerList = new ArrayList<>(List.of(new Answer(1, 1, 1, "test"),
+                new Answer(2, 2, 2, "test2"), new Answer(3, 1, 3, "test3")));
+        when(answerDao.findByQuestionId(anyInt())).thenReturn(answerList);
 
-        Optional<Answer> answer = answerService.getConsoleAnswerByQuestionId(1);
-
-        assertTrue(answer.isPresent());
-        assertEquals(1, answer.get().getId());
+        answerService.printAnswersByQuestionId(1);
 
         verify(answerDao).findByQuestionId(1);
-        verify(inputService).getConsoleIntValue();
         verify(localizationService).getLocalizationTextByTag(anyString(), anyList());
     }
 }
