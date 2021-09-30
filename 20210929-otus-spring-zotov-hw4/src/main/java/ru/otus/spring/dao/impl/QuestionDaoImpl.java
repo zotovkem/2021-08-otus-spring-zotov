@@ -38,7 +38,6 @@ public class QuestionDaoImpl implements QuestionDao {
      */
     @Override
     public Optional<Question> findById(Integer id) {
-        return dataLoaderService.loadObjectList(Question.class, propertyService.getQuestionDataFile())
-                .stream().filter(question -> question.getId().equals(id)).findAny();
+        return findByAll().stream().filter(question -> question.getId().equals(id)).findAny();
     }
 }
