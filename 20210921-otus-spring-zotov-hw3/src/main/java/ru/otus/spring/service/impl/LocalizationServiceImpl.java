@@ -1,10 +1,9 @@
 package ru.otus.spring.service.impl;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import ru.otus.spring.config.ApplicationProperties;
 import ru.otus.spring.service.LocalizationService;
 
 import java.util.Collections;
@@ -16,10 +15,14 @@ import java.util.Locale;
  * Реализация сервиса локализации
  */
 @Service
-@RequiredArgsConstructor
 public class LocalizationServiceImpl implements LocalizationService {
-    private final ApplicationProperties applicationProperties;
     private final MessageSource messageSource;
+    private final Locale currentLocal;
+
+    public LocalizationServiceImpl(MessageSource messageSource, @Value("${app.current-locale:ru}") Locale currentLocal) {
+        this.messageSource = messageSource;
+        this.currentLocal = currentLocal;
+    }
 
     /**
      * Получить текст
@@ -41,6 +44,6 @@ public class LocalizationServiceImpl implements LocalizationService {
      */
     @Override
     public String getLocalizationTextByTag(@NonNull String tag, List<String> args) {
-        return messageSource.getMessage(tag, args.toArray(), applicationProperties.getCurrentLocal());
+        return messageSource.getMessage(tag, args.toArray(), currentLocal);
     }
 }

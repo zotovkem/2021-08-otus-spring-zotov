@@ -28,15 +28,11 @@ public class ApplicationProperties {
      */
     private final Integer countRightAnswer;
 
-    private final Locale currentLocal;
-
     public ApplicationProperties(@Value("${app.csv-file-path.answer}") Resource answerDataFile,
             @Value("${app.csv-file-path.question}") Resource questionDataFile,
-            @Value("${app.count-right-answer}") String countRightAnswer, @Value("${app.current-locale:en_EN}") Locale currentLocal) {
+            @Value("${app.count-right-answer}") String countRightAnswer) {
         this.answerDataFile = answerDataFile;
         this.questionDataFile = questionDataFile;
         this.countRightAnswer = Integer.parseInt(countRightAnswer);
-
-        this.currentLocal = currentLocal;
     }
 }

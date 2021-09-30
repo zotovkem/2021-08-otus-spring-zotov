@@ -8,28 +8,29 @@ import lombok.Getter;
  */
 @Getter
 public class Question {
+    /**
+     * Идентификатор
+     */
+    private final Integer id;
+
+    /**
+     * Текст вопроса
+     */
+    private final String questionText;
+
+    /**
+     * Правильный ответ
+     */
+    private final String rightAnswer;
+
     public Question() {
         this.id = null;
         this.questionText = null;
         this.rightAnswer = null;
     }
-
     public Question(Integer id, String questionText, String rightAnswer) {
         this.id = id;
         this.questionText = questionText;
         this.rightAnswer = rightAnswer;
     }
-
-    /**
-     * Идентификатор
-     */
-    private final Integer id;
-    /**
-     * Текст вопроса
-     */
-    private final String questionText;
-    /**
-     * Правильный ответ
-     */
-    private final String rightAnswer;
 }
