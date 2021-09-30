@@ -1,0 +1,17 @@
+"id";"questionId";"answerText";numberAnswer
+1;2;class MyClass {};1
+2;2;new class MyClass {};2
+3;2;select * from class MyClass {};3
+4;2;MyClass extends class {};4
+5;3;Сreating a new variable;1
+6;3;Declaring a new class.;2
+7;3;Creating an instance of the class.;3
+8;3;It is the antagonist of the OLD operator.;4
+9;4;This class inherits from another.;1
+10;4;It is an additional module of the class that extends its properties.;2
+11;4;The two classes do the same thing.;3
+12;4;This is the largest class in the program.;4
+13;5;Changing the behavior of a class method relative to its parent.;1
+14;5;Changing the behavior of a class method relative to a child.;2
+15;5;Several methods with the same name but different set of parameters.;3
+16;5;Several different classes with the same method.;4
