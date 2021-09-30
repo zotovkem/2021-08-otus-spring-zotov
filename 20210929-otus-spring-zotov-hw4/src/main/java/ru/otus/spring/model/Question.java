@@ -8,6 +8,22 @@ import lombok.Getter;
  */
 @Getter
 public class Question {
+    /**
+     * Идентификатор
+     */
+    private final Integer id;
+
+    /**
+     * Текст вопроса
+     */
+    private final String questionText;
+
+    /**
+     * Правильный ответ
+     */
+    private final String rightAnswer;
+
+    @SuppressWarnings("unused")
     public Question() {
         this.id = null;
         this.questionText = null;
@@ -19,17 +35,4 @@ public class Question {
         this.questionText = questionText;
         this.rightAnswer = rightAnswer;
     }
-
-    /**
-     * Идентификатор
-     */
-    private final Integer id;
-    /**
-     * Текст вопроса
-     */
-    private final String questionText;
-    /**
-     * Правильный ответ
-     */
-    private final String rightAnswer;
 }

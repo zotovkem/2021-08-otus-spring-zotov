@@ -4,7 +4,7 @@ spring:
 
 
 app:
-  current-locale: en
+  current-locale: ru
   csv-file-path:
     answer: answer-data_${app.current-locale}.csv
     question: question-data_${app.current-locale}.csv
