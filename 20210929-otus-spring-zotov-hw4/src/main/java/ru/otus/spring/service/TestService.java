@@ -7,13 +7,24 @@ package ru.otus.spring.service;
 public interface TestService {
     /**
      * Старт теста
+     *
+     * @param userName имя пользователя
      */
     void start(String userName);
 
     /**
-     * Следующий вопрос
+     * Получить текст следующего вопроса
+     *
+     * @return текст вопроса
      */
-    void nextQuestion();
+    String getNextQuestionText();
+
+    /**
+     * Получить текст предыдущего вопроса
+     *
+     * @return текст вопроса
+     */
+    String getPrevQuestionText();
 
     /**
      * Проверить ответ
@@ -24,10 +35,6 @@ public interface TestService {
 
     /**
      * Закончить тест
-     *
-     * @param userName имя пользователя
      */
-    void finish(String userName);
-
-
+    String finish();
 }

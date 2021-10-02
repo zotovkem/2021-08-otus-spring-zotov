@@ -9,7 +9,11 @@ import ru.otus.spring.service.AnswerService;
 import ru.otus.spring.service.LocalizationService;
 import ru.otus.spring.service.QuestionService;
 
+import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 /**
  * @author Created by ZotovES on 30.08.2021
@@ -23,16 +27,16 @@ public class QuestionServiceImpl implements QuestionService {
     private final LocalizationService localizationService;
 
     /**
-     * Напечатать вопрос по ид
+     * Получить текст вопроса по ид
      *
      * @param id ид
      */
     @Override
-    public void printQuestionById(Integer id) {
-        questionDao.findById(id).ifPresentOrElse(question -> {
-            System.out.println(question.getQuestionText());
-            answerService.printAnswersByQuestionId(question.getId());
-        }, () -> System.out.println(localizationService.getLocalizationTextByTag("taq.question.ended")));
+    public String getQuestionTextById(Integer id) {
+        return questionDao.findById(id)
+                .map(question -> format("%s%n", question.getQuestionText()) +
+                        answerService.getAnswersTextByQuestionId(question.getId()))
+                .orElseGet(() -> localizationService.getLocalizationTextByTag("taq.question.ended"));
     }
 
     /**
@@ -48,6 +52,16 @@ public class QuestionServiceImpl implements QuestionService {
                 .map(Question::getRightAnswer)
                 .filter(checkAnswerByNumberPredicate(questionId, answer))
                 .isPresent();
+    }
+
+    /**
+     * Получить список ид всех вопросов
+     *
+     * @return список ид
+     */
+    @Override
+    public List<Integer> getAllIds() {
+        return questionDao.findByAll().stream().map(Question::getId).collect(Collectors.toList());
     }
 
     private Predicate<String> checkAnswerByNumberPredicate(Integer questionId, String answer) {

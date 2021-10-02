@@ -10,11 +10,11 @@ import java.util.Optional;
  */
 public interface AnswerService {
     /**
-     * Вывести на печать варианты ответа по ид вопроса
+     * Получить текст вариантов ответов по ид вопроса
      *
      * @param questionId ид вопроса
      */
-    void printAnswersByQuestionId(Integer questionId);
+    String getAnswersTextByQuestionId(Integer questionId);
 
     /**
      * Поиск варианта ответа по ид вопроса и номеру ответа

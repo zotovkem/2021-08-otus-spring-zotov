@@ -2,7 +2,6 @@ spring:
   messages:
     basename: i18n/message
 
-
 app:
   current-locale: ru
   csv-file-path:

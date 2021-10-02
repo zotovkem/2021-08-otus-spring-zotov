@@ -1,16 +1,18 @@
 package ru.otus.spring.service;
 
+import java.util.List;
+
 /**
  * @author Created by ZotovES on 30.08.2021
  * Сервис вопросов
  */
 public interface QuestionService {
     /**
-     * Напечатать вопрос по ид
+     * Получить текст вопроса по ид
      *
      * @param id ид
      */
-    void printQuestionById(Integer id);
+    String getQuestionTextById(Integer id);
 
     /**
      * Проверить ответ на вопрос
@@ -20,4 +22,11 @@ public interface QuestionService {
      * @return результат проверки
      */
     boolean checkAnswer(Integer questionId, String answer);
+
+    /**
+     * Получить все идентификаторы вопросов
+     *
+     * @return список ид
+     */
+    List<Integer> getAllIds();
 }
