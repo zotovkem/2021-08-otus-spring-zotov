@@ -9,10 +9,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.shell.jline.ScriptShellApplicationRunner;
 import ru.otus.spring.service.LocalizationService;
+import ru.otus.spring.service.TestProgressService;
 import ru.otus.spring.service.TestService;
 
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Created by ZotovES on 30.09.2021
@@ -23,11 +28,13 @@ import static org.mockito.Mockito.verify;
         ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false"})
 class ShellCommandControllerTest {
     @MockBean private TestService testService;
+    @MockBean private TestProgressService testProgressService;
     @MockBean private LocalizationService localizationService;
     @Autowired private ShellCommandController shellCommandController;
 
     @BeforeEach
     void setUp() {
+        when(testProgressService.getUserName()).thenReturn(Optional.of("testUserName"));
     }
 
     @Test
@@ -37,6 +44,7 @@ class ShellCommandControllerTest {
         shellCommandController.login(testUser);
 
         verify(testService).start(testUser);
+        verify(localizationService).getLocalizationTextByTag(anyString(), anyList());
     }
 
     @Test
@@ -44,7 +52,7 @@ class ShellCommandControllerTest {
     void nextQuestionTest() {
         shellCommandController.nextQuestion();
 
-        verify(testService).nextQuestion();
+        verify(testService).getNextQuestionText();
     }
 
     @Test
@@ -59,9 +67,8 @@ class ShellCommandControllerTest {
     @Test
     @DisplayName("Закончить тест")
     void finishTest() {
-        shellCommandController.setUserName("testUserName");
         shellCommandController.finishTest();
 
-        verify(testService).finish(anyString());
+        verify(testService).finish();
     }
 }

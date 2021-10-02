@@ -13,6 +13,7 @@ import ru.otus.spring.service.LocalizationService;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -31,13 +32,30 @@ class QuestionServiceImplTest {
 
     @Test
     @DisplayName("Вывод на печать вопроса по id")
-    void printQuestionByIdTest() {
+    void getQuestionTextByIdTest() {
         when(questionDao.findById(anyInt())).thenReturn(Optional.of(new Question(1, "testQuestion", "test")));
 
-        questionService.printQuestionById(1);
+        String result = questionService.getQuestionTextById(1);
+
+        assertThat(result).isNotEmpty();
 
         verify(questionDao).findById(anyInt());
-        verify(answerService).printAnswersByQuestionId(anyInt());
+        verify(answerService).getAnswersTextByQuestionId(anyInt());
+    }
+
+    @Test
+    @DisplayName("Вывод на печать сообщения если вопрос не найден")
+    void getQuestionTextByIdNotFoundTest() {
+        String testMessage = "test";
+        when(questionDao.findById(anyInt())).thenReturn(Optional.empty());
+        when(localizationService.getLocalizationTextByTag(anyString())).thenReturn(testMessage);
+
+        String result = questionService.getQuestionTextById(1);
+
+        assertThat(result).isEqualTo(testMessage);
+
+        verify(questionDao).findById(anyInt());
+        verify(answerService, never()).getAnswersTextByQuestionId(anyInt());
     }
 
     @Test
@@ -45,11 +63,11 @@ class QuestionServiceImplTest {
     void printEndedTest() {
         when(questionDao.findById(anyInt())).thenReturn(Optional.empty());
 
-        questionService.printQuestionById(1);
+        questionService.getQuestionTextById(1);
 
         verify(questionDao).findById(anyInt());
         verify(localizationService).getLocalizationTextByTag(anyString());
-        verify(answerService, never()).printAnswersByQuestionId(anyInt());
+        verify(answerService, never()).getAnswersTextByQuestionId(anyInt());
     }
 
     @Test

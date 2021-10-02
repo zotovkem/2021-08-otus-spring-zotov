@@ -36,7 +36,8 @@ class AnswerServiceImplTest {
                 new Answer(2, 2, 2, "test2"), new Answer(3, 1, 3, "test3")));
         when(answerDao.findByQuestionId(anyInt())).thenReturn(answerList);
 
-        answerService.printAnswersByQuestionId(1);
+        String result = answerService.getAnswersTextByQuestionId(1);
+        assertThat(result).isNotEmpty();
 
         verify(answerDao).findByQuestionId(1);
         verify(localizationService).getLocalizationTextByTag(anyString(), anyList());
