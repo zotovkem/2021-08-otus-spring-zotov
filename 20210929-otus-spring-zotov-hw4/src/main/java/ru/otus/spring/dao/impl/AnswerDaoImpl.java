@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AnswerDaoImpl implements AnswerDao {
-    private final DataLoader dataLoaderService;
+    private final DataLoader dataLoader;
     private final ApplicationProperties propertyService;
 
     /**
@@ -30,7 +30,7 @@ public class AnswerDaoImpl implements AnswerDao {
      */
     @Override
     public List<Answer> findByQuestionId(@NonNull Integer questionId) {
-        return dataLoaderService.loadObjectList(Answer.class, propertyService.getAnswerDataFile()).stream()
+        return dataLoader.loadObjectList(Answer.class, propertyService.getAnswerDataFile()).stream()
                 .filter(answer -> questionId.equals(answer.getQuestionId()))
                 .collect(Collectors.toList());
     }
@@ -44,7 +44,7 @@ public class AnswerDaoImpl implements AnswerDao {
      */
     @Override
     public Optional<Answer> findByQuestionIdAndNumber(@NonNull Integer questionId, @NonNull String number) {
-        return dataLoaderService.loadObjectList(Answer.class, propertyService.getAnswerDataFile()).stream()
+        return dataLoader.loadObjectList(Answer.class, propertyService.getAnswerDataFile()).stream()
                 .filter(answer -> questionId.equals(answer.getQuestionId()) && number.equals(answer.getNumberAnswer().toString()))
                 .findAny();
     }

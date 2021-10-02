@@ -108,5 +108,6 @@ class TestServiceImplTest {
         verify(propertyService).getCountRightAnswer();
         verify(localizationService).getLocalizationTextByTag(anyString());
         verify(localizationService).getLocalizationTextByTag(anyString(), anyList());
+        verify(testProgressService).create(any(), anyList());
     }
 }

@@ -69,7 +69,7 @@ public class TestProgressServiceImpl implements TestProgressService {
      */
     @Override
     public Integer getNextQuestionId() {
-        List<Integer> questionIds = testProgress.getQuestions();
+        List<Integer> questionIds = testProgress.getQuestionIds();
         if (++currentQuestionIdx >= questionIds.size()) {
             currentQuestionIdx = questionIds.size();
             return -1;
@@ -89,12 +89,12 @@ public class TestProgressServiceImpl implements TestProgressService {
             return -1;
         }
 
-        return testProgress.getQuestions().get(currentQuestionIdx);
+        return testProgress.getQuestionIds().get(currentQuestionIdx);
     }
 
     @Override
     public Optional<Integer> getCurrentQuestionId() {
-        List<Integer> questionIds = ofNullable(testProgress).map(TestProgress::getQuestions).orElse(List.of());
+        List<Integer> questionIds = ofNullable(testProgress).map(TestProgress::getQuestionIds).orElse(List.of());
         if (questionIds.isEmpty() || currentQuestionIdx < 0 || currentQuestionIdx >= questionIds.size()) {
             return Optional.empty();
         }

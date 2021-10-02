@@ -9,7 +9,9 @@ import ru.otus.spring.service.QuestionService;
 import ru.otus.spring.service.TestProgressService;
 import ru.otus.spring.service.TestService;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Created by ZotovES on 22.09.2021
@@ -72,7 +74,10 @@ public class TestServiceImpl implements TestService {
     public String finish() {
         Integer countRightQuestions = testProgressService.getCountRightQuestions();
         var resultTest = countRightQuestions > propertyService.getCountRightAnswer() ? "tag.test.passed" : "tag.test.failed";
-        return testProgressService.getUserName()
+        Optional<String> userName = testProgressService.getUserName();
+        testProgressService.create(null, Collections.emptyList());
+
+        return userName
                 .map(username -> localizationService.getLocalizationTextByTag("tag.test.result",
                         List.of(username, String.valueOf(countRightQuestions),
                                 localizationService.getLocalizationTextByTag(resultTest))))
