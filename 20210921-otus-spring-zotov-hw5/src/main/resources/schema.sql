@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS author;
 CREATE TABLE author
 (
-    id  BIGINT NOT NULL PRIMARY KEY,
+    id  IDENTITY PRIMARY KEY,
     fio VARCHAR(255)
 );
 COMMENT ON TABLE author IS 'Авторы';
@@ -11,7 +11,7 @@ COMMENT ON COLUMN author.fio IS 'ФИО автора';
 DROP TABLE IF EXISTS genre;
 CREATE TABLE genre
 (
-    id   BIGINT NOT NULL PRIMARY KEY,
+    id   IDENTITY PRIMARY KEY,
     name VARCHAR(255)
 );
 COMMENT ON TABLE genre IS 'Жанры';
@@ -21,7 +21,7 @@ COMMENT ON COLUMN genre.name IS 'Наименование';
 DROP TABLE IF EXISTS book;
 CREATE TABLE book
 (
-    id           BIGINT NOT NULL PRIMARY KEY,
+    id           IDENTITY PRIMARY KEY,
     name         VARCHAR(255),
     release_year INT
 );
@@ -33,9 +33,9 @@ COMMENT ON COLUMN book.release_year IS 'Год издания';
 DROP TABLE IF EXISTS mtm_book_author;
 CREATE TABLE mtm_book_author
 (
-    id        BIGINT NOT NULL PRIMARY KEY,
-    book_id   BIGINT NOT NULL,
-    author_id BIGINT NOT NULL
+    id        BIGINT AUTO_INCREMENT NOT NULL UNIQUE,
+    book_id   BIGINT                NOT NULL,
+    author_id BIGINT                NOT NULL
         CONSTRAINT book_author_fk REFERENCES author ON DELETE RESTRICT
 );
 COMMENT ON TABLE mtm_book_author IS 'Таблица связи книг с авторами';
@@ -47,9 +47,9 @@ CREATE INDEX mtm_book_author_book_id_idx ON mtm_book_author (book_id);
 DROP TABLE IF EXISTS mtm_book_genre;
 CREATE TABLE mtm_book_genre
 (
-    id       BIGINT NOT NULL PRIMARY KEY,
-    book_id  BIGINT NOT NULL,
-    genre_id BIGINT NOT NULL
+    id       BIGINT AUTO_INCREMENT NOT NULL UNIQUE,
+    book_id  BIGINT                NOT NULL,
+    genre_id BIGINT                NOT NULL
         CONSTRAINT book_genre_fk REFERENCES genre ON DELETE RESTRICT
 );
 COMMENT ON TABLE mtm_book_genre IS 'Таблица связи книг с жанрами';
