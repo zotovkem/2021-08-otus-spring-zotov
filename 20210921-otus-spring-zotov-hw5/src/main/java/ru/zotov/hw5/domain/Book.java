@@ -15,7 +15,7 @@ public class Book {
     /**
      * Ид книги
      */
-    private long id;
+    private Long id;
     /**
      * Наименование книги
      */
