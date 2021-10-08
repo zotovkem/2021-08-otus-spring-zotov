@@ -5,6 +5,7 @@ import ru.zotov.hw5.domain.Genre;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Created by ZotovES on 04.10.2021
@@ -32,7 +33,7 @@ public interface GenreDao {
      * @param id ид
      * @return жанр
      */
-    Genre getById(long id);
+    Optional<Genre> getById(long id);
 
     /**
      * Удалить по ид

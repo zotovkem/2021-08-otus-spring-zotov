@@ -11,6 +11,7 @@ import ru.zotov.hw5.domain.Genre;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.*;
 
@@ -43,7 +44,7 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public Genre update(Genre genre) {
         jdbc.update("update genre set name= :name where id = :id", Map.of("id", genre.getId(), "name", genre.getName()));
-        return getById(genre.getId());
+        return genre;
     }
 
     /**
@@ -53,8 +54,9 @@ public class GenreDaoImpl implements GenreDao {
      * @return жанр
      */
     @Override
-    public Genre getById(long id) {
-        return jdbc.queryForObject("select id,name from genre where id = :id", Map.of("id", id), new GenreMapper());
+    public Optional<Genre> getById(long id) {
+        return Optional.ofNullable(
+                jdbc.queryForObject("select id,name from genre where id = :id", Map.of("id", id), new GenreMapper()));
     }
 
     /**

@@ -13,7 +13,7 @@ public class Author {
     /**
      * Ид автора
      */
-    private long id;
+    private Long id;
     /**
      * ФИО автора
      */
