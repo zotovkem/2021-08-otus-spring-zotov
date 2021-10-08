@@ -1,0 +1,10 @@
+spring:
+  messages:
+    basename: i18n/message
+
+app:
+  current-locale: ru
+  csv-file-path:
+    answer: answer-data_${app.current-locale}.csv
+    question: question-data_${app.current-locale}.csv
+  count-right-answer: 3
