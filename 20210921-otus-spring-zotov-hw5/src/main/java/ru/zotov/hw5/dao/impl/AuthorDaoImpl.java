@@ -8,10 +8,7 @@ import ru.zotov.hw5.dao.mapper.AuthorMapper;
 import ru.zotov.hw5.dao.mapper.AuthorToMapEntryMapper;
 import ru.zotov.hw5.domain.Author;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.*;
 
@@ -19,6 +16,7 @@ import static java.util.stream.Collectors.*;
  * @author Created by ZotovES on 04.10.2021
  * Реализация репозитория авторов
  */
+@SuppressWarnings("SqlResolve")
 @Repository
 @RequiredArgsConstructor
 public class AuthorDaoImpl implements AuthorDao {
@@ -77,6 +75,16 @@ public class AuthorDaoImpl implements AuthorDao {
     @Override
     public List<Author> findByIdsIn(Collection<Long> ids) {
         return jdbc.query("select id,fio from author where id in (:ids)", Map.of("ids", ids), new AuthorMapper());
+    }
+
+    /**
+     * Получить всех авторов
+     *
+     * @return список авторов
+     */
+    @Override
+    public List<Author> findByAll() {
+        return jdbc.query("select id,fio from author", Collections.emptyMap(), new AuthorMapper());
     }
 
     /**

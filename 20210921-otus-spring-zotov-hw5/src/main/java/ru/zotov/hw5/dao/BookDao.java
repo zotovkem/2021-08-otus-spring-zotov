@@ -15,7 +15,7 @@ public interface BookDao {
      *
      * @param book книга
      */
-    void create(Book book);
+    Book create(Book book);
 
     /**
      * Редактировать книгу

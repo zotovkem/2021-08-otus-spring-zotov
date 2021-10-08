@@ -57,4 +57,19 @@ public interface GenreDao {
      * @return список жанров
      */
     Map<Long, List<Genre>> findByBookIds(Collection<Long> bookIds);
+
+    /**
+     * Найти жанры книги по ид книги
+     *
+     * @param bookId ид книги
+     * @return список жанров
+     */
+    List<Genre> findByBookId(Long bookId);
+
+    /**
+     * Получить все жанры
+     *
+     * @return список жанров
+     */
+    List<Genre> getAll();
 }

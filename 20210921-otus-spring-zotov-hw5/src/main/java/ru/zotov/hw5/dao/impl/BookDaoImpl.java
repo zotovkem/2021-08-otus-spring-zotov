@@ -1,7 +1,11 @@
 package ru.zotov.hw5.dao.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.zotov.hw5.dao.BookDao;
 import ru.zotov.hw5.dao.mapper.BookMapper;
@@ -27,9 +31,17 @@ public class BookDaoImpl implements BookDao {
      * @param book книга
      */
     @Override
-    public void create(Book book) {
-        jdbc.update("insert into book(name,release_year) values(:name,:releaseYear)",
-                Map.of("name", book.getName(), "releaseYear", book.getReleaseYear()));
+    public Book create(Book book) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        SqlParameterSource fileParameters =
+                new MapSqlParameterSource(Map.of("name", book.getName(), "releaseYear", book.getReleaseYear()));
+        jdbc.update("insert into book(name,release_year) values(:name,:releaseYear)", fileParameters, keyHolder);
+
+        Optional.ofNullable(keyHolder.getKey())
+                .map(Number::longValue)
+                .ifPresent(book::setId);
+
+        return book;
     }
 
     /**
@@ -41,7 +53,7 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Book update(Book book) {
         jdbc.update("update book set name= :name, release_year= :releaseYear where id = :id",
-                Map.of("name", book.getName(), "releaseYear", book.getReleaseYear()));
+                Map.of("name", book.getName(), "releaseYear", book.getReleaseYear(), "id", book.getId()));
         return getById(book.getId()).orElseThrow();
     }
 
@@ -63,7 +75,7 @@ public class BookDaoImpl implements BookDao {
      */
     @Override
     public Optional<Book> getById(Long id) {
-        return Optional.ofNullable(jdbc.queryForObject("select id,name,realese_year from book where id = :id",
+        return Optional.ofNullable(jdbc.queryForObject("select id,name,release_year from book where id = :id",
                 Map.of("id", id), new BookMapper()));
     }
 

@@ -57,4 +57,11 @@ public interface AuthorDao {
      * @return список авторов
      */
     Map<Long, List<Author>> findByBookIds(Collection<Long> bookIds);
+
+    /**
+     * Получить всех авторов
+     *
+     * @return список авторов
+     */
+    List<Author> findByAll();
 }

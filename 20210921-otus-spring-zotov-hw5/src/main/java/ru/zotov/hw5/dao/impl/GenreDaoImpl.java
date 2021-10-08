@@ -8,10 +8,7 @@ import ru.zotov.hw5.dao.mapper.GenreMapper;
 import ru.zotov.hw5.dao.mapper.GenreToMapEntryMapper;
 import ru.zotov.hw5.domain.Genre;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.*;
 
@@ -98,5 +95,26 @@ public class GenreDaoImpl implements GenreDao {
         return genreIds.entrySet().stream()
                 .collect(toMap(Map.Entry::getKey,
                         e -> genres.stream().filter(genre -> e.getValue().contains(genre.getId())).collect(toList())));
+    }
+
+    /**
+     * Найти жанры книги по ид книги
+     *
+     * @param bookId ид книги
+     * @return список жанров
+     */
+    @Override
+    public List<Genre> findByBookId(Long bookId) {
+        return findByBookIds(List.of(bookId)).values().stream().flatMap(List::stream).collect(toList());
+    }
+
+    /**
+     * Получить все жанры
+     *
+     * @return список жанров
+     */
+    @Override
+    public List<Genre> getAll() {
+        return jdbc.query("select id,name from genre", Collections.emptyMap(), new GenreMapper());
     }
 }
