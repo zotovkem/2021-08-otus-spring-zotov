@@ -64,7 +64,7 @@ public class BookDaoImpl implements BookDao {
      */
     @Override
     public void deleteById(Long id) {
-        jdbc.update("delete from book where id = : id", Map.of("id", id));
+        jdbc.update("delete from book where id = :id", Map.of("id", id));
     }
 
     /**
@@ -109,9 +109,10 @@ public class BookDaoImpl implements BookDao {
      */
     @Override
     public List<Book> findByAuthorFio(String authorFio) {
-        return jdbc.query("select id,name,release_year from book " +
-                "where exists (select id from mtm_book_author mba left join author a on (mba.author_id = a.id) " +
-                "where lower(a.fio) like concat(lower(:fio),'%'))", Map.of("fio", authorFio), new BookMapper());
+        return jdbc.query("select id,name,release_year from book b " +
+                        "where exists (select * from mtm_book_author mba left join author a on (mba.author_id = a.id) " +
+                        "where b.id = mba.book_id and lower(a.fio) like concat(lower(:fio),'%'))",
+                Map.of("fio", authorFio), new BookMapper());
     }
 
     /**
@@ -122,9 +123,10 @@ public class BookDaoImpl implements BookDao {
      */
     @Override
     public List<Book> findByGenreName(String genreName) {
-        return jdbc.query("select id,name,release_year from book " +
-                "where exists (select id from mtm_book_genre mbg left join genre g on (mbg.genre_id = g.id) " +
-                "where lower(g.name) like concat(lower(:genre),'%'))", Map.of("genre", genreName), new BookMapper());
+        return jdbc.query("select id,name,release_year from book b " +
+                        "where exists (select * from mtm_book_genre mbg left join genre g on (mbg.genre_id = g.id) " +
+                        "where b.id = mbg.book_id and lower(g.name) like concat(lower(:genre),'%'))",
+                Map.of("genre", genreName), new BookMapper());
     }
 
     /**

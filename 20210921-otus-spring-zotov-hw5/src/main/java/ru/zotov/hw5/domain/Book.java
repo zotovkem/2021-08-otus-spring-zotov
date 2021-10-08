@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Created by ZotovES on 29.09.2021
@@ -34,4 +35,13 @@ public class Book {
      * Жанры
      */
     private List<Genre> genres;
+
+    public String toString() {
+        return String.format("Ид: %s%nНаименование книги: %s%nГод издательства: %s%n" +
+                        "Авторы: %s%n" +
+                        "Жанры: %s%n" +
+                        "=====================================", getId(), getName(), getReleaseYear(),
+                getAuthors().stream().map(Author::getFio).collect(Collectors.joining(", ")),
+                getGenres().stream().map(Genre::getName).collect(Collectors.joining(", ")));
+    }
 }

@@ -11,6 +11,7 @@ import ru.zotov.hw5.domain.Genre;
 import ru.zotov.hw5.service.BookService;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -71,14 +72,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findByAll() {
         List<Book> books = bookDao.findAll();
-        Set<Long> bookIds = books.stream().map(Book::getId).collect(Collectors.toSet());
-        Map<Long, List<Author>> authorsMap = authorDao.findByBookIds(bookIds);
-        Map<Long, List<Genre>> genresMap = genreDao.findByBookIds(bookIds);
-
-        books.forEach(book -> {
-            book.setAuthors(authorsMap.get(book.getId()));
-            book.setGenres(genresMap.get(book.getId()));
-        });
+        setBookFieldsCollection(books);
 
         return books;
     }
@@ -92,12 +86,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<Book> findById(Long id) {
         Optional<Book> book = bookDao.getById(id);
-        book.ifPresent(b -> {
-            List<Author> authors = authorDao.findByBookIds(List.of(b.getId())).getOrDefault(b.getId(), Collections.emptyList());
-            List<Genre> genres = genreDao.findByBookIds(List.of(b.getId())).getOrDefault(b.getId(), Collections.emptyList());
-            b.setAuthors(authors);
-            b.setGenres(genres);
-        });
+        book.ifPresent(setBookFieldsConsumer());
 
         return book;
     }
@@ -110,7 +99,10 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public List<Book> findByName(String name) {
-        return bookDao.findByName(name);
+        List<Book> books = bookDao.findByName(name);
+        setBookFieldsCollection(books);
+
+        return books;
     }
 
     /**
@@ -121,7 +113,10 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public List<Book> findByGenreName(String name) {
-        return bookDao.findByGenreName(name);
+        List<Book> books = bookDao.findByGenreName(name);
+        setBookFieldsCollection(books);
+
+        return books;
     }
 
     /**
@@ -132,6 +127,37 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public List<Book> findByAuthorFio(String fio) {
-        return bookDao.findByAuthorFio(fio);
+        List<Book> books = bookDao.findByAuthorFio(fio);
+        setBookFieldsCollection(books);
+
+        return books;
+    }
+
+    /**
+     * Консюмер проставляет значения в поля коллекций книги
+     */
+    private Consumer<Book> setBookFieldsConsumer() {
+        return b -> {
+            List<Author> authors = authorDao.findByBookIds(List.of(b.getId())).getOrDefault(b.getId(), Collections.emptyList());
+            List<Genre> genres = genreDao.findByBookIds(List.of(b.getId())).getOrDefault(b.getId(), Collections.emptyList());
+            b.setAuthors(authors);
+            b.setGenres(genres);
+        };
+    }
+
+    /**
+     * Проставляет в поля коллекция книги значения
+     *
+     * @param books список книг
+     */
+    private void setBookFieldsCollection(List<Book> books) {
+        Set<Long> bookIds = books.stream().map(Book::getId).collect(Collectors.toSet());
+        Map<Long, List<Author>> authorsMap = authorDao.findByBookIds(bookIds);
+        Map<Long, List<Genre>> genresMap = genreDao.findByBookIds(bookIds);
+
+        books.forEach(book -> {
+            book.setAuthors(authorsMap.get(book.getId()));
+            book.setGenres(genresMap.get(book.getId()));
+        });
     }
 }
