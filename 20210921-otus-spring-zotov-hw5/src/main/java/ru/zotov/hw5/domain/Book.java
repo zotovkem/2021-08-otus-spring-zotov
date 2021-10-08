@@ -1,6 +1,7 @@
 package ru.zotov.hw5.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  * Книга
  */
 @Data
+@Builder
 @AllArgsConstructor
 public class Book {
     /**
