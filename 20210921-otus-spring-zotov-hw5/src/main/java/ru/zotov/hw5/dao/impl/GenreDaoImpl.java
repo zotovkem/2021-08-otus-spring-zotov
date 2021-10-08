@@ -54,7 +54,7 @@ public class GenreDaoImpl implements GenreDao {
      * @return жанр
      */
     @Override
-    public Optional<Genre> getById(long id) {
+    public Optional<Genre> getById(Long id) {
         return Optional.ofNullable(
                 jdbc.queryForObject("select id,name from genre where id = :id", Map.of("id", id), new GenreMapper()));
     }
@@ -65,7 +65,7 @@ public class GenreDaoImpl implements GenreDao {
      * @param id ид жанра
      */
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         jdbc.update("delete from genre where id = : id", Map.of("id", id));
     }
 

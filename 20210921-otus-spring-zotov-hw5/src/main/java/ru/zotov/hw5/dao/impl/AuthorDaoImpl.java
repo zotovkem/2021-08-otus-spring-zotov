@@ -53,7 +53,7 @@ public class AuthorDaoImpl implements AuthorDao {
      * @return автор
      */
     @Override
-    public Optional<Author> getById(long id) {
+    public Optional<Author> getById(Long id) {
         return Optional.ofNullable(
                 jdbc.queryForObject("select id,fio from author where id = :id", Map.of("id", id), new AuthorMapper()));
     }
@@ -64,7 +64,7 @@ public class AuthorDaoImpl implements AuthorDao {
      * @param id ид
      */
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         jdbc.update("delete from author where id = : id", Map.of("id", id));
     }
 

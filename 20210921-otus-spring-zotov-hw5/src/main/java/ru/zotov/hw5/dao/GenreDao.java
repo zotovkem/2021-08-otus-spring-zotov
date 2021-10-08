@@ -33,14 +33,14 @@ public interface GenreDao {
      * @param id ид
      * @return жанр
      */
-    Optional<Genre> getById(long id);
+    Optional<Genre> getById(Long id);
 
     /**
      * Удалить по ид
      *
      * @param id ид жанра
      */
-    void deleteById(long id);
+    void deleteById(Long id);
 
     /**
      * Найти по списку идентификаторов

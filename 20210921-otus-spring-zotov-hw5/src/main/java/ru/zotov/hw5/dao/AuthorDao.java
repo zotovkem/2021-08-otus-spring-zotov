@@ -33,14 +33,14 @@ public interface AuthorDao {
      * @param id ид
      * @return автор
      */
-    Optional<Author> getById(long id);
+    Optional<Author> getById(Long id);
 
     /**
      * Удалить автора
      *
      * @param id ид
      */
-    void deleteById(long id);
+    void deleteById(Long id);
 
     /**
      * Поиск авторов по списку ид

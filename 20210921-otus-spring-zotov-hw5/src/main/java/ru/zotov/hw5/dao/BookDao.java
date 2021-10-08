@@ -48,6 +48,36 @@ public interface BookDao {
     List<Book> findAll();
 
     /**
+     * Добавить книге жанр
+     *
+     * @param bookId  ид книги
+     * @param genreId ид автора
+     */
+    void addGenre(Long bookId, Long genreId);
+
+    /**
+     * Добавить книги автора
+     *
+     * @param bookId   ид книги
+     * @param authorId ид жанра
+     */
+    void addAuthor(Long bookId, Long authorId);
+
+    /**
+     * Удалить у книги все ссылки на жанры
+     *
+     * @param bookId ид книги
+     */
+    void deleteAllRefGenre(Long bookId);
+
+    /**
+     * Удалить у кинги все ссылки на авторов
+     *
+     * @param bookId ид книги
+     */
+    void deleteAllRefAuthor(Long bookId);
+
+    /**
      * Найти книгу по наименованию
      *
      * @param name наименование книги
