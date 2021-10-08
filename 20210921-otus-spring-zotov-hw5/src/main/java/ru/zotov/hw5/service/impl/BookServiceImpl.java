@@ -10,15 +10,12 @@ import ru.zotov.hw5.domain.Book;
 import ru.zotov.hw5.domain.Genre;
 import ru.zotov.hw5.service.BookService;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author Created by ZotovES on 07.10.2021
- * Реализация сервиса
+ * Реализация сервиса управления книгами
  */
 @Service
 @RequiredArgsConstructor
@@ -34,9 +31,9 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public void create(Book book) {
-        bookDao.create(book);
-        book.getAuthors().forEach(author -> bookDao.addAuthor(book.getId(), author.getId()));
-        book.getGenres().forEach(genre -> bookDao.addGenre(book.getId(), genre.getId()));
+        Book savedBook = bookDao.create(book);
+        book.getAuthors().forEach(author -> bookDao.addAuthor(savedBook.getId(), author.getId()));
+        book.getGenres().forEach(genre -> bookDao.addGenre(savedBook.getId(), genre.getId()));
     }
 
     /**
@@ -94,6 +91,47 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public Optional<Book> findById(Long id) {
-        return Optional.empty();
+        Optional<Book> book = bookDao.getById(id);
+        book.ifPresent(b -> {
+            List<Author> authors = authorDao.findByBookIds(List.of(b.getId())).getOrDefault(b.getId(), Collections.emptyList());
+            List<Genre> genres = genreDao.findByBookIds(List.of(b.getId())).getOrDefault(b.getId(), Collections.emptyList());
+            b.setAuthors(authors);
+            b.setGenres(genres);
+        });
+
+        return book;
+    }
+
+    /**
+     * Найти книги по наименованию
+     *
+     * @param name наименование
+     * @return список книг
+     */
+    @Override
+    public List<Book> findByName(String name) {
+        return bookDao.findByName(name);
+    }
+
+    /**
+     * Найти книги по жанру
+     *
+     * @param name наименование жанра
+     * @return список книг
+     */
+    @Override
+    public List<Book> findByGenreName(String name) {
+        return bookDao.findByGenreName(name);
+    }
+
+    /**
+     * Поиск книг по фио автора
+     *
+     * @param fio фио автора
+     * @return список книг
+     */
+    @Override
+    public List<Book> findByAuthorFio(String fio) {
+        return bookDao.findByAuthorFio(fio);
     }
 }
