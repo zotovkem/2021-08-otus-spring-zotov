@@ -21,6 +21,8 @@ public class AuthorShellCommandController {
 
     /**
      * Создать автора
+     * <p>
+     * Пример author-add -fio Зотов
      *
      * @param fio фио автора
      */
@@ -46,13 +48,14 @@ public class AuthorShellCommandController {
      * @return автор
      */
     @ShellMethod(value = "Find author by id", key = {"author-find-by-id"})
-    public Author getById(@ShellOption("-id") Long id) {
+    public Author getById(Long id) {
         return authorDao.getById(id).orElseThrow(() -> new IllegalArgumentException("Not found author by id = " + id));
     }
 
     /**
      * Редактировать автора
      *
+     * Пример author-update -id 9 -fio Зотов
      * @param id  ид
      * @param fio фио автора
      * @return автор

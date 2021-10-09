@@ -63,7 +63,7 @@ public class AuthorDaoImpl implements AuthorDao {
      */
     @Override
     public void deleteById(Long id) {
-        jdbc.update("delete from author where id = : id", Map.of("id", id));
+        jdbc.update("delete from author where id = :id", Map.of("id", id));
     }
 
     /**

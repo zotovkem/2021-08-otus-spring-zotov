@@ -79,7 +79,7 @@ public class GenreShellCommandController {
      *
      * @param id ид жанра
      */
-    @ShellMethod(value = "Delete genre by id", key = {"genre-delete"})
+    @ShellMethod(value = "Delete genre by id", key = {"genre-delete-by-id"})
     public void deleteById(Long id) {
         genreDao.deleteById(id);
     }

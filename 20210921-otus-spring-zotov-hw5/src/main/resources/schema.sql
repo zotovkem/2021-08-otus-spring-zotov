@@ -34,7 +34,8 @@ DROP TABLE IF EXISTS mtm_book_author;
 CREATE TABLE mtm_book_author
 (
     id        BIGINT AUTO_INCREMENT NOT NULL UNIQUE,
-    book_id   BIGINT                NOT NULL,
+    book_id   BIGINT                NOT NULL
+        CONSTRAINT book_mtm_book_author_fk REFERENCES book ON DELETE CASCADE,
     author_id BIGINT                NOT NULL
         CONSTRAINT book_author_fk REFERENCES author ON DELETE RESTRICT
 );
@@ -48,7 +49,8 @@ DROP TABLE IF EXISTS mtm_book_genre;
 CREATE TABLE mtm_book_genre
 (
     id       BIGINT AUTO_INCREMENT NOT NULL UNIQUE,
-    book_id  BIGINT                NOT NULL,
+    book_id  BIGINT                NOT NULL
+        CONSTRAINT book_mtm_book_genre_fk REFERENCES book ON DELETE CASCADE,
     genre_id BIGINT                NOT NULL
         CONSTRAINT book_genre_fk REFERENCES genre ON DELETE RESTRICT
 );

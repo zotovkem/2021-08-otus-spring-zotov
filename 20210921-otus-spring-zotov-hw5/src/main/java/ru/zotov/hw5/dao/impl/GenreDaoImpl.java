@@ -63,7 +63,7 @@ public class GenreDaoImpl implements GenreDao {
      */
     @Override
     public void deleteById(Long id) {
-        jdbc.update("delete from genre where id = : id", Map.of("id", id));
+        jdbc.update("delete from genre where id = :id", Map.of("id", id));
     }
 
     /**
