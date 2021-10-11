@@ -1,6 +1,6 @@
 Зотов Евгений Сергеевич
 
-Разработчик на Spring Framework https://otus.ru/lessons/javaspring/?int_source=courses_catalog&int_term=programming
+Курс "[Разработчик на Spring Framework](https://otus.ru/lessons/javaspring/)"
 
 2021-08
 
@@ -12,3 +12,5 @@
 ДЗ3 20210921-otus-spring-zotov-hw3
 
 ДЗ4 20210929-otus-spring-zotov-hw4
+
+ДЗ5 20210921-otus-spring-zotov-hw5
