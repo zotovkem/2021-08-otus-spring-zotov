@@ -5,3 +5,4 @@ spring:
     init:
       mode: always
       data-locations: data.sql
+      encoding: UTF-8
