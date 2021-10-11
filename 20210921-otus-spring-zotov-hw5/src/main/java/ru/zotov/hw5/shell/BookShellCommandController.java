@@ -33,7 +33,7 @@ public class BookShellCommandController {
      * @param genreIds    список ид жанров
      */
     @ShellMethod(value = "Create new book", key = {"book-create"})
-    public void createBook(@ShellOption("-name") String name, @ShellOption("-release-year") Integer releaseYear,
+    public Book createBook(@ShellOption("-name") String name, @ShellOption("-release-year") Integer releaseYear,
             @ShellOption(arity = 5, value = "-author-ids") long[] authorIds,
             @ShellOption(arity = 5, value = "-genre-ids") long[] genreIds) {
         Book book = Book.builder()
@@ -44,7 +44,7 @@ public class BookShellCommandController {
                 .genres(Arrays.stream(genreIds).filter(id -> id > 0).mapToObj(id -> new Genre(id, null))
                         .collect(Collectors.toList()))
                 .build();
-        bookService.create(book);
+        return bookService.create(book);
     }
 
     /**

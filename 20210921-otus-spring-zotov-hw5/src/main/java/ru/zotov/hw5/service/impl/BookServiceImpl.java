@@ -29,12 +29,14 @@ public class BookServiceImpl implements BookService {
      * Создать книгу
      *
      * @param book книга
+     * @return книга
      */
     @Override
-    public void create(Book book) {
+    public Book create(Book book) {
         Book savedBook = bookDao.create(book);
         book.getAuthors().forEach(author -> authorRefBookDao.addRefAuthor(savedBook.getId(), author.getId()));
         book.getGenres().forEach(genre -> genreRefBookDao.addRefGenre(savedBook.getId(), genre.getId()));
+        return book;
     }
 
     /**

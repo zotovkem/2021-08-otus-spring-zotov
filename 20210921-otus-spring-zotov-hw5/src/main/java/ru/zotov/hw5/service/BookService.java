@@ -14,8 +14,9 @@ public interface BookService {
      * Создать книгу
      *
      * @param book книга
+     * @return книга
      */
-    void create(Book book);
+    Book create(Book book);
 
     /**
      * Редактировать книгу
