@@ -2,9 +2,7 @@ package ru.zotov.hw5.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.zotov.hw5.dao.AuthorDao;
-import ru.zotov.hw5.dao.BookDao;
-import ru.zotov.hw5.dao.GenreDao;
+import ru.zotov.hw5.dao.*;
 import ru.zotov.hw5.domain.Author;
 import ru.zotov.hw5.domain.Book;
 import ru.zotov.hw5.domain.Genre;
@@ -24,6 +22,8 @@ public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
     private final AuthorDao authorDao;
     private final GenreDao genreDao;
+    private final GenreRefBookDao genreRefBookDao;
+    private final AuthorRefBookDao authorRefBookDao;
 
     /**
      * Создать книгу
@@ -33,8 +33,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public void create(Book book) {
         Book savedBook = bookDao.create(book);
-        book.getAuthors().forEach(author -> bookDao.addAuthor(savedBook.getId(), author.getId()));
-        book.getGenres().forEach(genre -> bookDao.addGenre(savedBook.getId(), genre.getId()));
+        book.getAuthors().forEach(author -> authorRefBookDao.addRefAuthor(savedBook.getId(), author.getId()));
+        book.getGenres().forEach(genre -> genreRefBookDao.addRefGenre(savedBook.getId(), genre.getId()));
     }
 
     /**
@@ -46,10 +46,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book update(Book book) {
         bookDao.update(book);
-        bookDao.deleteAllRefAuthor(book.getId());
-        bookDao.deleteAllRefGenre(book.getId());
-        book.getAuthors().forEach(author -> bookDao.addAuthor(book.getId(), author.getId()));
-        book.getGenres().forEach(genre -> bookDao.addGenre(book.getId(), genre.getId()));
+        authorRefBookDao.deleteAllRefAuthor(book.getId());
+        genreRefBookDao.deleteAllRefGenre(book.getId());
+        book.getAuthors().forEach(author -> authorRefBookDao.addRefAuthor(book.getId(), author.getId()));
+        book.getGenres().forEach(genre -> genreRefBookDao.addRefGenre(book.getId(), genre.getId()));
 
         return findById(book.getId()).orElseThrow(() -> new IllegalArgumentException("Not found book by id = " + book.getId()));
     }
@@ -137,12 +137,7 @@ public class BookServiceImpl implements BookService {
      * Консюмер проставляет значения в поля коллекций книги
      */
     private Consumer<Book> setBookFieldsConsumer() {
-        return b -> {
-            List<Author> authors = authorDao.findByBookIds(List.of(b.getId())).getOrDefault(b.getId(), Collections.emptyList());
-            List<Genre> genres = genreDao.findByBookIds(List.of(b.getId())).getOrDefault(b.getId(), Collections.emptyList());
-            b.setAuthors(authors);
-            b.setGenres(genres);
-        };
+        return b -> setBookFieldsCollection(List.of(b));
     }
 
     /**
@@ -152,12 +147,23 @@ public class BookServiceImpl implements BookService {
      */
     private void setBookFieldsCollection(List<Book> books) {
         Set<Long> bookIds = books.stream().map(Book::getId).collect(Collectors.toSet());
-        Map<Long, List<Author>> authorsMap = authorDao.findByBookIds(bookIds);
-        Map<Long, List<Genre>> genresMap = genreDao.findByBookIds(bookIds);
+        Map<Long, List<Long>> authorsMap = authorRefBookDao.findByBookIds(bookIds);
+        Map<Long, List<Long>> genresMap = genreRefBookDao.findByBookIds(bookIds);
+        List<Author> authors = authorDao.findByIdsIn(authorsMap.values().stream()
+                .flatMap(Collection::stream).collect(Collectors.toSet()));
+        List<Genre> genres = genreDao.findByIdsIn(genresMap.values().stream()
+                .flatMap(Collection::stream).collect(Collectors.toSet()));
 
         books.forEach(book -> {
-            book.setAuthors(authorsMap.get(book.getId()));
-            book.setGenres(genresMap.get(book.getId()));
+            List<Author> filteredAuthors = authors.stream()
+                    .filter(a -> authorsMap.getOrDefault(book.getId(), Collections.emptyList()).contains(a.getId()))
+                    .collect(Collectors.toList());
+            List<Genre> filteredGenres = genres.stream()
+                    .filter(g -> genresMap.getOrDefault(book.getId(), Collections.emptyList()).contains(g.getId()))
+                    .collect(Collectors.toList());
+
+            book.setAuthors(filteredAuthors);
+            book.setGenres(filteredGenres);
         });
     }
 }

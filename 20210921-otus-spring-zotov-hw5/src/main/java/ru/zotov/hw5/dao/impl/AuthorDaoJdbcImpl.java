@@ -5,12 +5,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.zotov.hw5.dao.AuthorDao;
 import ru.zotov.hw5.dao.mapper.AuthorMapper;
-import ru.zotov.hw5.dao.mapper.AuthorToMapEntryMapper;
 import ru.zotov.hw5.domain.Author;
 
 import java.util.*;
-
-import static java.util.stream.Collectors.*;
 
 /**
  * @author Created by ZotovES on 04.10.2021
@@ -19,7 +16,7 @@ import static java.util.stream.Collectors.*;
 @SuppressWarnings("SqlResolve")
 @Repository
 @RequiredArgsConstructor
-public class AuthorDaoImpl implements AuthorDao {
+public class AuthorDaoJdbcImpl implements AuthorDao {
     private final NamedParameterJdbcOperations jdbc;
 
     /**
@@ -52,8 +49,7 @@ public class AuthorDaoImpl implements AuthorDao {
      */
     @Override
     public Optional<Author> getById(Long id) {
-        return Optional.ofNullable(
-                jdbc.queryForObject("select id,fio from author where id = :id", Map.of("id", id), new AuthorMapper()));
+        return jdbc.queryForStream("select id,fio from author where id = :id", Map.of("id", id), new AuthorMapper()).findFirst();
     }
 
     /**
@@ -85,25 +81,5 @@ public class AuthorDaoImpl implements AuthorDao {
     @Override
     public List<Author> findByAll() {
         return jdbc.query("select id,fio from author", Collections.emptyMap(), new AuthorMapper());
-    }
-
-    /**
-     * Найти всех авторов по списку ид книг
-     *
-     * @param bookIds список ид книг
-     * @return список авторов
-     */
-    @Override
-    public Map<Long, List<Author>> findByBookIds(Collection<Long> bookIds) {
-        Map<Long, List<Long>> authorIds =
-                jdbc.queryForStream("select book_id,author_id from mtm_book_author m  where book_id in (:bookIds)",
-                                Map.of("bookIds", bookIds), new AuthorToMapEntryMapper())
-                        .collect(groupingBy(Map.Entry::getKey, mapping(Map.Entry::getValue, toList())));
-
-        List<Author> authors = findByIdsIn(authorIds.values().stream().flatMap(Collection::stream).collect(toList()));
-
-        return authorIds.entrySet().stream()
-                .collect(toMap(Map.Entry::getKey,
-                        e -> authors.stream().filter(author -> e.getValue().contains(author.getId())).collect(toList())));
     }
 }

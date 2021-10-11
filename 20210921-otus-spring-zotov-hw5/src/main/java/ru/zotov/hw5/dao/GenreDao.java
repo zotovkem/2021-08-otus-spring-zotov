@@ -4,7 +4,6 @@ import ru.zotov.hw5.domain.Genre;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -49,22 +48,6 @@ public interface GenreDao {
      * @return список жанров
      */
     List<Genre> findByIdsIn(Collection<Long> ids);
-
-    /**
-     * Найти все жанры по ид книги
-     *
-     * @param bookIds список ид книг
-     * @return список жанров
-     */
-    Map<Long, List<Genre>> findByBookIds(Collection<Long> bookIds);
-
-    /**
-     * Найти жанры книги по ид книги
-     *
-     * @param bookId ид книги
-     * @return список жанров
-     */
-    List<Genre> findByBookId(Long bookId);
 
     /**
      * Получить все жанры

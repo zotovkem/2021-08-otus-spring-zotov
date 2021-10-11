@@ -42,17 +42,6 @@ public class GenreShellCommandController {
     }
 
     /**
-     * Получить жанры по ид книги
-     *
-     * @param bookId ид книги
-     * @return список жанров
-     */
-    @ShellMethod(value = "Find genres by book id", key = {"genre-find-by-book-id"})
-    public List<Genre> getByBookId(Long bookId) {
-        return genreDao.findByBookId(bookId);
-    }
-
-    /**
      * Получить список всех жанров
      *
      * @return список жанров

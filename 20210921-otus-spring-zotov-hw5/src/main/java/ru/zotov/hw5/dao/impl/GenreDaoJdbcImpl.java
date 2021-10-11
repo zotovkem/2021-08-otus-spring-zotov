@@ -5,12 +5,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.zotov.hw5.dao.GenreDao;
 import ru.zotov.hw5.dao.mapper.GenreMapper;
-import ru.zotov.hw5.dao.mapper.GenreToMapEntryMapper;
 import ru.zotov.hw5.domain.Genre;
 
 import java.util.*;
-
-import static java.util.stream.Collectors.*;
 
 /**
  * @author Created by ZotovES on 04.10.2021
@@ -19,7 +16,7 @@ import static java.util.stream.Collectors.*;
 @SuppressWarnings("SqlResolve")
 @Repository
 @RequiredArgsConstructor
-public class GenreDaoImpl implements GenreDao {
+public class GenreDaoJdbcImpl implements GenreDao {
     private final NamedParameterJdbcOperations jdbc;
 
     /**
@@ -52,8 +49,7 @@ public class GenreDaoImpl implements GenreDao {
      */
     @Override
     public Optional<Genre> getById(Long id) {
-        return Optional.ofNullable(
-                jdbc.queryForObject("select id,name from genre where id = :id", Map.of("id", id), new GenreMapper()));
+        return jdbc.queryForStream("select id,name from genre where id = :id", Map.of("id", id), new GenreMapper()).findFirst();
     }
 
     /**
@@ -75,37 +71,6 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public List<Genre> findByIdsIn(Collection<Long> ids) {
         return jdbc.query("select id,name from genre where id in (:ids)", Map.of("ids", ids), new GenreMapper());
-    }
-
-    /**
-     * Найти все жанры по ид книги
-     *
-     * @param bookIds список ид книг
-     * @return список жанров
-     */
-    @Override
-    public Map<Long, List<Genre>> findByBookIds(Collection<Long> bookIds) {
-        Map<Long, List<Long>> genreIds =
-                jdbc.queryForStream("select book_id,genre_id from mtm_book_genre m  where book_id in (:bookIds)",
-                                Map.of("bookIds", bookIds), new GenreToMapEntryMapper())
-                        .collect(groupingBy(Map.Entry::getKey, mapping(Map.Entry::getValue, toList())));
-
-        List<Genre> genres = findByIdsIn(genreIds.values().stream().flatMap(Collection::stream).collect(toList()));
-
-        return genreIds.entrySet().stream()
-                .collect(toMap(Map.Entry::getKey,
-                        e -> genres.stream().filter(genre -> e.getValue().contains(genre.getId())).collect(toList())));
-    }
-
-    /**
-     * Найти жанры книги по ид книги
-     *
-     * @param bookId ид книги
-     * @return список жанров
-     */
-    @Override
-    public List<Genre> findByBookId(Long bookId) {
-        return findByBookIds(List.of(bookId)).values().stream().flatMap(List::stream).collect(toList());
     }
 
     /**

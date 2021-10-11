@@ -4,7 +4,6 @@ import ru.zotov.hw5.domain.Author;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -49,14 +48,6 @@ public interface AuthorDao {
      * @return список авторов
      */
     List<Author> findByIdsIn(Collection<Long> ids);
-
-    /**
-     * Найти всех авторов по списку ид книг
-     *
-     * @param bookIds список ид книг
-     * @return список авторов
-     */
-    Map<Long, List<Author>> findByBookIds(Collection<Long> bookIds);
 
     /**
      * Получить всех авторов

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,11 +31,13 @@ public class Book {
     /**
      * Авторы
      */
-    private List<Author> authors;
+    @Builder.Default
+    private List<Author> authors = new ArrayList<>();
     /**
      * Жанры
      */
-    private List<Genre> genres;
+    @Builder.Default
+    private List<Genre> genres = new ArrayList<>();
 
     public String toString() {
         return String.format("Ид: %s%nНаименование книги: %s%nГод издательства: %s%n" +

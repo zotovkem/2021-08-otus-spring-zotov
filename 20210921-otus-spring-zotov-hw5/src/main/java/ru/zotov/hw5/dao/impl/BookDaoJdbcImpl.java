@@ -22,7 +22,7 @@ import java.util.Optional;
 @SuppressWarnings("SqlResolve")
 @Repository
 @RequiredArgsConstructor
-public class BookDaoImpl implements BookDao {
+public class BookDaoJdbcImpl implements BookDao {
     private final NamedParameterJdbcOperations jdbc;
 
     /**
@@ -75,8 +75,8 @@ public class BookDaoImpl implements BookDao {
      */
     @Override
     public Optional<Book> getById(Long id) {
-        return Optional.ofNullable(jdbc.queryForObject("select id,name,release_year from book where id = :id",
-                Map.of("id", id), new BookMapper()));
+        return jdbc.query("select id,name,release_year from book where id = :id",
+                Map.of("id", id), new BookMapper()).stream().findFirst();
     }
 
     /**
@@ -127,50 +127,5 @@ public class BookDaoImpl implements BookDao {
                         "where exists (select * from mtm_book_genre mbg left join genre g on (mbg.genre_id = g.id) " +
                         "where b.id = mbg.book_id and lower(g.name) like concat(lower(:genre),'%'))",
                 Map.of("genre", genreName), new BookMapper());
-    }
-
-    /**
-     * Добавить книге жанр
-     *
-     * @param bookId  ид книги
-     * @param genreId ид автора
-     */
-    @Override
-    public void addGenre(Long bookId, Long genreId) {
-        jdbc.update("insert into mtm_book_genre(book_id,genre_id) values(:bookId,:genreId)",
-                Map.of("bookId", bookId, "genreId", genreId));
-    }
-
-    /**
-     * Добавить книги автора
-     *
-     * @param bookId   ид книги
-     * @param authorId ид жанра
-     */
-    @Override
-    public void addAuthor(Long bookId, Long authorId) {
-        jdbc.update("insert into mtm_book_author(book_id,author_id) values(:bookId,:authorId)",
-                Map.of("bookId", bookId, "authorId", authorId));
-    }
-
-    /**
-     * Удалить у книги все ссылки на жанры
-     *
-     * @param bookId ид книги
-     */
-    @Override
-    public void deleteAllRefGenre(Long bookId) {
-        jdbc.update("delete from mtm_book_genre where book_id = :bookId", Map.of("bookId", bookId));
-
-    }
-
-    /**
-     * Удалить у кинги все ссылки на авторов
-     *
-     * @param bookId ид книги
-     */
-    @Override
-    public void deleteAllRefAuthor(Long bookId) {
-        jdbc.update("delete from mtm_book_author where book_id = :bookId", Map.of("bookId", bookId));
     }
 }
