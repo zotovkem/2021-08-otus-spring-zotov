@@ -1,6 +1,7 @@
 package ru.zotov.hw5.dao.mapper;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 import ru.zotov.hw5.domain.Author;
 
 import java.sql.ResultSet;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
  * @author Created by ZotovES on 06.10.2021
  * Маппер авторов
  */
+@Component
 public class AuthorMapper implements RowMapper<Author> {
     @Override
     public Author mapRow(ResultSet rs, int rowNum) throws SQLException {

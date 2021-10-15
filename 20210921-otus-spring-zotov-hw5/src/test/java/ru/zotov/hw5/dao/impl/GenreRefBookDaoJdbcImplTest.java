@@ -4,8 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
+import ru.zotov.hw5.dao.mapper.GenreToMapEntryMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -48,5 +51,13 @@ class GenreRefBookDaoJdbcImplTest {
         Map<Long, List<Long>> result = genreRefBookDao.findByBookIds(List.of(1L));
 
         assertThat(result).isEmpty();
+    }
+
+    @Configuration
+    static class Config {
+        @Bean
+        GenreToMapEntryMapper getMapper() {
+            return new GenreToMapEntryMapper();
+        }
     }
 }

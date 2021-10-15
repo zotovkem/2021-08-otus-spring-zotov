@@ -24,6 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BookDaoJdbcImpl implements BookDao {
     private final NamedParameterJdbcOperations jdbc;
+    private final BookMapper bookMapper;
 
     /**
      * Добавить книгу
@@ -76,7 +77,7 @@ public class BookDaoJdbcImpl implements BookDao {
     @Override
     public Optional<Book> getById(Long id) {
         return jdbc.query("select id,name,release_year from book where id = :id",
-                Map.of("id", id), new BookMapper()).stream().findFirst();
+                Map.of("id", id), bookMapper).stream().findFirst();
     }
 
     /**
@@ -86,7 +87,7 @@ public class BookDaoJdbcImpl implements BookDao {
      */
     @Override
     public List<Book> findAll() {
-        return jdbc.query("select id,name,release_year from book", new BookMapper());
+        return jdbc.query("select id,name,release_year from book", bookMapper);
     }
 
     /**
@@ -98,7 +99,7 @@ public class BookDaoJdbcImpl implements BookDao {
     @Override
     public List<Book> findByName(String name) {
         return jdbc.query("select id,name,release_year from book where lower(name) like concat(lower(:name),'%')",
-                Map.of("name", name), new BookMapper());
+                Map.of("name", name), bookMapper);
     }
 
     /**
@@ -112,7 +113,7 @@ public class BookDaoJdbcImpl implements BookDao {
         return jdbc.query("select id,name,release_year from book b " +
                         "where exists (select * from mtm_book_author mba left join author a on (mba.author_id = a.id) " +
                         "where b.id = mba.book_id and lower(a.fio) like concat(lower(:fio),'%'))",
-                Map.of("fio", authorFio), new BookMapper());
+                Map.of("fio", authorFio), bookMapper);
     }
 
     /**
@@ -126,6 +127,6 @@ public class BookDaoJdbcImpl implements BookDao {
         return jdbc.query("select id,name,release_year from book b " +
                         "where exists (select * from mtm_book_genre mbg left join genre g on (mbg.genre_id = g.id) " +
                         "where b.id = mbg.book_id and lower(g.name) like concat(lower(:genre),'%'))",
-                Map.of("genre", genreName), new BookMapper());
+                Map.of("genre", genreName), bookMapper);
     }
 }

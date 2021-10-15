@@ -4,8 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
+import ru.zotov.hw5.dao.mapper.BookMapper;
 import ru.zotov.hw5.domain.Book;
 
 import java.util.List;
@@ -18,12 +21,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @JdbcTest
 @Import(BookDaoJdbcImpl.class)
-@DisplayName("")
+@DisplayName("Тестирование репозитория книг")
 class BookDaoJdbcImplTest {
     @Autowired private BookDaoJdbcImpl bookDao;
 
     @Test
-    @DisplayName("")
+    @DisplayName("Создание")
     void createTest() {
         Book book = Book.builder().name("Книга про тестирование").releaseYear(2021).build();
         Book result = bookDao.create(book);
@@ -33,7 +36,7 @@ class BookDaoJdbcImplTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("Редактирование")
     void updateTest() {
         Book book = Book.builder().id(1L).name("Книга про тестирование").releaseYear(2021).build();
         Book result = bookDao.update(book);
@@ -43,7 +46,7 @@ class BookDaoJdbcImplTest {
 
     @Test
     @Rollback
-    @DisplayName("")
+    @DisplayName("Удалить по ид")
     void deleteByIdTest() {
         bookDao.deleteById(1L);
         Optional<Book> result = bookDao.getById(1L);
@@ -52,7 +55,7 @@ class BookDaoJdbcImplTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("Найти по ид")
     void getByIdTest() {
         Optional<Book> result = bookDao.getById(1L);
 
@@ -61,7 +64,7 @@ class BookDaoJdbcImplTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("Получить все книги")
     void findAllTest() {
         List<Book> result = bookDao.findAll();
 
@@ -75,7 +78,7 @@ class BookDaoJdbcImplTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("Найти по наименованию")
     void findByNameTest() {
         List<Book> result = bookDao.findByName("Высоконагруженные приложения");
 
@@ -86,7 +89,7 @@ class BookDaoJdbcImplTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("Найти по фио автора")
     void findByAuthorFioTest() {
         List<Book> result = bookDao.findByAuthorFio("Роберт Мартин");
 
@@ -97,7 +100,7 @@ class BookDaoJdbcImplTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("Найти по наименованию жанра")
     void findByGenreNameTest() {
         List<Book> result = bookDao.findByGenreName("Компьютерная литература");
 
@@ -105,5 +108,13 @@ class BookDaoJdbcImplTest {
                 .allSatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Чистая архитектура")
                         .hasFieldOrPropertyWithValue("releaseYear", 2018)
                         .hasFieldOrPropertyWithValue("id", 2L));
+    }
+
+    @Configuration
+    static class Config {
+        @Bean
+        BookMapper getMapper() {
+            return new BookMapper();
+        }
     }
 }

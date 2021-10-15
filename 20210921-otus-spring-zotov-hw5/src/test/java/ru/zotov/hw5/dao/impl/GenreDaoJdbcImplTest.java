@@ -4,8 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
+import ru.zotov.hw5.dao.mapper.GenreMapper;
 import ru.zotov.hw5.domain.Genre;
 
 import java.util.List;
@@ -78,5 +81,13 @@ class GenreDaoJdbcImplTest {
                         .hasFieldOrPropertyWithValue("name", "Детектив"))
                 .anySatisfy(genre -> assertThat(genre).hasFieldOrPropertyWithValue("id", 2L)
                         .hasFieldOrPropertyWithValue("name", "Компьютерная литература"));
+    }
+
+    @Configuration
+    static class Config {
+        @Bean
+        GenreMapper getMapperGenre() {
+            return new GenreMapper();
+        }
     }
 }

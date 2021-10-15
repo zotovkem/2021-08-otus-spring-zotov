@@ -18,6 +18,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class GenreDaoJdbcImpl implements GenreDao {
     private final NamedParameterJdbcOperations jdbc;
+    private final GenreMapper genreMapper;
 
     /**
      * Создать
@@ -49,7 +50,7 @@ public class GenreDaoJdbcImpl implements GenreDao {
      */
     @Override
     public Optional<Genre> getById(Long id) {
-        return jdbc.queryForStream("select id,name from genre where id = :id", Map.of("id", id), new GenreMapper()).findFirst();
+        return jdbc.queryForStream("select id,name from genre where id = :id", Map.of("id", id), genreMapper).findFirst();
     }
 
     /**
@@ -70,7 +71,7 @@ public class GenreDaoJdbcImpl implements GenreDao {
      */
     @Override
     public List<Genre> findByIdsIn(Collection<Long> ids) {
-        return jdbc.query("select id,name from genre where id in (:ids)", Map.of("ids", ids), new GenreMapper());
+        return jdbc.query("select id,name from genre where id in (:ids)", Map.of("ids", ids), genreMapper);
     }
 
     /**
@@ -80,6 +81,6 @@ public class GenreDaoJdbcImpl implements GenreDao {
      */
     @Override
     public List<Genre> getAll() {
-        return jdbc.query("select id,name from genre", Collections.emptyMap(), new GenreMapper());
+        return jdbc.query("select id,name from genre", Collections.emptyMap(), genreMapper);
     }
 }

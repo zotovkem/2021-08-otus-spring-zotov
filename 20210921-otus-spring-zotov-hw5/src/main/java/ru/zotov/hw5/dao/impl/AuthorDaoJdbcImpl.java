@@ -18,6 +18,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AuthorDaoJdbcImpl implements AuthorDao {
     private final NamedParameterJdbcOperations jdbc;
+    private final AuthorMapper authorMapper;
 
     /**
      * Создать автора
@@ -49,7 +50,7 @@ public class AuthorDaoJdbcImpl implements AuthorDao {
      */
     @Override
     public Optional<Author> getById(Long id) {
-        return jdbc.queryForStream("select id,fio from author where id = :id", Map.of("id", id), new AuthorMapper()).findFirst();
+        return jdbc.queryForStream("select id,fio from author where id = :id", Map.of("id", id), authorMapper).findFirst();
     }
 
     /**
@@ -70,7 +71,7 @@ public class AuthorDaoJdbcImpl implements AuthorDao {
      */
     @Override
     public List<Author> findByIdsIn(Collection<Long> ids) {
-        return jdbc.query("select id,fio from author where id in (:ids)", Map.of("ids", ids), new AuthorMapper());
+        return jdbc.query("select id,fio from author where id in (:ids)", Map.of("ids", ids), authorMapper);
     }
 
     /**
@@ -80,6 +81,6 @@ public class AuthorDaoJdbcImpl implements AuthorDao {
      */
     @Override
     public List<Author> findByAll() {
-        return jdbc.query("select id,fio from author", Collections.emptyMap(), new AuthorMapper());
+        return jdbc.query("select id,fio from author", Collections.emptyMap(), authorMapper);
     }
 }

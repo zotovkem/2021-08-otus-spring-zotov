@@ -4,8 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
+import ru.zotov.hw5.dao.mapper.AuthorMapper;
 import ru.zotov.hw5.domain.Author;
 
 import java.util.List;
@@ -92,5 +95,13 @@ class AuthorDaoImplTest {
                 .allSatisfy(author ->
                         assertThat(author).hasFieldOrPropertyWithValue("id", 2L)
                                 .hasFieldOrPropertyWithValue("fio", "Александр Сергеевич Пушкин"));
+    }
+
+    @Configuration
+    static class Config {
+        @Bean
+        AuthorMapper getMapper() {
+            return new AuthorMapper();
+        }
     }
 }

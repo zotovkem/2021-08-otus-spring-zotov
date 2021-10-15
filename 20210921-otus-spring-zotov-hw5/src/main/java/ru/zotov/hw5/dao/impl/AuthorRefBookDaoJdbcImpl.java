@@ -21,6 +21,7 @@ import static java.util.stream.Collectors.*;
 @RequiredArgsConstructor
 public class AuthorRefBookDaoJdbcImpl implements AuthorRefBookDao {
     private final NamedParameterJdbcOperations jdbc;
+    private final AuthorToMapEntryMapper authorToMapEntryMapper;
 
     /**
      * Найти всех авторов по списку ид книг
@@ -31,7 +32,7 @@ public class AuthorRefBookDaoJdbcImpl implements AuthorRefBookDao {
     @Override
     public Map<Long, List<Long>> findByBookIds(Collection<Long> bookIds) {
         return jdbc.queryForStream("select book_id,author_id from mtm_book_author m  where book_id in (:bookIds)",
-                        Map.of("bookIds", bookIds), new AuthorToMapEntryMapper())
+                        Map.of("bookIds", bookIds), authorToMapEntryMapper)
                 .collect(groupingBy(Map.Entry::getKey, mapping(Map.Entry::getValue, toList())));
 
     }

@@ -21,6 +21,7 @@ import static java.util.stream.Collectors.*;
 @RequiredArgsConstructor
 public class GenreRefBookDaoJdbcImpl implements GenreRefBookDao {
     private final NamedParameterJdbcOperations jdbc;
+    private final GenreToMapEntryMapper genreToMapEntryMapper;
 
     /**
      * Найти все жанры по ид книги
@@ -31,7 +32,7 @@ public class GenreRefBookDaoJdbcImpl implements GenreRefBookDao {
     @Override
     public Map<Long, List<Long>> findByBookIds(Collection<Long> bookIds) {
         return jdbc.queryForStream("select book_id,genre_id from mtm_book_genre m  where book_id in (:bookIds)",
-                        Map.of("bookIds", bookIds), new GenreToMapEntryMapper())
+                        Map.of("bookIds", bookIds), genreToMapEntryMapper)
                 .collect(groupingBy(Map.Entry::getKey, mapping(Map.Entry::getValue, toList())));
     }
 
