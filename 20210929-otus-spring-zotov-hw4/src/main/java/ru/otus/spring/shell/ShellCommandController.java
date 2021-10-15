@@ -7,7 +7,10 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 import ru.otus.spring.service.LocalizationService;
+import ru.otus.spring.service.TestProgressService;
 import ru.otus.spring.service.TestService;
+
+import java.util.List;
 
 /**
  * @author Created by ZotovES on 29.09.2021
@@ -19,16 +22,30 @@ import ru.otus.spring.service.TestService;
 public class ShellCommandController {
     private final TestService testService;
     private final LocalizationService localizationService;
+    private final TestProgressService testProgressService;
 
+    @SuppressWarnings("UnusedReturnValue")
     @ShellMethod(value = "Login command", key = {"l", "login"})
-    public void login(@ShellOption(defaultValue = "Anonymous") String userName) {
+    public String login(@ShellOption(defaultValue = "Anonymous") String userName) {
         testService.start(userName);
+
+        return localizationService.getLocalizationTextByTag("tag.your.name", List.of(userName));
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     @ShellMethodAvailability(value = "isLoginUser")
     @ShellMethod(value = "Next question", key = {"n", "next", "next-question"})
-    public void nextQuestion() {
-        testService.nextQuestion();
+    public String nextQuestion() {
+        return testService.getNextQuestionText();
+
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    @ShellMethodAvailability(value = "isLoginUser")
+    @ShellMethod(value = "Previous question", key = {"p", "prev", "previous-question"})
+    public String prevQuestion() {
+        return testService.getPrevQuestionText();
+
     }
 
     @ShellMethodAvailability(value = "isLoginUser")
@@ -37,14 +54,15 @@ public class ShellCommandController {
         testService.checkAnswer(answer);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     @ShellMethodAvailability(value = "isLoginUser")
     @ShellMethod(value = "Finish test", key = {"f", "finish"})
-    private void finishTest() {
-        testService.finish();
+    public String finishTest() {
+        return testService.finish();
     }
 
     private Availability isLoginUser() {
-        return testService.qetUserName()
+        return testProgressService.getUserName()
                 .map(u -> Availability.available())
                 .orElseGet(() -> Availability.unavailable(localizationService.getLocalizationTextByTag("tag.login.error")));
     }

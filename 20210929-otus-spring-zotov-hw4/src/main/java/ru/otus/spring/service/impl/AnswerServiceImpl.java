@@ -11,6 +11,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
+
 /**
  * @author Created by ZotovES on 30.08.2021
  * Реализация сервиса вариантов ответов на вопрос
@@ -22,45 +24,36 @@ public class AnswerServiceImpl implements AnswerService {
     private final LocalizationService localizationService;
 
     /**
-     * Вывести на печать варианты ответа по ид вопроса
+     * Получить текст вариантов ответов по ид вопроса
      *
      * @param questionId ид вопроса
      */
-    public void printAnswersByQuestionId(Integer questionId) {
+    public String getAnswersTextByQuestionId(Integer questionId) {
         List<Answer> answers = answerDao.findByQuestionId(questionId);
         if (answers.isEmpty()) {
-            System.out.println(localizationService.getLocalizationTextByTag("tag.answer.input"));
-            return;
+            return localizationService.getLocalizationTextByTag("tag.answer.input");
         }
+
+        StringBuilder answersText = new StringBuilder();
         answers.sort(Comparator.comparingInt(Answer::getNumberAnswer));
-        answers.forEach(answer -> System.out.printf("%s %s%n", answer.getNumberAnswer(), answer.getAnswerText()));
+        answers.forEach(answer -> answersText.append(format("%s %s%n", answer.getNumberAnswer(), answer.getAnswerText())));
 
         int countVersionAnswer = answers.stream().mapToInt(Answer::getNumberAnswer).max().orElse(1);
-        System.out.println(localizationService.getLocalizationTextByTag("tag.number.answer.input",
+        answersText.append(localizationService.getLocalizationTextByTag("tag.number.answer.input",
                 List.of(Integer.toString(countVersionAnswer))));
+
+        return answersText.toString();
     }
 
     /**
      * Поиск варианта ответа по ид вопроса и номеру ответа
      *
      * @param questionId ид вопроса
-     * @param number     номер варианта ответа
+     * @param answer     ответ
      * @return ответ
      */
     @Override
-    public Optional<Answer> findByQuestionIdAndNumber(Integer questionId, Integer number) {
-        return answerDao.findByQuestionIdAndNumber(questionId, number);
-    }
-
-    /**
-     * Поиск варианта ответа по ид вопроса и номеру ответа
-     *
-     * @param questionId ид вопроса
-     * @param number     номер варианта ответа
-     * @return ответ
-     */
-    @Override
-    public Optional<Answer> findByQuestionIdAndNumber(Integer questionId, String number) {
-        return answerDao.findByQuestionIdAndNumber(questionId, number);
+    public Optional<Answer> findByQuestionIdAndNumber(Integer questionId, String answer) {
+        return answerDao.findByQuestionIdAndNumber(questionId, answer);
     }
 }

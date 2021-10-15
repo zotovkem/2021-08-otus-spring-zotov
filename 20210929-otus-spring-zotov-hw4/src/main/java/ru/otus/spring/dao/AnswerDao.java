@@ -26,14 +26,5 @@ public interface AnswerDao {
      * @param number     номер варианта ответа
      * @return список ответов
      */
-    Optional<Answer> findByQuestionIdAndNumber(@NonNull Integer questionId, @NonNull Integer number);
-
-    /**
-     * Получить вариант ответа по ид вопроса и номеру варианта
-     *
-     * @param questionId ид вопроса
-     * @param number     номер варианта ответа
-     * @return список ответов
-     */
     Optional<Answer> findByQuestionIdAndNumber(@NonNull Integer questionId, @NonNull String number);
 }

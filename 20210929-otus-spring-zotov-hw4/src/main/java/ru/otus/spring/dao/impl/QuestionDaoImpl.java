@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class QuestionDaoImpl implements QuestionDao {
-    private final DataLoader dataLoaderService;
+    private final DataLoader dataLoader;
     private final ApplicationProperties propertyService;
 
     /**
@@ -27,7 +27,7 @@ public class QuestionDaoImpl implements QuestionDao {
      */
     @Override
     public List<Question> findByAll() {
-        return dataLoaderService.loadObjectList(Question.class, propertyService.getQuestionDataFile());
+        return dataLoader.loadObjectList(Question.class, propertyService.getQuestionDataFile());
     }
 
     /**
@@ -38,7 +38,6 @@ public class QuestionDaoImpl implements QuestionDao {
      */
     @Override
     public Optional<Question> findById(Integer id) {
-        return dataLoaderService.loadObjectList(Question.class, propertyService.getQuestionDataFile())
-                .stream().filter(question -> question.getId().equals(id)).findAny();
+        return findByAll().stream().filter(question -> question.getId().equals(id)).findAny();
     }
 }

@@ -1,7 +1,5 @@
 package ru.otus.spring.service;
 
-import java.util.Optional;
-
 /**
  * @author Created by ZotovES on 22.09.2021
  * Сервис тестирования
@@ -9,13 +7,24 @@ import java.util.Optional;
 public interface TestService {
     /**
      * Старт теста
+     *
+     * @param userName имя пользователя
      */
     void start(String userName);
 
     /**
-     * Следующий вопрос
+     * Получить текст следующего вопроса
+     *
+     * @return текст вопроса
      */
-    void nextQuestion();
+    String getNextQuestionText();
+
+    /**
+     * Получить текст предыдущего вопроса
+     *
+     * @return текст вопроса
+     */
+    String getPrevQuestionText();
 
     /**
      * Проверить ответ
@@ -27,12 +36,5 @@ public interface TestService {
     /**
      * Закончить тест
      */
-    void finish();
-
-    /**
-     * Получить имя пользователя
-     *
-     * @return имя пользователя
-     */
-    Optional<String> qetUserName();
+    String finish();
 }

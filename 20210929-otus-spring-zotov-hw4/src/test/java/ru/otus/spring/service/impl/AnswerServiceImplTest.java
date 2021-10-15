@@ -36,23 +36,11 @@ class AnswerServiceImplTest {
                 new Answer(2, 2, 2, "test2"), new Answer(3, 1, 3, "test3")));
         when(answerDao.findByQuestionId(anyInt())).thenReturn(answerList);
 
-        answerService.printAnswersByQuestionId(1);
+        String result = answerService.getAnswersTextByQuestionId(1);
+        assertThat(result).isNotEmpty();
 
         verify(answerDao).findByQuestionId(1);
         verify(localizationService).getLocalizationTextByTag(anyString(), anyList());
-    }
-
-    @Test
-    @DisplayName("Поиск ответа по номеру вопроса и варианту ответа")
-    void findByQuestionIdAndNumberTest() {
-        Optional<Answer> answer = Optional.of(new Answer(1, 1, 1, "test"));
-        when(answerDao.findByQuestionIdAndNumber(anyInt(), anyInt())).thenReturn(answer);
-
-        Optional<Answer> result = answerService.findByQuestionIdAndNumber(1, 1);
-
-        assertThat(result).isPresent().isEqualTo(answer);
-
-        verify(answerDao).findByQuestionIdAndNumber(1, 1);
     }
 
     @Test
