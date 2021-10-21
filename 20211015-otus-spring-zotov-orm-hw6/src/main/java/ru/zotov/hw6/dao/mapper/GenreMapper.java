@@ -1,0 +1,21 @@
+package ru.zotov.hw6.dao.mapper;
+
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
+import ru.zotov.hw6.domain.Genre;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+
+/**
+ * @author Created by ZotovES on 06.10.2021
+ * Маппер жанров
+ */
+@Component
+public class GenreMapper implements RowMapper<Genre> {
+    @Override
+    public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new Genre(rs.getLong("id"), rs.getString("name"));
+    }
+}
