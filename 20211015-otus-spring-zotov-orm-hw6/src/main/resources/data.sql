@@ -46,6 +46,31 @@ VALUES (5, 'Сказки пушкина', 2008);
 INSERT INTO book (id, name, release_year)
 VALUES (6, 'Отдаленные последствия', 2021);
 
+INSERT INTO comment_for_book (id, name, release_year)
+VALUES (1, 1, 'Вроде не чего, еще не дочитал', 'ЗотовЕС');
+INSERT INTO comment_for_book (id, name, release_year)
+VALUES (2, 2, 'Хорошая книга', 'ЗотовЕС');
+INSERT INTO comment_for_book (id, name, release_year)
+VALUES (3, 3, 'Не про гречку', 'ЗотовЕС');
+INSERT INTO comment_for_book (id, name, release_year)
+VALUES (4, 4, 'Странное название', 'ЗотовЕС');
+INSERT INTO comment_for_book (id, name, release_year)
+VALUES (5, 5, 'У Лукоморья дуб ...', 'ЗотовЕС');
+INSERT INTO comment_for_book (id, name, release_year)
+VALUES (6, 6, 'Детектива, детектива', 'ЗотовЕС');
+INSERT INTO comment_for_book (id, name, release_year)
+VALUES (7, 1, 'Комментарий ', 'Иванов');
+INSERT INTO comment_for_book (id, name, release_year)
+VALUES (8, 2, 'Тестовый комментарий', 'Петров');
+INSERT INTO comment_for_book (id, name, release_year)
+VALUES (9, 3, 'Еще один комментарий', 'Сидоров');
+INSERT INTO comment_for_book (id, name, release_year)
+VALUES (10, 4, 'Как много комментарием нужно написать', 'Тестов');
+INSERT INTO comment_for_book (id, name, release_year)
+VALUES (11, 5, 'Предпоследний комментарий', 'Какой то ник');
+INSERT INTO comment_for_book (id, name, release_year)
+VALUES (12, 6, 'Последний комментарий', 'Лютый критик');
+
 
 INSERT INTO mtm_book_author (id, book_id, author_id)
 VALUES (1, 1, 2);
