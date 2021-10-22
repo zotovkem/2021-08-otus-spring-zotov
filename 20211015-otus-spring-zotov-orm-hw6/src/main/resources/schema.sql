@@ -62,14 +62,16 @@ CREATE INDEX mtm_genre_author_book_id_idx ON mtm_book_genre (book_id);
 DROP TABLE IF EXISTS comment_for_book;
 CREATE TABLE comment_for_book
 (
-    id      IDENTITY PRIMARY KEY,
-    book_id BIGINT NOT NULL
+    id          IDENTITY PRIMARY KEY,
+    book_id     BIGINT                   NOT NULL
         CONSTRAINT book_comment_for_book_fk REFERENCES book ON DELETE CASCADE,
-    content VARCHAR(255),
-    author  VARCHAR(255)
+    content     VARCHAR(255),
+    author      VARCHAR(255),
+    create_date TIMESTAMP WITH TIME ZONE NOT NULL
 );
 COMMENT ON TABLE comment_for_book IS 'Комментарии к книге';
 COMMENT ON COLUMN comment_for_book.id IS 'Ид';
 COMMENT ON COLUMN comment_for_book.book_id IS 'Ид книги';
 COMMENT ON COLUMN comment_for_book.content IS 'Текст комментария';
 COMMENT ON COLUMN comment_for_book.author IS 'Автор комментария';
+COMMENT ON COLUMN comment_for_book.create_date IS 'Дата комментария';

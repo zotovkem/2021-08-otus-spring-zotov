@@ -1,11 +1,15 @@
 package ru.zotov.hw6.domain;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author Created by ZotovES on 29.09.2021
@@ -14,10 +18,11 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "book")
+@NamedEntityGraph(name = "author-graph", attributeNodes = {@NamedAttributeNode("comments")})
 public class Book {
     /**
      * Ид книги
@@ -41,30 +46,41 @@ public class Book {
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "mtm_book_author", joinColumns = {@JoinColumn(name = "book_id")},
                inverseJoinColumns = {@JoinColumn(name = "author_id")})
-    private List<Author> authors = new ArrayList<>();
+    private Set<Author> authors = new HashSet<>();
     /**
      * Жанры
      */
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "mtm_book_genres", joinColumns = {@JoinColumn(name = "book_id")},
+    @Fetch(FetchMode.SUBSELECT)
+    @ManyToMany(targetEntity = Genre.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "mtm_book_genre", joinColumns = {@JoinColumn(name = "book_id")},
                inverseJoinColumns = {@JoinColumn(name = "genre_id")})
-    private List<Genre> genres = new ArrayList<>();
+    private Set<Genre> genres = new HashSet<>();
 
-//TODO
-//    public String toString() {
-//        return String.format("Ид: %s%nНаименование книги: %s%nГод издательства: %s%n" +
-//                        "Авторы: %s%n" +
-//                        "Жанры: %s%n" +
-//                        "=====================================", getId(), getName(), getReleaseYear(),
-//                getAuthors().stream().map(Author::getFio).collect(Collectors.joining(", ")),
-//                getGenres().stream().map(Genre::getName).collect(Collectors.joining(", ")));
-//    }
+    @Builder.Default
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id", referencedColumnName = "id")
+    private Set<Comment> comments = new HashSet<>();
+
+    //TODO
+    public String toString() {
+        return String.format("Ид: %s%nНаименование книги: %s%nГод издательства: %s%n" +
+                        "Авторы: %s%n" +
+                        "Жанры: %s%n" +
+                        "Комментарии: %n%s%n" +
+                        "=====================================", getId(), getName(), getReleaseYear(),
+                getAuthors().stream().map(Author::getFio).collect(Collectors.joining(", ")),
+                getGenres().stream().map(Genre::getName).collect(Collectors.joining(", ")),
+                getComments().stream().map(getCommentStringFunction()).collect(Collectors.joining(System.lineSeparator())));
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -81,5 +97,10 @@ public class Book {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, releaseYear);
+    }
+
+    private Function<Comment, String> getCommentStringFunction() {
+        return comment -> String.format("%s \"%s\" %s", comment.getCreateDate().toLocalDate(), comment.getContent(),
+                comment.getAuthor());
     }
 }
