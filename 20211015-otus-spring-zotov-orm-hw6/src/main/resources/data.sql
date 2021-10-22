@@ -15,7 +15,6 @@ values (7, 'Архитектура ИС');
 INSERT INTO genre (id, name)
 values (8, 'Аудио книги');
 
-
 INSERT INTO author (id, fio)
 values (1, 'Роберт Мартин');
 INSERT INTO author (id, fio)
@@ -46,30 +45,26 @@ VALUES (5, 'Сказки пушкина', 2008);
 INSERT INTO book (id, name, release_year)
 VALUES (6, 'Отдаленные последствия', 2021);
 
-INSERT INTO comment_for_book (id, name, release_year)
-VALUES (1, 1, 'Вроде не чего, еще не дочитал', 'ЗотовЕС');
-INSERT INTO comment_for_book (id, name, release_year)
-VALUES (2, 2, 'Хорошая книга', 'ЗотовЕС');
-INSERT INTO comment_for_book (id, name, release_year)
-VALUES (3, 3, 'Не про гречку', 'ЗотовЕС');
-INSERT INTO comment_for_book (id, name, release_year)
-VALUES (4, 4, 'Странное название', 'ЗотовЕС');
-INSERT INTO comment_for_book (id, name, release_year)
-VALUES (5, 5, 'У Лукоморья дуб ...', 'ЗотовЕС');
-INSERT INTO comment_for_book (id, name, release_year)
-VALUES (6, 6, 'Детектива, детектива', 'ЗотовЕС');
-INSERT INTO comment_for_book (id, name, release_year)
-VALUES (7, 1, 'Комментарий ', 'Иванов');
-INSERT INTO comment_for_book (id, name, release_year)
-VALUES (8, 2, 'Тестовый комментарий', 'Петров');
-INSERT INTO comment_for_book (id, name, release_year)
-VALUES (9, 3, 'Еще один комментарий', 'Сидоров');
-INSERT INTO comment_for_book (id, name, release_year)
-VALUES (10, 4, 'Как много комментарием нужно написать', 'Тестов');
-INSERT INTO comment_for_book (id, name, release_year)
-VALUES (11, 5, 'Предпоследний комментарий', 'Какой то ник');
-INSERT INTO comment_for_book (id, name, release_year)
-VALUES (12, 6, 'Последний комментарий', 'Лютый критик');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (1, 1, 'Вроде не чего, еще не дочитал', 'ЗотовЕС', '2020-02-01 19:10:25-07');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (2, 2, 'Хорошая книга', 'ЗотовЕС', '2020-02-01 19:10:25-07');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (3, 3, 'Не про гречку', 'ЗотовЕС', '2020-02-01 19:10:25-07');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (4, 4, 'Странное название', 'ЗотовЕС', '2020-02-01 19:10:25-07');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (6, 6, 'Детектива, детектива', 'ЗотовЕС', '2020-02-01 19:10:25-07');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (7, 1, 'Комментарий ', 'Иванов', '2020-02-01 19:10:25-07');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (8, 2, 'Тестовый комментарий', 'Петров', '2020-02-01 19:10:25-07');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (9, 3, 'Еще один комментарий', 'Сидоров', '2020-02-01 19:10:25-07');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (10, 4, 'Как много комментарием нужно написать', 'Тестов', '2020-02-01 19:10:25-07');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (12, 6, 'Последний комментарий', 'Лютый критик', '2020-02-01 19:10:25-07');
 
 
 INSERT INTO mtm_book_author (id, book_id, author_id)
