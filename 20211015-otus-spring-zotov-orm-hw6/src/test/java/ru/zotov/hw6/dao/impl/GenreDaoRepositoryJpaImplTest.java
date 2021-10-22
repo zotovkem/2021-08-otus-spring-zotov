@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @DisplayName("Тестирование репозитория жанров")
 @Import(GenreDaoRepositoryJpaImpl.class)
-class GenreDaoJdbcImplTest {
+class GenreDaoRepositoryJpaImplTest {
     @Autowired private GenreDaoRepositoryJpaImpl genreDao;
 
     @Test

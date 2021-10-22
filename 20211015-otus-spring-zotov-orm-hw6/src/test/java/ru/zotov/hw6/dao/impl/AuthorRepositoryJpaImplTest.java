@@ -19,7 +19,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @DataJpaTest
 @DisplayName("Тестирование репозитория авторов")
 @Import(AuthorRepositoryJpaImpl.class)
-class AuthorDaoImplTest {
+class AuthorRepositoryJpaImplTest {
     @Autowired private AuthorRepositoryJpaImpl authorDao;
 
     @Test

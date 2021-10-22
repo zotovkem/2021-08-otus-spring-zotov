@@ -1,6 +1,8 @@
 package ru.zotov.hw6.dao.impl;
 
 import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,23 +23,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Import(BookRepositoryJpaImpl.class)
 @DisplayName("Тестирование репозитория книг")
-class BookDaoJdbcImplTest {
+class BookRepositoryJpaImplTest {
     @Autowired private BookRepositoryJpaImpl bookDao;
     @Autowired private TestEntityManager em;
 
-//    SessionFactory sessionFactory;
-//
-//    @BeforeEach
-//    void setUp(){
-//        sessionFactory = em.getEntityManager().getEntityManagerFactory()
-//                .unwrap(SessionFactory.class);
-//        sessionFactory.getStatistics().setStatisticsEnabled(true);
-//    }
-//
-//    @AfterEach
-//    void setDown(){
-//        sessionFactory = null;
-//    }
+    SessionFactory sessionFactory;
+
+    @BeforeEach
+    private void getSessionFactory() {
+        sessionFactory = em.getEntityManager().getEntityManagerFactory()
+                .unwrap(SessionFactory.class);
+        sessionFactory.getStatistics().setStatisticsEnabled(true);
+    }
+
+    @AfterEach
+    private void clearSessionStatistic() {
+        sessionFactory.getStatistics().clear();
+    }
 
     @Test
     @DisplayName("Создание")
@@ -80,10 +82,6 @@ class BookDaoJdbcImplTest {
     @Test
     @DisplayName("Получить все книги")
     void findAllTest() {
-        SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory()
-                .unwrap(SessionFactory.class);
-        sessionFactory.getStatistics().setStatisticsEnabled(true);
-
         List<Book> result = bookDao.findAll();
 
         assertThat(result).isNotNull().hasSize(2)
@@ -104,17 +102,13 @@ class BookDaoJdbcImplTest {
     @Test
     @DisplayName("Найти по наименованию")
     void findByNameTest() {
-//        SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory()
-//                .unwrap(SessionFactory.class);
-//        sessionFactory.getStatistics().setStatisticsEnabled(true);
-
         List<Book> result = bookDao.findByName("Высоконагруженные приложения");
 
         assertThat(result).asList().hasSize(1)
                 .allSatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Высоконагруженные приложения")
                         .hasFieldOrPropertyWithValue("releaseYear", 2017)
                         .hasFieldOrPropertyWithValue("id", 1L));
-//        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(3);
+        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1);
     }
 
     @Test
@@ -126,6 +120,7 @@ class BookDaoJdbcImplTest {
                 .allSatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Высоконагруженные приложения")
                         .hasFieldOrPropertyWithValue("releaseYear", 2017)
                         .hasFieldOrPropertyWithValue("id", 1L));
+        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1);
     }
 
     @Test
