@@ -10,13 +10,14 @@ import java.util.Optional;
  * @author Created by ZotovES on 04.10.2021
  * Репозиторий Жанров книг
  */
-public interface GenreDao {
+public interface GenreRepository {
     /**
      * Создать
      *
      * @param genre жанр
+     * @return жанр
      */
-    void create(Genre genre);
+    Genre create(Genre genre);
 
     /**
      * Редактировать
@@ -32,7 +33,7 @@ public interface GenreDao {
      * @param id ид
      * @return жанр
      */
-    Optional<Genre> getById(Long id);
+    Optional<Genre> findById(Long id);
 
     /**
      * Удалить по ид
@@ -54,5 +55,5 @@ public interface GenreDao {
      *
      * @return список жанров
      */
-    List<Genre> getAll();
+    List<Genre> findAll();
 }

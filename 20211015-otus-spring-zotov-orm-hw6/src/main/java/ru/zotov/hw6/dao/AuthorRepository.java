@@ -10,13 +10,14 @@ import java.util.Optional;
  * @author Created by ZotovES on 04.10.2021
  * Репозиторий Авторов книг
  */
-public interface AuthorDao {
+public interface AuthorRepository {
     /**
      * Создать автора
      *
      * @param author автор
+     * @return автор
      */
-    void create(Author author);
+    Author create(Author author);
 
     /**
      * Редактировать автора
@@ -32,7 +33,7 @@ public interface AuthorDao {
      * @param id ид
      * @return автор
      */
-    Optional<Author> getById(Long id);
+    Optional<Author> findById(Long id);
 
     /**
      * Удалить автора

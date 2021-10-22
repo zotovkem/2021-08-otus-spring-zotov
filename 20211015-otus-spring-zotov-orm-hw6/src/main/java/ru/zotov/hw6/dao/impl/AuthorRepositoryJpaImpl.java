@@ -1,33 +1,39 @@
 package ru.zotov.hw6.dao.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
-import ru.zotov.hw6.dao.AuthorDao;
-import ru.zotov.hw6.dao.mapper.AuthorMapper;
+import ru.zotov.hw6.dao.AuthorRepository;
 import ru.zotov.hw6.domain.Author;
 
-import java.util.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Created by ZotovES on 04.10.2021
  * Реализация репозитория авторов
  */
-@SuppressWarnings("SqlResolve")
 @Repository
 @RequiredArgsConstructor
-public class AuthorDaoJdbcImpl implements AuthorDao {
-    private final NamedParameterJdbcOperations jdbc;
-    private final AuthorMapper authorMapper;
+public class AuthorRepositoryJpaImpl implements AuthorRepository {
+    @PersistenceContext
+    private final EntityManager em;
 
     /**
      * Создать автора
      *
      * @param author автор
+     * @return автор
      */
     @Override
-    public void create(Author author) {
-        jdbc.update("insert into author(fio) values(:fio)", Map.of("fio", author.getFio()));
+    public Author create(Author author) {
+        if (author.getId() == null) {
+            em.persist(author);
+            return author;
+        }
+        return update(author);
     }
 
     /**
@@ -38,8 +44,7 @@ public class AuthorDaoJdbcImpl implements AuthorDao {
      */
     @Override
     public Author update(Author author) {
-        jdbc.update("update author set fio= :fio where id = :id", Map.of("id", author.getId(), "fio", author.getFio()));
-        return author;
+        return em.merge(author);
     }
 
     /**
@@ -49,8 +54,8 @@ public class AuthorDaoJdbcImpl implements AuthorDao {
      * @return автор
      */
     @Override
-    public Optional<Author> getById(Long id) {
-        return jdbc.queryForStream("select id,fio from author where id = :id", Map.of("id", id), authorMapper).findFirst();
+    public Optional<Author> findById(Long id) {
+        return Optional.ofNullable(em.find(Author.class, id));
     }
 
     /**
@@ -60,7 +65,9 @@ public class AuthorDaoJdbcImpl implements AuthorDao {
      */
     @Override
     public void deleteById(Long id) {
-        jdbc.update("delete from author where id = :id", Map.of("id", id));
+        em.createQuery("delete from Author where id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
     }
 
     /**
@@ -71,7 +78,9 @@ public class AuthorDaoJdbcImpl implements AuthorDao {
      */
     @Override
     public List<Author> findByIdsIn(Collection<Long> ids) {
-        return jdbc.query("select id,fio from author where id in (:ids)", Map.of("ids", ids), authorMapper);
+        return em.createQuery("select a from Author a where a.id in (:ids)", Author.class)
+                .setParameter("ids", ids)
+                .getResultList();
     }
 
     /**
@@ -81,6 +90,6 @@ public class AuthorDaoJdbcImpl implements AuthorDao {
      */
     @Override
     public List<Author> findByAll() {
-        return jdbc.query("select id,fio from author", Collections.emptyMap(), authorMapper);
+        return em.createQuery("select a from Author a", Author.class).getResultList();
     }
 }

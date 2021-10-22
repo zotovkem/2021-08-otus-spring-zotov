@@ -9,7 +9,7 @@ import java.util.Optional;
  * @author Created by ZotovES on 04.10.2021
  * Репозиторий Книг
  */
-public interface BookDao {
+public interface BookRepository {
     /**
      * Добавить книгу
      *
@@ -38,7 +38,7 @@ public interface BookDao {
      * @param id ид
      * @return книга
      */
-    Optional<Book> getById(Long id);
+    Optional<Book> findById(Long id);
 
     /**
      * Получить все книги

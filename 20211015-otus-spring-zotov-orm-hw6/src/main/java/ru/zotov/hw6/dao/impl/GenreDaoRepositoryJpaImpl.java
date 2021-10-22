@@ -1,33 +1,39 @@
 package ru.zotov.hw6.dao.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
-import ru.zotov.hw6.dao.GenreDao;
-import ru.zotov.hw6.dao.mapper.GenreMapper;
+import ru.zotov.hw6.dao.GenreRepository;
 import ru.zotov.hw6.domain.Genre;
 
-import java.util.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Created by ZotovES on 04.10.2021
  * Реализация репозитория жанров
  */
-@SuppressWarnings("SqlResolve")
 @Repository
 @RequiredArgsConstructor
-public class GenreDaoJdbcImpl implements GenreDao {
-    private final NamedParameterJdbcOperations jdbc;
-    private final GenreMapper genreMapper;
+public class GenreDaoRepositoryJpaImpl implements GenreRepository {
+    @PersistenceContext
+    private final EntityManager em;
 
     /**
      * Создать
      *
      * @param genre жанр
+     * @return жанр
      */
     @Override
-    public void create(Genre genre) {
-        jdbc.update("insert into genre(name) values(:name)", Map.of("name", genre.getName()));
+    public Genre create(Genre genre) {
+        if (genre.getId() == null) {
+            em.persist(genre);
+            return genre;
+        }
+        return update(genre);
     }
 
     /**
@@ -38,8 +44,7 @@ public class GenreDaoJdbcImpl implements GenreDao {
      */
     @Override
     public Genre update(Genre genre) {
-        jdbc.update("update genre set name= :name where id = :id", Map.of("id", genre.getId(), "name", genre.getName()));
-        return genre;
+        return em.merge(genre);
     }
 
     /**
@@ -49,8 +54,8 @@ public class GenreDaoJdbcImpl implements GenreDao {
      * @return жанр
      */
     @Override
-    public Optional<Genre> getById(Long id) {
-        return jdbc.queryForStream("select id,name from genre where id = :id", Map.of("id", id), genreMapper).findFirst();
+    public Optional<Genre> findById(Long id) {
+        return Optional.ofNullable(em.find(Genre.class, id));
     }
 
     /**
@@ -60,7 +65,9 @@ public class GenreDaoJdbcImpl implements GenreDao {
      */
     @Override
     public void deleteById(Long id) {
-        jdbc.update("delete from genre where id = :id", Map.of("id", id));
+        em.createQuery("delete from Genre where id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
     }
 
     /**
@@ -71,7 +78,9 @@ public class GenreDaoJdbcImpl implements GenreDao {
      */
     @Override
     public List<Genre> findByIdsIn(Collection<Long> ids) {
-        return jdbc.query("select id,name from genre where id in (:ids)", Map.of("ids", ids), genreMapper);
+        return em.createQuery("select g from Genre g where g.id in (:ids)", Genre.class)
+                .setParameter("ids", ids)
+                .getResultList();
     }
 
     /**
@@ -80,7 +89,7 @@ public class GenreDaoJdbcImpl implements GenreDao {
      * @return список жанров
      */
     @Override
-    public List<Genre> getAll() {
-        return jdbc.query("select id,name from genre", Collections.emptyMap(), genreMapper);
+    public List<Genre> findAll() {
+        return em.createQuery("select g from Genre g", Genre.class).getResultList();
     }
 }
