@@ -5,9 +5,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -22,13 +20,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "book")
-@NamedEntityGraph(name = "author-graph", attributeNodes = {@NamedAttributeNode("comments")})
+@NamedEntityGraph(name = "comment-graph", attributeNodes = {@NamedAttributeNode("comments")})
 public class Book {
     /**
      * Ид книги
      */
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /**
      * Наименование книги
@@ -68,7 +67,7 @@ public class Book {
     @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", referencedColumnName = "id")
-    private Set<Comment> comments = new HashSet<>();
+    private List<Comment> comments = new ArrayList<>();
 
     //TODO
     public String toString() {

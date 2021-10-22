@@ -76,7 +76,7 @@ public class BookRepositoryJpaImpl implements BookRepository {
     @Override
     public List<Book> findAll() {
         return em.createQuery("select distinct b from Book b ", Book.class)
-                .setHint("javax.persistence.fetchgraph", em.getEntityGraph("author-graph"))
+                .setHint("javax.persistence.fetchgraph", em.getEntityGraph("comment-graph"))
                 .getResultList();
     }
 
@@ -89,9 +89,8 @@ public class BookRepositoryJpaImpl implements BookRepository {
     @Override
     public List<Book> findByName(String name) {
         return em.createQuery("select b from Book b " +
-                        "join fetch b.authors a " +
-                        "join fetch b.genres g " +
                         "where lower(b.name) like concat(lower(:name),'%')", Book.class)
+                .setHint("javax.persistence.fetchgraph", em.getEntityGraph("comment-graph"))
                 .setParameter("name", name)
                 .getResultList();
     }
@@ -106,8 +105,8 @@ public class BookRepositoryJpaImpl implements BookRepository {
     public List<Book> findByAuthorFio(String authorFio) {
         return em.createQuery("select b from Book b " +
                         "join fetch b.authors a " +
-                        "join fetch b.genres g " +
                         "where lower(a.fio) like concat(lower(:fio),'%')", Book.class)
+                .setHint("javax.persistence.fetchgraph", em.getEntityGraph("comment-graph"))
                 .setParameter("fio", authorFio)
                 .getResultList();
     }
@@ -121,10 +120,10 @@ public class BookRepositoryJpaImpl implements BookRepository {
     @Override
     public List<Book> findByGenreName(String genreName) {
         return em.createQuery("select b from Book b " +
-                        "join fetch b.authors a " +
                         "join fetch b.genres g " +
                         "where lower(g.name) like concat(lower(:genre),'%')", Book.class)
                 .setParameter("genre", genreName)
+                .setHint("javax.persistence.fetchgraph", em.getEntityGraph("comment-graph"))
                 .getResultList();
     }
 }
