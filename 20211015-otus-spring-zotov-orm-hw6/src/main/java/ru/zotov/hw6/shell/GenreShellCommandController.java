@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import ru.zotov.hw6.dao.GenreDao;
+import ru.zotov.hw6.dao.GenreRepository;
 import ru.zotov.hw6.domain.Genre;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 @ShellComponent
 @RequiredArgsConstructor
 public class GenreShellCommandController {
-    private final GenreDao genreDao;
+    private final GenreRepository genreDao;
 
     /**
      * Создать жанр
@@ -38,7 +38,7 @@ public class GenreShellCommandController {
      */
     @ShellMethod(value = "Find genres by list id", key = {"genre-find-by-id"})
     public Genre getById(Long id) {
-        return genreDao.getById(id).orElseThrow(() -> new IllegalArgumentException("Not found book by id = " + id));
+        return genreDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Not found book by id = " + id));
     }
 
     /**
@@ -48,7 +48,7 @@ public class GenreShellCommandController {
      */
     @ShellMethod(value = "Get all genres ", key = {"genre-get-all"})
     public List<Genre> getAll() {
-        return genreDao.getAll();
+        return genreDao.findAll();
     }
 
     /**
@@ -72,5 +72,4 @@ public class GenreShellCommandController {
     public void deleteById(Long id) {
         genreDao.deleteById(id);
     }
-
 }

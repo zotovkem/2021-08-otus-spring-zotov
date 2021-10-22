@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import ru.zotov.hw6.dao.AuthorDao;
+import ru.zotov.hw6.dao.AuthorRepository;
 import ru.zotov.hw6.domain.Author;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 @ShellComponent
 @RequiredArgsConstructor
 public class AuthorShellCommandController {
-    private final AuthorDao authorDao;
+    private final AuthorRepository authorDao;
 
     /**
      * Создать автора
@@ -49,7 +49,7 @@ public class AuthorShellCommandController {
      */
     @ShellMethod(value = "Find author by id", key = {"author-find-by-id"})
     public Author getById(Long id) {
-        return authorDao.getById(id).orElseThrow(() -> new IllegalArgumentException("Not found author by id = " + id));
+        return authorDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Not found author by id = " + id));
     }
 
     /**

@@ -40,9 +40,9 @@ public class BookShellCommandController {
                 .name(name)
                 .releaseYear(releaseYear)
                 .authors(Arrays.stream(authorIds).filter(id -> id > 0).mapToObj(id -> new Author(id, null))
-                        .collect(Collectors.toList()))
+                        .collect(Collectors.toSet()))
                 .genres(Arrays.stream(genreIds).filter(id -> id > 0).mapToObj(id -> new Genre(id, null))
-                        .collect(Collectors.toList()))
+                        .collect(Collectors.toSet()))
                 .build();
         return bookService.create(book);
     }
@@ -120,9 +120,9 @@ public class BookShellCommandController {
                 .name(name)
                 .releaseYear(releaseYear)
                 .authors(Arrays.stream(authorIds).filter(id -> id > 0).mapToObj(id -> new Author(id, null))
-                        .collect(Collectors.toList()))
+                        .collect(Collectors.toSet()))
                 .genres(Arrays.stream(genreIds).filter(id -> id > 0).mapToObj(id -> new Genre(id, null))
-                        .collect(Collectors.toList()))
+                        .collect(Collectors.toSet()))
                 .build();
         return bookService.update(book);
     }
