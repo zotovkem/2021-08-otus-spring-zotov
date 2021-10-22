@@ -22,3 +22,12 @@ INSERT INTO mtm_book_genre (id, book_id, genre_id)
 VALUES (1, 1, 1);
 INSERT INTO mtm_book_genre (id, book_id, genre_id)
 VALUES (2, 2, 2);
+
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (1, 1, 'Вроде не чего, еще не дочитал', 'ЗотовЕС', '2020-02-01 19:10:25-07');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (2, 2, 'Хорошая книга', 'ЗотовЕС', '2020-02-01 19:10:25-07');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (7, 1, 'Комментарий ', 'Иванов', '2020-02-01 19:10:25-07');
+INSERT INTO comment_for_book (id, book_id, content, author, create_date)
+VALUES (8, 2, 'Тестовый комментарий', 'Петров', '2020-02-01 19:10:25-07');

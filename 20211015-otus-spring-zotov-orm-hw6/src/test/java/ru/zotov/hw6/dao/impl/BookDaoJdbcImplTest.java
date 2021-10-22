@@ -1,14 +1,13 @@
 package ru.zotov.hw6.dao.impl;
 
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
-import ru.zotov.hw6.dao.mapper.BookMapper;
 import ru.zotov.hw6.domain.Book;
 
 import java.util.List;
@@ -19,11 +18,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Created by ZotovES on 09.10.2021
  */
-@JdbcTest
-@Import(BookDaoJdbcImpl.class)
+@DataJpaTest
+@Import(BookRepositoryJpaImpl.class)
 @DisplayName("Тестирование репозитория книг")
 class BookDaoJdbcImplTest {
-    @Autowired private BookDaoJdbcImpl bookDao;
+    @Autowired private BookRepositoryJpaImpl bookDao;
+    @Autowired private TestEntityManager em;
+
+//    SessionFactory sessionFactory;
+//
+//    @BeforeEach
+//    void setUp(){
+//        sessionFactory = em.getEntityManager().getEntityManagerFactory()
+//                .unwrap(SessionFactory.class);
+//        sessionFactory.getStatistics().setStatisticsEnabled(true);
+//    }
+//
+//    @AfterEach
+//    void setDown(){
+//        sessionFactory = null;
+//    }
 
     @Test
     @DisplayName("Создание")
@@ -49,7 +63,7 @@ class BookDaoJdbcImplTest {
     @DisplayName("Удалить по ид")
     void deleteByIdTest() {
         bookDao.deleteById(1L);
-        Optional<Book> result = bookDao.getById(1L);
+        Optional<Book> result = bookDao.findById(1L);
 
         assertThat(result).isEmpty();
     }
@@ -57,7 +71,7 @@ class BookDaoJdbcImplTest {
     @Test
     @DisplayName("Найти по ид")
     void getByIdTest() {
-        Optional<Book> result = bookDao.getById(1L);
+        Optional<Book> result = bookDao.findById(1L);
 
         assertThat(result).isPresent().get().hasFieldOrPropertyWithValue("name", "Высоконагруженные приложения")
                 .hasFieldOrPropertyWithValue("releaseYear", 2017);
@@ -66,26 +80,41 @@ class BookDaoJdbcImplTest {
     @Test
     @DisplayName("Получить все книги")
     void findAllTest() {
+        SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory()
+                .unwrap(SessionFactory.class);
+        sessionFactory.getStatistics().setStatisticsEnabled(true);
+
         List<Book> result = bookDao.findAll();
 
-        assertThat(result).asList().hasSize(2)
+        assertThat(result).isNotNull().hasSize(2)
+                .allMatch(book -> book.getGenres() != null && !book.getGenres().isEmpty())
+                .allMatch(book -> book.getAuthors() != null && !book.getGenres().isEmpty())
                 .anySatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Высоконагруженные приложения")
                         .hasFieldOrPropertyWithValue("releaseYear", 2017)
-                        .hasFieldOrPropertyWithValue("id", 1L))
+                        .hasFieldOrPropertyWithValue("id", 1L)
+                        .extracting("comments").asList().isNotEmpty())
                 .anySatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Чистая архитектура")
                         .hasFieldOrPropertyWithValue("releaseYear", 2018)
-                        .hasFieldOrPropertyWithValue("id", 2L));
+                        .hasFieldOrPropertyWithValue("id", 2L)
+                        .extracting("comments").asList().isNotEmpty());
+
+        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(3);
     }
 
     @Test
     @DisplayName("Найти по наименованию")
     void findByNameTest() {
+//        SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory()
+//                .unwrap(SessionFactory.class);
+//        sessionFactory.getStatistics().setStatisticsEnabled(true);
+
         List<Book> result = bookDao.findByName("Высоконагруженные приложения");
 
         assertThat(result).asList().hasSize(1)
                 .allSatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Высоконагруженные приложения")
                         .hasFieldOrPropertyWithValue("releaseYear", 2017)
                         .hasFieldOrPropertyWithValue("id", 1L));
+//        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(3);
     }
 
     @Test
@@ -108,13 +137,5 @@ class BookDaoJdbcImplTest {
                 .allSatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Чистая архитектура")
                         .hasFieldOrPropertyWithValue("releaseYear", 2018)
                         .hasFieldOrPropertyWithValue("id", 2L));
-    }
-
-    @Configuration
-    static class Config {
-        @Bean
-        BookMapper getMapper() {
-            return new BookMapper();
-        }
     }
 }

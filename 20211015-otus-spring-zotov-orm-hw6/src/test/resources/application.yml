@@ -5,4 +5,13 @@ spring:
     init:
       mode: always
       data-locations: data.sql
-      encoding: UTF-8
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+
+    show-sql: true
+
+logging:
+  level:
+    ROOT: ERROR

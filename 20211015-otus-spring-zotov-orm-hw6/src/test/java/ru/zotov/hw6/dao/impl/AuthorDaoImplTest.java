@@ -3,12 +3,9 @@ package ru.zotov.hw6.dao.impl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
-import ru.zotov.hw6.dao.mapper.AuthorMapper;
 import ru.zotov.hw6.domain.Author;
 
 import java.util.List;
@@ -19,11 +16,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 /**
  * @author Created by ZotovES on 09.10.2021
  */
+@DataJpaTest
 @DisplayName("Тестирование репозитория авторов")
-@JdbcTest
-@Import(AuthorDaoJdbcImpl.class)
+@Import(AuthorRepositoryJpaImpl.class)
 class AuthorDaoImplTest {
-    @Autowired private AuthorDaoJdbcImpl authorDao;
+    @Autowired private AuthorRepositoryJpaImpl authorDao;
 
     @Test
     @DisplayName("Создать автора")
@@ -31,7 +28,7 @@ class AuthorDaoImplTest {
         Author author = new Author(3L, "Иванов");
         authorDao.create(author);
 
-        Optional<Author> result = authorDao.getById(3L);
+        Optional<Author> result = authorDao.findById(3L);
         assertThat(result).isPresent().get().usingRecursiveComparison().isEqualTo(author);
     }
 
@@ -41,14 +38,14 @@ class AuthorDaoImplTest {
         Author author = new Author(1L, "Иванов");
         authorDao.update(author);
 
-        Optional<Author> result = authorDao.getById(1L);
+        Optional<Author> result = authorDao.findById(1L);
         assertThat(result).isPresent().get().usingRecursiveComparison().isEqualTo(author);
     }
 
     @Test
     @DisplayName("Получить автора по ид")
     void getByIdTest() {
-        Optional<Author> result = authorDao.getById(2L);
+        Optional<Author> result = authorDao.findById(2L);
         assertThat(result).isPresent().get().hasFieldOrPropertyWithValue("fio", "Александр Сергеевич Пушкин");
     }
 
@@ -58,7 +55,7 @@ class AuthorDaoImplTest {
     void deleteByIdTest() {
         authorDao.deleteById(3L);
 
-        Optional<Author> result = authorDao.getById(3L);
+        Optional<Author> result = authorDao.findById(3L);
         assertThat(result).isEmpty();
     }
 
@@ -95,13 +92,5 @@ class AuthorDaoImplTest {
                 .allSatisfy(author ->
                         assertThat(author).hasFieldOrPropertyWithValue("id", 2L)
                                 .hasFieldOrPropertyWithValue("fio", "Александр Сергеевич Пушкин"));
-    }
-
-    @Configuration
-    static class Config {
-        @Bean
-        AuthorMapper getMapper() {
-            return new AuthorMapper();
-        }
     }
 }
