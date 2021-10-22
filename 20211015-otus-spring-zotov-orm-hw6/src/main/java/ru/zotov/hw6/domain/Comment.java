@@ -3,6 +3,7 @@ package ru.zotov.hw6.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 
 /**
  * @author Created by ZotovES on 21.10.2021
@@ -25,18 +26,19 @@ public class Comment {
     private Long id;
 
     /**
-     * Книга
-     */
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", referencedColumnName = "id")
-    private Book book;
-
-    /**
      * Содержимое комментария
      */
     @Column(name = "content")
     private String content;
-
+    /**
+     * Автор комментария
+     */
+    @Column(name = "author")
+    private String author;
+    /**
+     * Дата создания
+     */
+    @Column(name = "create_date")
+    private ZonedDateTime createDate;
 
 }
