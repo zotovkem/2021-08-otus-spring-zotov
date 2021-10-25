@@ -14,3 +14,5 @@
 ДЗ4 20210929-otus-spring-zotov-hw4
 
 ДЗ5 20210921-otus-spring-zotov-hw5
+
+ДЗ7 20211025-otus-spring-zotov-spring-data-hw7
