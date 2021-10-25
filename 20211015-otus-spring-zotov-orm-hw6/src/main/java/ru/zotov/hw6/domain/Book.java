@@ -1,6 +1,7 @@
 package ru.zotov.hw6.domain;
 
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -62,11 +63,12 @@ public class Book {
                inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     private Set<Genre> genres = new HashSet<>();
 
+    @Fetch(FetchMode.SELECT)
+    @BatchSize(size = 1)
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", referencedColumnName = "id")
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
     //TODO
