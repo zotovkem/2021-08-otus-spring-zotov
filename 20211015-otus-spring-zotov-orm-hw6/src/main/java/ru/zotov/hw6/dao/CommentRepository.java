@@ -47,4 +47,12 @@ public interface CommentRepository {
      * @return список комментариев
      */
     List<Comment> findAll();
+
+    /**
+     * Получить список комментариев по ид книги
+     *
+     * @param bookId ид книги
+     * @return список комментариев
+     */
+    List<Comment> findByBookId(Long bookId);
 }
