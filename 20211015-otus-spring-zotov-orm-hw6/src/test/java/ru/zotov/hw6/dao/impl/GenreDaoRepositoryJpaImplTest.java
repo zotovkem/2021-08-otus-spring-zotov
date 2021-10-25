@@ -27,10 +27,9 @@ class GenreDaoRepositoryJpaImplTest {
     @DisplayName("Создать жанр")
     void createTest() {
         Genre genre = new Genre(3L, "Повесть");
-        genreDao.create(genre);
+        Genre result = genreDao.create(genre);
 
-        Optional<Genre> result = genreDao.findById(3L);
-        assertThat(result).isPresent().get().usingRecursiveComparison().isEqualTo(genre);
+        assertThat(result).usingRecursiveComparison().isEqualTo(genre);
     }
 
     @Test
@@ -38,10 +37,9 @@ class GenreDaoRepositoryJpaImplTest {
     @DisplayName("Обновить жанр")
     void updateTest() {
         Genre genre = new Genre(1L, "Повесть");
-        genreDao.update(genre);
+        Genre result = genreDao.update(genre);
 
-        Optional<Genre> result = genreDao.findById(1L);
-        assertThat(result).isPresent().get().usingRecursiveComparison().isEqualTo(genre);
+        assertThat(result).usingRecursiveComparison().isEqualTo(genre);
     }
 
     @Test

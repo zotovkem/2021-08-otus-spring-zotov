@@ -25,21 +25,20 @@ class AuthorRepositoryJpaImplTest {
     @Test
     @DisplayName("Создать автора")
     void createTest() {
-        Author author = new Author(3L, "Иванов");
-        authorDao.create(author);
+        Author author = new Author(null, "Иванов");
+        Author result = authorDao.create(author);
 
-        Optional<Author> result = authorDao.findById(3L);
-        assertThat(result).isPresent().get().usingRecursiveComparison().isEqualTo(author);
+        assertThat(result).isNotNull().hasFieldOrProperty("id").isNotNull()
+                .usingRecursiveComparison().ignoringFields("id").isEqualTo(author);
     }
 
     @Test
     @DisplayName("Обновить автора")
     void updateTest() {
         Author author = new Author(1L, "Иванов");
-        authorDao.update(author);
+        Author result = authorDao.update(author);
 
-        Optional<Author> result = authorDao.findById(1L);
-        assertThat(result).isPresent().get().usingRecursiveComparison().isEqualTo(author);
+        assertThat(result).usingRecursiveComparison().isEqualTo(author);
     }
 
     @Test
