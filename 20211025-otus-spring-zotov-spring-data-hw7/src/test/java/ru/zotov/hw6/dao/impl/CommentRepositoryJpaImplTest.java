@@ -5,8 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import ru.zotov.hw6.domain.Book;
-import ru.zotov.hw6.domain.Comment;
+import ru.zotov.hw7.dao.impl.CommentRepositoryJpaImpl;
+import ru.zotov.hw7.domain.Book;
+import ru.zotov.hw7.domain.Comment;
 
 import java.time.ZonedDateTime;
 import java.util.List;

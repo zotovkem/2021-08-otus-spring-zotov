@@ -10,7 +10,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
-import ru.zotov.hw6.domain.Book;
+import ru.zotov.hw7.dao.impl.BookRepositoryJpaImpl;
+import ru.zotov.hw7.domain.Book;
 
 import java.util.List;
 import java.util.Optional;

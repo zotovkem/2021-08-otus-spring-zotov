@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ru.zotov</groupId>
-    <artifactId>hw5</artifactId>
+    <artifactId>hw7</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>20210921-otus-spring-zotov-hw5</name>
-    <description>20210921-otus-spring-zotov-hw5</description>
+    <name>20211025-otus-spring-zotov-hw7</name>
+    <description>20211025-otus-spring-zotov-hw7</description>
     <properties>
         <java.version>11</java.version>
         <spring-shell-starter.version>2.0.1.RELEASE</spring-shell-starter.version>

@@ -5,9 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.zotov.hw6.dao.CommentRepository;
-import ru.zotov.hw6.domain.Book;
-import ru.zotov.hw6.domain.Comment;
+import ru.zotov.hw7.dao.CommentRepository;
+import ru.zotov.hw7.domain.Book;
+import ru.zotov.hw7.domain.Comment;
+import ru.zotov.hw7.service.impl.CommentServiceImpl;
 
 import java.time.ZonedDateTime;
 import java.util.List;

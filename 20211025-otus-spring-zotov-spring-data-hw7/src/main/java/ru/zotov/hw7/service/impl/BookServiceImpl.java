@@ -1,11 +1,11 @@
-package ru.zotov.hw6.service.impl;
+package ru.zotov.hw7.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.zotov.hw6.dao.BookRepository;
-import ru.zotov.hw6.domain.Book;
-import ru.zotov.hw6.service.BookService;
+import ru.zotov.hw7.dao.BookRepository;
+import ru.zotov.hw7.domain.Book;
+import ru.zotov.hw7.service.BookService;
 
 import java.util.Collection;
 import java.util.List;

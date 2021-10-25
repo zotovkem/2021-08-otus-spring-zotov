@@ -1,4 +1,4 @@
-package ru.zotov.hw6.domain;
+package ru.zotov.hw7.domain;
 
 import lombok.*;
 import org.hibernate.annotations.BatchSize;

@@ -1,6 +1,6 @@
-package ru.zotov.hw6.dao;
+package ru.zotov.hw7.dao;
 
-import ru.zotov.hw6.domain.Author;
+import ru.zotov.hw7.domain.Author;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,9 +1,9 @@
-package ru.zotov.hw6.dao.impl;
+package ru.zotov.hw7.dao.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import ru.zotov.hw6.dao.BookRepository;
-import ru.zotov.hw6.domain.Book;
+import ru.zotov.hw7.dao.BookRepository;
+import ru.zotov.hw7.domain.Book;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

@@ -1,6 +1,6 @@
-package ru.zotov.hw6.service;
+package ru.zotov.hw7.service;
 
-import ru.zotov.hw6.domain.Comment;
+import ru.zotov.hw7.domain.Comment;
 
 import java.util.List;
 

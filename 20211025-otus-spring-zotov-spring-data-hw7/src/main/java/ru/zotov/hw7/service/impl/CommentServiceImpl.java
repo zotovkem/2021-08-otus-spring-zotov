@@ -1,11 +1,11 @@
-package ru.zotov.hw6.service.impl;
+package ru.zotov.hw7.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.zotov.hw6.dao.CommentRepository;
-import ru.zotov.hw6.domain.Comment;
-import ru.zotov.hw6.service.CommentService;
+import ru.zotov.hw7.dao.CommentRepository;
+import ru.zotov.hw7.domain.Comment;
+import ru.zotov.hw7.service.CommentService;
 
 import java.util.List;
 

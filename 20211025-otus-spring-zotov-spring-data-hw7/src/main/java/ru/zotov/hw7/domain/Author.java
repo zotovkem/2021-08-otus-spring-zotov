@@ -1,4 +1,4 @@
-package ru.zotov.hw6.domain;
+package ru.zotov.hw7.domain;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import java.util.Objects;
 
 /**
  * @author Created by ZotovES on 29.09.2021
- * Жанр
+ * Автор
  */
 @Getter
 @Setter
@@ -15,20 +15,21 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "genre")
-public class Genre {
+@Table(name = "author")
+public class Author {
     /**
-     * Ид
+     * Ид автора
      */
     @Id
-    @Column(name = "id")
+    @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     /**
-     * Наименование жанра
+     * ФИО автора
      */
-    @Column(name = "name")
-    private String name;
+    @Column(name = "fio")
+    private String fio;
 
     @Override
     public boolean equals(Object o) {
@@ -38,12 +39,12 @@ public class Genre {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Genre genre = (Genre) o;
-        return Objects.equals(id, genre.id) && Objects.equals(name, genre.name);
+        Author author = (Author) o;
+        return Objects.equals(id, author.id) && Objects.equals(fio, author.fio);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, fio);
     }
 }

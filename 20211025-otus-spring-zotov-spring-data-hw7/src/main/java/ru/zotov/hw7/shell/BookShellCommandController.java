@@ -1,13 +1,13 @@
-package ru.zotov.hw6.shell;
+package ru.zotov.hw7.shell;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import ru.zotov.hw6.domain.Author;
-import ru.zotov.hw6.domain.Book;
-import ru.zotov.hw6.domain.Genre;
-import ru.zotov.hw6.service.BookService;
+import ru.zotov.hw7.domain.Author;
+import ru.zotov.hw7.domain.Book;
+import ru.zotov.hw7.domain.Genre;
+import ru.zotov.hw7.service.BookService;
 
 import java.util.Arrays;
 import java.util.List;

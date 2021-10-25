@@ -1,9 +1,9 @@
-package ru.zotov.hw6.dao.impl;
+package ru.zotov.hw7.dao.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import ru.zotov.hw6.dao.CommentRepository;
-import ru.zotov.hw6.domain.Comment;
+import ru.zotov.hw7.dao.CommentRepository;
+import ru.zotov.hw7.domain.Comment;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
