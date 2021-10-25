@@ -59,16 +59,6 @@ class AuthorRepositoryJpaImplTest {
     }
 
     @Test
-    @DisplayName("Получить по списку ид")
-    void findByIdsInTest() {
-        List<Author> result = authorDao.findByIdsIn(List.of(1L));
-
-        assertThat(result).asList().hasSize(1)
-                .allSatisfy(author -> assertThat(author).hasFieldOrPropertyWithValue("id", 1L)
-                        .hasFieldOrPropertyWithValue("fio", "Роберт Мартин"));
-    }
-
-    @Test
     @DisplayName("Получить всех авторов")
     void findByAllTest() {
         List<Author> result = authorDao.findByAll();
@@ -78,17 +68,6 @@ class AuthorRepositoryJpaImplTest {
                         assertThat(author).hasFieldOrPropertyWithValue("id", 1L)
                                 .hasFieldOrPropertyWithValue("fio", "Роберт Мартин"))
                 .anySatisfy(author ->
-                        assertThat(author).hasFieldOrPropertyWithValue("id", 2L)
-                                .hasFieldOrPropertyWithValue("fio", "Александр Сергеевич Пушкин"));
-    }
-
-    @Test
-    @DisplayName("Поиск по списку ид книг")
-    void findByBookIdsTest() {
-        List<Author> result = authorDao.findByIdsIn(List.of(2L));
-
-        assertThat(result).asList().hasSize(1)
-                .allSatisfy(author ->
                         assertThat(author).hasFieldOrPropertyWithValue("id", 2L)
                                 .hasFieldOrPropertyWithValue("fio", "Александр Сергеевич Пушкин"));
     }

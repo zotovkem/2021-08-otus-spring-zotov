@@ -2,7 +2,6 @@ package ru.zotov.hw6.dao;
 
 import ru.zotov.hw6.domain.Author;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,14 +40,6 @@ public interface AuthorRepository {
      * @param id ид
      */
     void deleteById(Long id);
-
-    /**
-     * Поиск авторов по списку ид
-     *
-     * @param ids список ид
-     * @return список авторов
-     */
-    List<Author> findByIdsIn(Collection<Long> ids);
 
     /**
      * Получить всех авторов

@@ -60,14 +60,6 @@ class GenreDaoRepositoryJpaImplTest {
     }
 
     @Test
-    @DisplayName("Найти жанры по списку ид")
-    void findByIdsInTest() {
-        List<Genre> result = genreDao.findByIdsIn(List.of(1L));
-        assertThat(result).asList().hasSize(1)
-                .allSatisfy(genre -> assertThat(genre).hasFieldOrPropertyWithValue("name", "Детектив"));
-    }
-
-    @Test
     @DisplayName("Получить все жанры")
     void getAllTest() {
         List<Genre> result = genreDao.findAll();

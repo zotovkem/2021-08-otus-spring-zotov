@@ -7,7 +7,6 @@ import ru.zotov.hw6.domain.Author;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,19 +67,6 @@ public class AuthorRepositoryJpaImpl implements AuthorRepository {
         em.createQuery("delete from Author where id = :id")
                 .setParameter("id", id)
                 .executeUpdate();
-    }
-
-    /**
-     * Поиск авторов по списку ид
-     *
-     * @param ids список ид
-     * @return список авторов
-     */
-    @Override
-    public List<Author> findByIdsIn(Collection<Long> ids) {
-        return em.createQuery("select a from Author a where a.id in (:ids)", Author.class)
-                .setParameter("ids", ids)
-                .getResultList();
     }
 
     /**

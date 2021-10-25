@@ -2,7 +2,6 @@ package ru.zotov.hw6.dao;
 
 import ru.zotov.hw6.domain.Genre;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,14 +40,6 @@ public interface GenreRepository {
      * @param id ид жанра
      */
     void deleteById(Long id);
-
-    /**
-     * Найти по списку идентификаторов
-     *
-     * @param ids список ид
-     * @return список жанров
-     */
-    List<Genre> findByIdsIn(Collection<Long> ids);
 
     /**
      * Получить все жанры

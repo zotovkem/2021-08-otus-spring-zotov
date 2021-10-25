@@ -7,7 +7,6 @@ import ru.zotov.hw6.domain.Genre;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,19 +67,6 @@ public class GenreDaoRepositoryJpaImpl implements GenreRepository {
         em.createQuery("delete from Genre where id = :id")
                 .setParameter("id", id)
                 .executeUpdate();
-    }
-
-    /**
-     * Найти по списку идентификаторов
-     *
-     * @param ids список ид
-     * @return список жанров
-     */
-    @Override
-    public List<Genre> findByIdsIn(Collection<Long> ids) {
-        return em.createQuery("select g from Genre g where g.id in (:ids)", Genre.class)
-                .setParameter("ids", ids)
-                .getResultList();
     }
 
     /**
