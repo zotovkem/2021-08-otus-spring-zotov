@@ -1,4 +1,4 @@
-package ru.zotov.hw6.service.impl;
+package ru.zotov.hw7.service.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.zotov.hw7.dao.CommentRepository;
 import ru.zotov.hw7.domain.Book;
 import ru.zotov.hw7.domain.Comment;
-import ru.zotov.hw7.service.impl.CommentServiceImpl;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -32,7 +31,7 @@ class CommentServiceImplTest {
     @Test
     @DisplayName("Добавить комментарий")
     void createTest() {
-        when(commentRepository.create(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(commentRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Comment comment = new Comment(null, Book.builder().id(1L).build(), "testComment", "testAuthor", ZonedDateTime.now());
         Comment result = commentService.create(comment);
@@ -40,7 +39,7 @@ class CommentServiceImplTest {
         assertThat(result).isNotNull().hasNoNullFieldsOrPropertiesExcept("id")
                 .usingRecursiveComparison().ignoringFields("id").isEqualTo(comment);
 
-        verify(commentRepository).create(comment);
+        verify(commentRepository).save(comment);
     }
 
     @Test
@@ -48,7 +47,7 @@ class CommentServiceImplTest {
     void updateTest() {
         Comment comment = new Comment(1L, Book.builder().id(1L).build(), "testComment", "testAuthor", ZonedDateTime.now());
         when(commentRepository.findById(any())).thenReturn(Optional.of(comment));
-        when(commentRepository.update(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(commentRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Comment result = commentService.update(comment);
 
@@ -56,7 +55,7 @@ class CommentServiceImplTest {
                 .usingRecursiveComparison().isEqualTo(comment);
 
         verify(commentRepository).findById(any());
-        verify(commentRepository).update(comment);
+        verify(commentRepository).save(comment);
     }
 
     @Test

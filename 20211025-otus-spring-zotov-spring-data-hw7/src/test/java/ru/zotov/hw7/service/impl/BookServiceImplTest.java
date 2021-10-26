@@ -1,17 +1,14 @@
-package ru.zotov.hw6.service.impl;
+package ru.zotov.hw7.service.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.zotov.hw7.dao.AuthorRepository;
 import ru.zotov.hw7.dao.BookRepository;
-import ru.zotov.hw7.dao.GenreRepository;
 import ru.zotov.hw7.domain.Author;
 import ru.zotov.hw7.domain.Book;
 import ru.zotov.hw7.domain.Genre;
-import ru.zotov.hw7.service.impl.BookServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,27 +26,24 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = BookServiceImpl.class)
 class BookServiceImplTest {
     @MockBean private BookRepository bookDao;
-    @MockBean private AuthorRepository authorDao;
-    @MockBean private GenreRepository genreDao;
     @Autowired BookServiceImpl bookService;
 
     @Test
     @DisplayName("Создать книгу")
     void createTest() {
         Book book = Book.builder().name("Книга про тестирование")
-                .id(1L)
                 .releaseYear(2021)
                 .genres(Set.of(new Genre(1L, "")))
                 .authors(Set.of(new Author(1L, "")))
                 .build();
-        when(bookDao.create(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(bookDao.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Book result = bookService.create(book);
+        Book result = bookService.save(book);
 
         assertThat(result).isNotNull().hasNoNullFieldsOrPropertiesExcept("id")
                 .usingRecursiveComparison().ignoringFields("id").isEqualTo(book);
 
-        verify(bookDao).create(book);
+        verify(bookDao).save(book);
     }
 
     @Test
@@ -61,13 +55,13 @@ class BookServiceImplTest {
                 .genres(Set.of(new Genre(1L, "")))
                 .authors(Set.of(new Author(1L, "")))
                 .build();
-        when(bookDao.update(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(bookDao.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Book result = bookService.update(book);
+        Book result = bookService.save(book);
 
         assertThat(result).isNotNull().usingRecursiveComparison().isEqualTo(book);
 
-        verify(bookDao).update(book);
+        verify(bookDao).save(book);
     }
 
     @Test
