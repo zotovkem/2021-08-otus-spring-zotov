@@ -1,5 +1,10 @@
 package ru.zotov.hw7.dao;
 
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import ru.zotov.hw7.domain.Book;
 
 import java.util.List;
@@ -9,43 +14,15 @@ import java.util.Optional;
  * @author Created by ZotovES on 04.10.2021
  * Репозиторий Книг
  */
-public interface BookRepository {
-    /**
-     * Добавить книгу
-     *
-     * @param book книга
-     */
-    Book create(Book book);
-
-    /**
-     * Редактировать книгу
-     *
-     * @param book книга
-     * @return книга
-     */
-    Book update(Book book);
-
-    /**
-     * Удалить книгу
-     *
-     * @param id ид
-     */
-    void deleteById(Long id);
-
-    /**
-     * Получить книгу по ид
-     *
-     * @param id ид
-     * @return книга
-     */
-    Optional<Book> findById(Long id);
-
-    /**
-     * Получить все книги
-     *
-     * @return список книг
-     */
+@Repository
+public interface BookRepository extends JpaRepository<Book, Long> {
+    @Override
+    @EntityGraph(value = "book-graph")
     List<Book> findAll();
+
+    @Override
+    @EntityGraph(value = "book-graph")
+    Optional<Book> findById(Long aLong);
 
     /**
      * Найти книгу по наименованию
@@ -53,7 +30,10 @@ public interface BookRepository {
      * @param name наименование книги
      * @return список книг
      */
-    List<Book> findByName(String name);
+    @EntityGraph(value = "book-graph")
+    @Query(value = "select b from Book b " +
+            "where lower(b.name) like concat(lower(:name),'%')")
+    List<Book> findByName(@Param("name") String name);
 
     /**
      * Найти книги по ФИО автора
@@ -61,7 +41,11 @@ public interface BookRepository {
      * @param authorFio фио автора книги
      * @return Список книг
      */
-    List<Book> findByAuthorFio(String authorFio);
+    @EntityGraph(value = "book-graph")
+    @Query(value = "select b from Book b " +
+            "join fetch b.authors a " +
+            "where lower(a.fio) like concat(lower(:fio),'%')")
+    List<Book> findByAuthorFio(@Param("fio") String authorFio);
 
     /**
      * Найти книги по жанру
@@ -69,5 +53,9 @@ public interface BookRepository {
      * @param genreName жанр
      * @return список книг
      */
-    List<Book> findByGenreName(String genreName);
+    @EntityGraph(value = "book-graph")
+    @Query(value = "select b from Book b " +
+            "join fetch b.genres g " +
+            "where lower(g.name) like concat(lower(:genre),'%')")
+    List<Book> findByGenreName(@Param("genre") String genreName);
 }

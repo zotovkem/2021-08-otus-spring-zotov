@@ -22,27 +22,15 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookDao;
 
     /**
-     * Создать книгу
-     *
-     * @param book книга
-     * @return книга
-     */
-    @Override
-    @Transactional
-    public Book create(Book book) {
-        return bookDao.create(book);
-    }
-
-    /**
-     * Редактировать книгу
+     * Сохранить книгу
      *
      * @param book Книга
      * @return книга
      */
     @Override
     @Transactional
-    public Book update(Book book) {
-        return bookDao.update(book);
+    public Book save(Book book) {
+        return bookDao.save(book);
     }
 
     /**
@@ -79,7 +67,10 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Book> findById(Long id) {
-        return bookDao.findById(id);
+        List<Book> books = bookDao.findById(id).stream().collect(Collectors.toList());
+        loadLazyFields(books);
+
+        return books.stream().findAny();
     }
 
     /**
@@ -91,7 +82,9 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<Book> findByName(String name) {
-        return bookDao.findByName(name);
+        List<Book> books = bookDao.findByName(name);
+        loadLazyFields(books);
+        return books;
     }
 
     /**

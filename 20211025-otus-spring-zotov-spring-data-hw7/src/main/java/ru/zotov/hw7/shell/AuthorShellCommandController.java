@@ -21,14 +21,13 @@ public class AuthorShellCommandController {
 
     /**
      * Создать автора
-     * <p>
      * Пример author-add -fio Зотов
      *
      * @param fio фио автора
      */
     @ShellMethod(value = "Create author", key = {"author-add"})
     public void create(@ShellOption("-fio") String fio) {
-        authorDao.create(new Author(null, fio));
+        authorDao.save(new Author(null, fio));
     }
 
     /**
@@ -38,7 +37,7 @@ public class AuthorShellCommandController {
      */
     @ShellMethod(value = "Get all authors", key = {"author-get-all"})
     public List<Author> getAll() {
-        return authorDao.findByAll();
+        return authorDao.findAll();
     }
 
     /**
@@ -63,7 +62,7 @@ public class AuthorShellCommandController {
      */
     @ShellMethod(value = "Update author", key = {"author-update"})
     public Author update(@ShellOption("-id") Long id, @ShellOption("-fio") String fio) {
-        return authorDao.update(new Author(id, fio));
+        return authorDao.save(new Author(id, fio));
     }
 
     /**

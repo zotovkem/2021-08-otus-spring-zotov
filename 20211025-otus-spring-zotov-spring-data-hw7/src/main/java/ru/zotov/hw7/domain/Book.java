@@ -1,7 +1,6 @@
 package ru.zotov.hw7.domain;
 
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "book")
-@NamedEntityGraph(name = "comment-graph", attributeNodes = {@NamedAttributeNode("comments")})
+@NamedEntityGraph(name = "book-graph", attributeNodes = {@NamedAttributeNode("comments")/*,@NamedAttributeNode("authors")*/})
 public class Book {
     /**
      * Ид книги
@@ -63,8 +62,6 @@ public class Book {
                inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     private Set<Genre> genres = new HashSet<>();
 
-    @Fetch(FetchMode.SELECT)
-    @BatchSize(size = 1)
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

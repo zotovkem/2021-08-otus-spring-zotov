@@ -27,7 +27,7 @@ public class GenreShellCommandController {
      */
     @ShellMethod(value = "Create genre", key = {"genre-add"})
     public void getById(@ShellOption({"-name"}) String name) {
-        genreDao.create(new Genre(null, name));
+        genreDao.save(new Genre(null, name));
     }
 
     /**
@@ -53,6 +53,7 @@ public class GenreShellCommandController {
 
     /**
      * Редактировать жанр
+     * Пример genre-update -id 1 -name Комиксы
      *
      * @param id   ид
      * @param name наименование жанра
@@ -60,7 +61,7 @@ public class GenreShellCommandController {
      */
     @ShellMethod(value = "Update genre", key = "genre-update")
     public Genre update(@ShellOption({"-id"}) Long id, @ShellOption({"-name"}) String name) {
-        return genreDao.update(new Genre(id, name));
+        return genreDao.save(new Genre(id, name));
     }
 
     /**

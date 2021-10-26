@@ -27,7 +27,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Comment create(Comment comment) {
-        return commentRepository.create(comment);
+        return commentRepository.save(comment);
     }
 
     /**
@@ -44,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
         persistComment.setContent(comment.getContent());
         persistComment.setAuthor(comment.getAuthor());
 
-        return commentRepository.update(persistComment);
+        return commentRepository.save(persistComment);
     }
 
     /**
