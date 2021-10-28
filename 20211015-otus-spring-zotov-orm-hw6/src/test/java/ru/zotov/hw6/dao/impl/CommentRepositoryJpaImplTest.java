@@ -45,7 +45,10 @@ class CommentRepositoryJpaImplTest {
     @Test
     @DisplayName("Удалить комментарий")
     void deleteByIdTest() {
-        commentRepository.deleteById(1L);
+        Optional<Comment> comment = commentRepository.findById(1L);
+        assertThat(comment).isPresent();
+
+        commentRepository.delete(comment.get());
 
         Optional<Comment> result = commentRepository.findById(1L);
         assertThat(result).isEmpty();
@@ -74,21 +77,5 @@ class CommentRepositoryJpaImplTest {
                         assertThat(comment).hasFieldOrPropertyWithValue("id", 4L)
                                 .hasFieldOrPropertyWithValue("content", "Тестовый комментарий")
                                 .hasFieldOrPropertyWithValue("author", "Петров"));
-    }
-
-    @Test
-    @DisplayName("Поиск по ид книги")
-    void findByBookId() {
-        List<Comment> result = commentRepository.findByBookId(1L);
-
-        assertThat(result).asList().hasSize(2)
-                .anySatisfy(comment ->
-                        assertThat(comment).hasFieldOrPropertyWithValue("id", 1L)
-                                .hasFieldOrPropertyWithValue("content", "Вроде не чего, еще не дочитал")
-                                .hasFieldOrPropertyWithValue("author", "ЗотовЕС"))
-                .anySatisfy(comment ->
-                        assertThat(comment).hasFieldOrPropertyWithValue("id", 3L)
-                                .hasFieldOrPropertyWithValue("content", "Комментарий")
-                                .hasFieldOrPropertyWithValue("author", "Иванов"));
     }
 }

@@ -8,8 +8,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.zotov.hw6.dao.CommentRepository;
 import ru.zotov.hw6.domain.Book;
 import ru.zotov.hw6.domain.Comment;
+import ru.zotov.hw6.service.BookService;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +27,7 @@ import static org.mockito.Mockito.when;
 @DisplayName("Тестирование сервиса комментариев")
 class CommentServiceImplTest {
     @MockBean private CommentRepository commentRepository;
+    @MockBean private BookService bookService;
     @Autowired CommentServiceImpl commentService;
 
 
@@ -61,9 +64,12 @@ class CommentServiceImplTest {
     @Test
     @DisplayName("Удалить комментарий по ид")
     void deleteByIdTest() {
+        Comment comment = new Comment(1L, Book.builder().id(1L).build(), "testComment", "testAuthor", ZonedDateTime.now());
+        when(commentRepository.findById(any())).thenReturn(Optional.of(comment));
+
         commentService.deleteById(1L);
 
-        verify(commentRepository).deleteById(1L);
+        verify(commentRepository).delete(any());
     }
 
     @Test
@@ -98,7 +104,14 @@ class CommentServiceImplTest {
     @DisplayName("Получить список комментариев по ид книги")
     void findByBookIdTest() {
         Comment comment = new Comment(1L, Book.builder().id(1L).build(), "testComment", "testAuthor", ZonedDateTime.now());
-        when(commentRepository.findByBookId(1L)).thenReturn(List.of(comment));
+        Book book = Book.builder().name("Книга про тестирование")
+                .id(1L)
+                .releaseYear(2021)
+                .genres(Collections.emptySet())
+                .authors(Collections.emptySet())
+                .comments(List.of(comment))
+                .build();
+        when(bookService.findById(1L)).thenReturn(Optional.of(book));
 
         List<Comment> result = commentService.findByBookId(1L);
 
@@ -106,6 +119,6 @@ class CommentServiceImplTest {
                 assertThat(c).hasNoNullFieldsOrPropertiesExcept("id").usingRecursiveComparison().isEqualTo(comment)
         );
 
-        verify(commentRepository).findByBookId(1L);
+        verify(bookService).findById(1L);
     }
 }
