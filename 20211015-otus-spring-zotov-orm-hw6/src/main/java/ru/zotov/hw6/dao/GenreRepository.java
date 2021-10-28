@@ -37,9 +37,9 @@ public interface GenreRepository {
     /**
      * Удалить по ид
      *
-     * @param id ид жанра
+     * @param genre жанр
      */
-    void deleteById(Long id);
+    void delete(Genre genre);
 
     /**
      * Получить все жанры
@@ -47,4 +47,12 @@ public interface GenreRepository {
      * @return список жанров
      */
     List<Genre> findAll();
+
+    /**
+     * Найти жанры по наименованию
+     *
+     * @param genreName наименование жанра
+     * @return список жанров
+     */
+    List<Genre> findByName(String genreName);
 }

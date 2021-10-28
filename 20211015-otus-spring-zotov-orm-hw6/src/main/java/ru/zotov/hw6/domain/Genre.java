@@ -3,6 +3,7 @@ package ru.zotov.hw6.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -29,6 +30,12 @@ public class Genre {
      */
     @Column(name = "name")
     private String name;
+    /**
+     * Книги жанра
+     */
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
+    private List<Book> books;
 
     @Override
     public boolean equals(Object o) {

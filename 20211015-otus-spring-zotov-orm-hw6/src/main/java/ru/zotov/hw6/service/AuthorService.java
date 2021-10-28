@@ -49,10 +49,10 @@ public interface AuthorService {
     List<Author> findByAll();
 
     /**
-     * Поиск автора по фио
+     * Поиск авторов по фио
      *
      * @param fio фио автора
-     * @return автор
+     * @return список авторов
      */
-    Optional<Author> findByFio(String fio);
+    List<Author> findByFio(String fio);
 }

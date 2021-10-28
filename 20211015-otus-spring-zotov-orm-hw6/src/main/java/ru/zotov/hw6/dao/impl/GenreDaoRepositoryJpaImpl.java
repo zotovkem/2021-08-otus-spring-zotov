@@ -60,11 +60,11 @@ public class GenreDaoRepositoryJpaImpl implements GenreRepository {
     /**
      * Удалить по ид
      *
-     * @param id ид жанра
+     * @param genre жанр
      */
     @Override
-    public void deleteById(Long id) {
-        findById(id).ifPresent(em::remove);
+    public void delete(Genre genre) {
+        em.remove(genre);
     }
 
     /**
@@ -75,5 +75,19 @@ public class GenreDaoRepositoryJpaImpl implements GenreRepository {
     @Override
     public List<Genre> findAll() {
         return em.createQuery("select g from Genre g", Genre.class).getResultList();
+    }
+
+    /**
+     * Найти жанры по наименованию
+     *
+     * @param genreName наименование жанра
+     * @return список жанров
+     */
+    @Override
+    public List<Genre> findByName(String genreName) {
+        return em.createQuery("select g from Genre g " +
+                        "where lower(g.name) like concat(lower(:genre),'%')", Genre.class)
+                .setParameter("genre", genreName)
+                .getResultList();
     }
 }

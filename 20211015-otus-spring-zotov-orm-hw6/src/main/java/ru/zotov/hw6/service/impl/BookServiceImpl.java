@@ -6,11 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw6.dao.BookRepository;
 import ru.zotov.hw6.domain.Author;
 import ru.zotov.hw6.domain.Book;
+import ru.zotov.hw6.domain.Genre;
 import ru.zotov.hw6.service.AuthorService;
 import ru.zotov.hw6.service.BookService;
+import ru.zotov.hw6.service.GenreService;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookDao;
     private final AuthorService authorService;
+    private final GenreService genreService;
 
     /**
      * Создать книгу
@@ -107,8 +109,13 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<Book> findByGenreName(String name) {
-        List<Book> books = bookDao.findByGenreName(name);
+        List<Book> books = genreService.findByName(name).stream()
+                .map(Genre::getBooks)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
         loadLazyFields(books);
+
         return books;
     }
 
@@ -121,9 +128,10 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<Book> findByAuthorFio(String fio) {
-        List<Book> books = authorService.findByFio(fio)
+        List<Book> books = authorService.findByFio(fio).stream()
                 .map(Author::getBooks)
-                .orElse(Collections.emptyList());
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
 
         loadLazyFields(books);
         return books;
