@@ -56,14 +56,6 @@ public interface BookRepository {
     List<Book> findByName(String name);
 
     /**
-     * Найти книги по ФИО автора
-     *
-     * @param authorFio фио автора книги
-     * @return Список книг
-     */
-    List<Book> findByAuthorFio(String authorFio);
-
-    /**
      * Найти книги по жанру
      *
      * @param genreName жанр

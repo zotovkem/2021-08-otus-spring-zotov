@@ -37,9 +37,9 @@ public interface AuthorRepository {
     /**
      * Удалить автора
      *
-     * @param id ид
+     * @param author автор
      */
-    void deleteById(Long id);
+    void delete(Author author);
 
     /**
      * Получить всех авторов
@@ -47,4 +47,12 @@ public interface AuthorRepository {
      * @return список авторов
      */
     List<Author> findByAll();
+
+    /**
+     * Поиск автора по фио
+     *
+     * @param fio фио автора
+     * @return автор
+     */
+    List<Author> findByFio(String fio);
 }

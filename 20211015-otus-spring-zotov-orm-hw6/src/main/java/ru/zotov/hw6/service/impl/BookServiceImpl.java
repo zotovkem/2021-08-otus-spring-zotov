@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw6.dao.BookRepository;
+import ru.zotov.hw6.domain.Author;
 import ru.zotov.hw6.domain.Book;
+import ru.zotov.hw6.service.AuthorService;
 import ru.zotov.hw6.service.BookService;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookDao;
+    private final AuthorService authorService;
 
     /**
      * Создать книгу
@@ -117,7 +121,10 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<Book> findByAuthorFio(String fio) {
-        List<Book> books = bookDao.findByAuthorFio(fio);
+        List<Book> books = authorService.findByFio(fio)
+                .map(Author::getBooks)
+                .orElse(Collections.emptyList());
+
         loadLazyFields(books);
         return books;
     }
