@@ -76,17 +76,4 @@ public class CommentRepositoryJpaImpl implements CommentRepository {
     public List<Comment> findAll() {
         return em.createQuery("select c from Comment c", Comment.class).getResultList();
     }
-
-    /**
-     * Получить список комментариев по ид книги
-     *
-     * @param bookId ид книги
-     * @return список комментариев
-     */
-    @Override
-    public List<Comment> findByBookId(Long bookId) {
-        return em.createQuery("select c from Comment c where c.book.id = :bookId", Comment.class)
-                .setParameter("bookId", bookId)
-                .getResultList();
-    }
 }
