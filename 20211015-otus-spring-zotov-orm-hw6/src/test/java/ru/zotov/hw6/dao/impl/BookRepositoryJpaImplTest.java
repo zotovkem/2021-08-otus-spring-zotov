@@ -64,9 +64,12 @@ class BookRepositoryJpaImplTest {
     @Rollback
     @DisplayName("Удалить по ид")
     void deleteByIdTest() {
-        bookDao.deleteById(1L);
-        Optional<Book> result = bookDao.findById(1L);
+        Optional<Book> book = bookDao.findById(1L);
+        assertThat(book).isPresent();
 
+        bookDao.delete(book.get());
+
+        Optional<Book> result = bookDao.findById(1L);
         assertThat(result).isEmpty();
     }
 
@@ -96,7 +99,7 @@ class BookRepositoryJpaImplTest {
                         .hasFieldOrPropertyWithValue("id", 2L)
                         .extracting("comments").asList().isNotEmpty());
 
-        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(3);
+        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(4);
     }
 
     @Test
@@ -109,28 +112,5 @@ class BookRepositoryJpaImplTest {
                         .hasFieldOrPropertyWithValue("releaseYear", 2017)
                         .hasFieldOrPropertyWithValue("id", 1L));
         assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1);
-    }
-
-    @Test
-    @DisplayName("Найти по фио автора")
-    void findByAuthorFioTest() {
-        List<Book> result = bookDao.findByAuthorFio("Роберт Мартин");
-
-        assertThat(result).asList().hasSize(1)
-                .allSatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Высоконагруженные приложения")
-                        .hasFieldOrPropertyWithValue("releaseYear", 2017)
-                        .hasFieldOrPropertyWithValue("id", 1L));
-        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1);
-    }
-
-    @Test
-    @DisplayName("Найти по наименованию жанра")
-    void findByGenreNameTest() {
-        List<Book> result = bookDao.findByGenreName("Компьютерная литература");
-
-        assertThat(result).asList().hasSize(1)
-                .allSatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Чистая архитектура")
-                        .hasFieldOrPropertyWithValue("releaseYear", 2018)
-                        .hasFieldOrPropertyWithValue("id", 2L));
     }
 }
