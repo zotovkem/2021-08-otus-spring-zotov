@@ -59,7 +59,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        bookDao.deleteById(id);
+        findById(id).ifPresent(bookDao::delete);
     }
 
     /**

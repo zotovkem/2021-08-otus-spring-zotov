@@ -29,9 +29,9 @@ public interface CommentRepository {
     /**
      * Удалить комментарий
      *
-     * @param id ид
+     * @param comment комментарий
      */
-    void deleteById(Long id);
+    void delete(Comment comment);
 
     /**
      * Поиск комментария по ид

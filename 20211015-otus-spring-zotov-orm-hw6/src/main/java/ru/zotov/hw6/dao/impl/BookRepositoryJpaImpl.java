@@ -48,11 +48,11 @@ public class BookRepositoryJpaImpl implements BookRepository {
     /**
      * Удалить книгу
      *
-     * @param id ид
+     * @param book книга
      */
     @Override
-    public void deleteById(Long id) {
-        findById(id).ifPresent(em::remove);
+    public void delete(Book book) {
+        em.remove(book);
     }
 
     /**
