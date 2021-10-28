@@ -3,6 +3,7 @@ package ru.zotov.hw6.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -30,6 +31,12 @@ public class Author {
      */
     @Column(name = "fio")
     private String fio;
+    /**
+     * Книги автора
+     */
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
+    private List<Book> books;
 
     @Override
     public boolean equals(Object o) {
@@ -40,11 +47,11 @@ public class Author {
             return false;
         }
         Author author = (Author) o;
-        return Objects.equals(id, author.id) && Objects.equals(fio, author.fio);
+        return Objects.equals(id, author.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fio);
+        return Objects.hash(id);
     }
 }

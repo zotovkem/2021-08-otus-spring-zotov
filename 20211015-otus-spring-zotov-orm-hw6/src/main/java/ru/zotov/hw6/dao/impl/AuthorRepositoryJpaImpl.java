@@ -60,11 +60,11 @@ public class AuthorRepositoryJpaImpl implements AuthorRepository {
     /**
      * Удалить автора
      *
-     * @param id ид
+     * @param author автор
      */
     @Override
-    public void deleteById(Long id) {
-        findById(id).ifPresent(em::remove);
+    public void delete(Author author) {
+        em.remove(author);
     }
 
     /**
@@ -75,5 +75,19 @@ public class AuthorRepositoryJpaImpl implements AuthorRepository {
     @Override
     public List<Author> findByAll() {
         return em.createQuery("select a from Author a", Author.class).getResultList();
+    }
+
+    /**
+     * Поиск автора по фио
+     *
+     * @param fio фио автора
+     * @return автор
+     */
+    @Override
+    public List<Author> findByFio(String fio) {
+        return em.createQuery("select a from Author a " +
+                        "where lower(a.fio) like concat(lower(:fio),'%')", Author.class)
+                .setParameter("fio", fio)
+                .getResultList();
     }
 }
