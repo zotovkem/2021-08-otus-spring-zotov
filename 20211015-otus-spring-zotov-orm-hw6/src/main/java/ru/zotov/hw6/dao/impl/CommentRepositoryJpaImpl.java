@@ -49,11 +49,11 @@ public class CommentRepositoryJpaImpl implements CommentRepository {
     /**
      * Удалить комментарий
      *
-     * @param id ид
+     * @param comment комментарий
      */
     @Override
-    public void deleteById(Long id) {
-        findById(id).ifPresent(em::remove);
+    public void delete(Comment comment) {
+        em.remove(comment);
     }
 
     /**

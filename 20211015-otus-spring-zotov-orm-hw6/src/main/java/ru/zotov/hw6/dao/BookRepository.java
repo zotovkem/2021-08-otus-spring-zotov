@@ -28,9 +28,9 @@ public interface BookRepository {
     /**
      * Удалить книгу
      *
-     * @param id ид
+     * @param book книга
      */
-    void deleteById(Long id);
+    void delete(Book book);
 
     /**
      * Получить книгу по ид
