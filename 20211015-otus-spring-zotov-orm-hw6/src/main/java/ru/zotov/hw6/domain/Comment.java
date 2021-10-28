@@ -48,10 +48,8 @@ public class Comment {
 
     @Override
     public String toString() {
-        return String.format("Комментарий: %s%n" +
-                        "Автор: %s%n" +
-                        "Дата/время: %s%n" +
+        return String.format("Ид: %s%nКомментарий: %s%nАвтор: %s%nДата/время: %s%n" +
                         "=====================================",
-                getContent(), getAuthor(), getCreateDate().format(DateTimeFormatter.RFC_1123_DATE_TIME));
+                getId(), getContent(), getAuthor(), getCreateDate().format(DateTimeFormatter.RFC_1123_DATE_TIME));
     }
 }
