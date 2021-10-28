@@ -38,7 +38,7 @@ public class CommentShellCommandController {
 
     /**
      * Редактировать комментарий к книге
-     * Пример comment-update -id 1 -text Текст комментария -author Зотов
+     * Пример comment-update -id 1 -text "Текст комментария измененный" -author Зотов
      *
      * @param id             ид комментария
      * @param commentContent текст комментария

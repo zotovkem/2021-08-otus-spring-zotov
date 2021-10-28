@@ -54,6 +54,7 @@ public class GenreShellCommandController {
 
     /**
      * Редактировать жанр
+     * Пример genre-update -id 1 -name Повесть
      *
      * @param id   ид
      * @param name наименование жанра
