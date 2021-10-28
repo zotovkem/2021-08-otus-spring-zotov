@@ -69,6 +69,7 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
+    @Override
     public String toString() {
         return String.format("Ид: %s%nНаименование книги: %s%nГод издательства: %s%n" +
                         "Авторы: %s%n" +

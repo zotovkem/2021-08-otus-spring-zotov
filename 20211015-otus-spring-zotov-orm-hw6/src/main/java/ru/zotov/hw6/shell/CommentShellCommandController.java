@@ -89,7 +89,6 @@ public class CommentShellCommandController {
      */
     @ShellMethod(value = "Find comment by bookId", key = {"comment-find-by-book-id"})
     public List<Comment> findByBookId(Long bookId) {
-//        return commentService.findByBookId(bookId);
-        return null;
+        return commentService.findByBookId(bookId);
     }
 }
