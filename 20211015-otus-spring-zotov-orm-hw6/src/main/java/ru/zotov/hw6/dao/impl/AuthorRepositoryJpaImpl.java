@@ -1,7 +1,7 @@
 package ru.zotov.hw6.dao.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ru.zotov.hw6.dao.AuthorRepository;
 import ru.zotov.hw6.domain.Author;
 
@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author Created by ZotovES on 04.10.2021
  * Реализация репозитория авторов
  */
-@Repository
+@Service
 @RequiredArgsConstructor
 public class AuthorRepositoryJpaImpl implements AuthorRepository {
     @PersistenceContext
@@ -64,9 +64,7 @@ public class AuthorRepositoryJpaImpl implements AuthorRepository {
      */
     @Override
     public void deleteById(Long id) {
-        em.createQuery("delete from Author where id = :id")
-                .setParameter("id", id)
-                .executeUpdate();
+        findById(id).ifPresent(em::remove);
     }
 
     /**

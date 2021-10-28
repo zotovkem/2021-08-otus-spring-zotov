@@ -1,7 +1,7 @@
 package ru.zotov.hw6.dao.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ru.zotov.hw6.dao.BookRepository;
 import ru.zotov.hw6.domain.Book;
 
@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author Created by ZotovES on 04.10.2021
  * Реализация репозитория книг
  */
-@Repository
+@Service
 @RequiredArgsConstructor
 public class BookRepositoryJpaImpl implements BookRepository {
     @PersistenceContext
@@ -52,9 +52,7 @@ public class BookRepositoryJpaImpl implements BookRepository {
      */
     @Override
     public void deleteById(Long id) {
-        em.createQuery("delete from Book where id = :id")
-                .setParameter("id", id)
-                .executeUpdate();
+        findById(id).ifPresent(em::remove);
     }
 
     /**

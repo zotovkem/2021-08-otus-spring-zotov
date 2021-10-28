@@ -1,7 +1,7 @@
 package ru.zotov.hw6.dao.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ru.zotov.hw6.dao.CommentRepository;
 import ru.zotov.hw6.domain.Comment;
 
@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author Created by ZotovES on 22.10.2021
  * Реализация репозитория комментариев к книге
  */
-@Repository
+@Service
 @RequiredArgsConstructor
 public class CommentRepositoryJpaImpl implements CommentRepository {
     @PersistenceContext
@@ -53,9 +53,7 @@ public class CommentRepositoryJpaImpl implements CommentRepository {
      */
     @Override
     public void deleteById(Long id) {
-        em.createQuery("delete from Comment where id = :id")
-                .setParameter("id", id)
-                .executeUpdate();
+        findById(id).ifPresent(em::remove);
     }
 
     /**
