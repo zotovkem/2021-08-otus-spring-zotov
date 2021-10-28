@@ -89,19 +89,4 @@ public class BookRepositoryJpaImpl implements BookRepository {
                 .setParameter("name", name)
                 .getResultList();
     }
-
-    /**
-     * Найти книги по жанру
-     *
-     * @param genreName жанр
-     * @return список книг
-     */
-    @Override
-    public List<Book> findByGenreName(String genreName) {
-        return em.createQuery("select b from Book b " +
-                        "join fetch b.genres g " +
-                        "where lower(g.name) like concat(lower(:genre),'%')", Book.class)
-                .setParameter("genre", genreName)
-                .getResultList();
-    }
 }

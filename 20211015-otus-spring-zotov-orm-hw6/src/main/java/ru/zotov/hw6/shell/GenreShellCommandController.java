@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import ru.zotov.hw6.dao.GenreRepository;
 import ru.zotov.hw6.domain.Genre;
+import ru.zotov.hw6.service.GenreService;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ import java.util.List;
 @ShellComponent
 @RequiredArgsConstructor
 public class GenreShellCommandController {
-    private final GenreRepository genreDao;
+    private final GenreService genreService;
 
     /**
      * Создать жанр
@@ -27,7 +28,7 @@ public class GenreShellCommandController {
      */
     @ShellMethod(value = "Create genre", key = {"genre-add"})
     public void getById(@ShellOption({"-name"}) String name) {
-        genreDao.create(new Genre(null, name));
+        genreService.create(new Genre(null, name, Collections.emptyList()));
     }
 
     /**
@@ -38,7 +39,7 @@ public class GenreShellCommandController {
      */
     @ShellMethod(value = "Find genres by list id", key = {"genre-find-by-id"})
     public Genre getById(Long id) {
-        return genreDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Not found book by id = " + id));
+        return genreService.findById(id).orElseThrow(() -> new IllegalArgumentException("Not found book by id = " + id));
     }
 
     /**
@@ -48,7 +49,7 @@ public class GenreShellCommandController {
      */
     @ShellMethod(value = "Get all genres ", key = {"genre-get-all"})
     public List<Genre> getAll() {
-        return genreDao.findAll();
+        return genreService.findAll();
     }
 
     /**
@@ -60,7 +61,7 @@ public class GenreShellCommandController {
      */
     @ShellMethod(value = "Update genre", key = "genre-update")
     public Genre update(@ShellOption({"-id"}) Long id, @ShellOption({"-name"}) String name) {
-        return genreDao.update(new Genre(id, name));
+        return genreService.update(new Genre(id, name, Collections.emptyList()));
     }
 
     /**
@@ -70,6 +71,6 @@ public class GenreShellCommandController {
      */
     @ShellMethod(value = "Delete genre by id", key = {"genre-delete-by-id"})
     public void deleteById(Long id) {
-        genreDao.deleteById(id);
+        genreService.deleteById(id);
     }
 }

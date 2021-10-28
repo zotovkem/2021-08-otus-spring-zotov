@@ -54,12 +54,4 @@ public interface BookRepository {
      * @return список книг
      */
     List<Book> findByName(String name);
-
-    /**
-     * Найти книги по жанру
-     *
-     * @param genreName жанр
-     * @return список книг
-     */
-    List<Book> findByGenreName(String genreName);
 }

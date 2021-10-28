@@ -78,14 +78,14 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     /**
-     * Поиск автора по фио
+     * Поиск авторов по фио
      *
      * @param fio фио автора
-     * @return автор
+     * @return список авторов
      */
     @Override
     @Transactional(readOnly = true)
-    public Optional<Author> findByFio(String fio) {
-        return authorRepository.findByFio(fio).stream().findFirst();
+    public List<Author> findByFio(String fio) {
+        return authorRepository.findByFio(fio);
     }
 }
