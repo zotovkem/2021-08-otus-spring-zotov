@@ -6,7 +6,6 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "book")
-@NamedEntityGraph(name = "book-graph", attributeNodes = {@NamedAttributeNode("comments")/*,@NamedAttributeNode("authors")*/})
 public class Book {
     /**
      * Ид книги
@@ -62,21 +60,21 @@ public class Book {
                inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     private Set<Genre> genres = new HashSet<>();
 
+    @Fetch(FetchMode.SUBSELECT)
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
+    @Override
     public String toString() {
         return String.format("Ид: %s%nНаименование книги: %s%nГод издательства: %s%n" +
                         "Авторы: %s%n" +
                         "Жанры: %s%n" +
-                        "Комментарии: %n%s%n" +
                         "=====================================", getId(), getName(), getReleaseYear(),
                 getAuthors().stream().map(Author::getFio).collect(Collectors.joining(", ")),
-                getGenres().stream().map(Genre::getName).collect(Collectors.joining(", ")),
-                getComments().stream().map(getCommentStringFunction()).collect(Collectors.joining(System.lineSeparator())));
+                getGenres().stream().map(Genre::getName).collect(Collectors.joining(", ")));
     }
 
     @Override
@@ -94,10 +92,5 @@ public class Book {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, releaseYear);
-    }
-
-    private Function<Comment, String> getCommentStringFunction() {
-        return comment -> String.format("%s \"%s\" %s", comment.getCreateDate().toLocalDate(), comment.getContent(),
-                comment.getAuthor());
     }
 }

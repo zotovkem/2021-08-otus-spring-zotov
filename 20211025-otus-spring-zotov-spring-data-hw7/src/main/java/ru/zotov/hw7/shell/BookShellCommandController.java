@@ -10,6 +10,7 @@ import ru.zotov.hw7.domain.Genre;
 import ru.zotov.hw7.service.BookService;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,14 +40,15 @@ public class BookShellCommandController {
         Book book = Book.builder()
                 .name(name)
                 .releaseYear(releaseYear)
-                .authors(Arrays.stream(authorIds).filter(id -> id > 0).mapToObj(id -> new Author(id, null))
+                .authors(Arrays.stream(authorIds).filter(id -> id > 0)
+                        .mapToObj(id -> new Author(id, null, Collections.emptyList()))
                         .collect(Collectors.toSet()))
-                .genres(Arrays.stream(genreIds).filter(id -> id > 0).mapToObj(id -> new Genre(id, null))
+                .genres(Arrays.stream(genreIds).filter(id -> id > 0)
+                        .mapToObj(id -> new Genre(id, null, Collections.emptyList()))
                         .collect(Collectors.toSet()))
                 .build();
-        bookService.save(book);
-
-        return getById(book.getId());
+        Book savedBook = bookService.create(book);
+        return getById(savedBook.getId());
     }
 
     /**
@@ -121,14 +123,14 @@ public class BookShellCommandController {
                 .id(bookId)
                 .name(name)
                 .releaseYear(releaseYear)
-                .authors(Arrays.stream(authorIds).filter(id -> id > 0).mapToObj(id -> new Author(id, null))
+                .authors(Arrays.stream(authorIds).filter(id -> id > 0)
+                        .mapToObj(id -> new Author(id, null, Collections.emptyList()))
                         .collect(Collectors.toSet()))
-                .genres(Arrays.stream(genreIds).filter(id -> id > 0).mapToObj(id -> new Genre(id, null))
+                .genres(Arrays.stream(genreIds).filter(id -> id > 0).mapToObj(id -> new Genre(id, null, Collections.emptyList()))
                         .collect(Collectors.toSet()))
                 .build();
-        bookService.save(book);
-
-        return getById(book.getId());
+        Book savedBook = bookService.update(book);
+        return getById(savedBook.getId());
     }
 
     /**

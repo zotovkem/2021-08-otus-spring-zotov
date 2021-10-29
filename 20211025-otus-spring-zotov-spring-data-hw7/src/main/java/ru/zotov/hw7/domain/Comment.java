@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author Created by ZotovES on 21.10.2021
@@ -12,7 +13,6 @@ import java.time.ZonedDateTime;
 @Getter
 @Setter
 @Entity
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "comment_for_book")
@@ -25,7 +25,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", referencedColumnName = "id")
@@ -47,4 +46,10 @@ public class Comment {
     @Column(name = "create_date")
     private ZonedDateTime createDate;
 
+    @Override
+    public String toString() {
+        return String.format("Ид: %s%nКомментарий: %s%nАвтор: %s%nДата/время: %s%n" +
+                        "=====================================",
+                getId(), getContent(), getAuthor(), getCreateDate().format(DateTimeFormatter.RFC_1123_DATE_TIME));
+    }
 }

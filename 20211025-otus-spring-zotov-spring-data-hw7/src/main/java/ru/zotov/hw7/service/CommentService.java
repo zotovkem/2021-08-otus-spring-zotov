@@ -41,7 +41,7 @@ public interface CommentService {
     Comment findById(Long id);
 
     /**
-     * Поиск комментария по ид книги
+     * Поиск комментариев по ид книги
      *
      * @param bookId ид книги
      * @return список комментариев

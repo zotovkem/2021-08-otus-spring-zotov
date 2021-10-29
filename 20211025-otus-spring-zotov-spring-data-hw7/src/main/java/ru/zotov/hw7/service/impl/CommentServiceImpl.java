@@ -4,10 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw7.dao.CommentRepository;
+import ru.zotov.hw7.domain.Book;
 import ru.zotov.hw7.domain.Comment;
+import ru.zotov.hw7.service.BookService;
 import ru.zotov.hw7.service.CommentService;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Created by ZotovES on 25.10.2021
@@ -17,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
+    private final BookService bookService;
 
     /**
      * Создать комментарий
@@ -55,7 +60,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        commentRepository.deleteById(id);
+        commentRepository.delete(findById(id));
     }
 
     /**
@@ -83,7 +88,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * Поиск комментария по ид книги
+     * Поиск комментариев по ид книги
      *
      * @param bookId ид книги
      * @return список комментариев
@@ -91,6 +96,18 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public List<Comment> findByBookId(Long bookId) {
-        return commentRepository.findByBookId(bookId);
+        List<Comment> comments = bookService.findById(bookId)
+                .map(Book::getComments)
+                .orElse(Collections.emptyList());
+        loadLazyFields(comments);
+
+        return comments;
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void loadLazyFields(List<Comment> comments) {
+        comments.stream()
+                .map(Comment::getContent)
+                .collect(Collectors.toList());
     }
 }

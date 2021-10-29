@@ -4,8 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw7.dao.BookRepository;
+import ru.zotov.hw7.domain.Author;
 import ru.zotov.hw7.domain.Book;
+import ru.zotov.hw7.domain.Genre;
+import ru.zotov.hw7.service.AuthorService;
 import ru.zotov.hw7.service.BookService;
+import ru.zotov.hw7.service.GenreService;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,16 +24,30 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookDao;
+    private final AuthorService authorService;
+    private final GenreService genreService;
 
     /**
-     * Сохранить книгу
+     * Создать книгу
+     *
+     * @param book книга
+     * @return книга
+     */
+    @Override
+    @Transactional
+    public Book create(Book book) {
+        return bookDao.save(book);
+    }
+
+    /**
+     * Редактировать книгу
      *
      * @param book Книга
      * @return книга
      */
     @Override
     @Transactional
-    public Book save(Book book) {
+    public Book update(Book book) {
         return bookDao.save(book);
     }
 
@@ -41,7 +59,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        bookDao.deleteById(id);
+        findById(id).ifPresent(bookDao::delete);
     }
 
     /**
@@ -84,6 +102,7 @@ public class BookServiceImpl implements BookService {
     public List<Book> findByName(String name) {
         List<Book> books = bookDao.findByName(name);
         loadLazyFields(books);
+
         return books;
     }
 
@@ -96,8 +115,13 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<Book> findByGenreName(String name) {
-        List<Book> books = bookDao.findByGenreName(name);
+        List<Book> books = genreService.findByName(name).stream()
+                .map(Genre::getBooks)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
         loadLazyFields(books);
+
         return books;
     }
 
@@ -110,7 +134,11 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<Book> findByAuthorFio(String fio) {
-        List<Book> books = bookDao.findByAuthorFio(fio);
+        List<Book> books = authorService.findByFio(fio).stream()
+                .map(Author::getBooks)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
         loadLazyFields(books);
         return books;
     }
