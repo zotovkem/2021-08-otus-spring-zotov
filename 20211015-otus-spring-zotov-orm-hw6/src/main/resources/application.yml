@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:bookdb
+
+  sql:
+    init:
+      mode: always
+      data-locations: data.sql
+      encoding: UTF-8
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+
+    show-sql: false
+
+  h2:
+    console:
+      path: /h2-console
+      settings:
+        web-allow-others: true
+      enabled: true
