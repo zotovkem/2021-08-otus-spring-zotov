@@ -72,7 +72,6 @@ public class AuthorServiceImpl implements AuthorService {
      * @return список авторов
      */
     @Override
-    @Transactional(readOnly = true)
     public List<Author> findByAll() {
         return authorRepository.findAll();
     }
@@ -84,7 +83,6 @@ public class AuthorServiceImpl implements AuthorService {
      * @return список авторов
      */
     @Override
-    @Transactional(readOnly = true)
     public List<Author> findByFio(String fio) {
         return authorRepository.findByFio(fio);
     }

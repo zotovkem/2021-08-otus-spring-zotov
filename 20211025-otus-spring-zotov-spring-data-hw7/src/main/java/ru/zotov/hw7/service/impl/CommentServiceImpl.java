@@ -70,7 +70,6 @@ public class CommentServiceImpl implements CommentService {
      * @return комментарий
      */
     @Override
-    @Transactional(readOnly = true)
     public Comment findById(Long id) {
         return commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid comment id"));
@@ -82,7 +81,6 @@ public class CommentServiceImpl implements CommentService {
      * @return список комментариев
      */
     @Override
-    @Transactional(readOnly = true)
     public List<Comment> findAll() {
         return commentRepository.findAll();
     }

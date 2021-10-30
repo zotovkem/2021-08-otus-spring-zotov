@@ -50,7 +50,6 @@ public class GenreServiceImpl implements GenreService {
      * @return жанр
      */
     @Override
-    @Transactional(readOnly = true)
     public Optional<Genre> findById(Long id) {
         return genreRepository.findById(id);
     }
@@ -72,7 +71,6 @@ public class GenreServiceImpl implements GenreService {
      * @return список жанров
      */
     @Override
-    @Transactional(readOnly = true)
     public List<Genre> findAll() {
         return genreRepository.findAll();
     }
@@ -84,7 +82,6 @@ public class GenreServiceImpl implements GenreService {
      * @return список жанров
      */
     @Override
-    @Transactional(readOnly = true)
     public List<Genre> findByName(String genreName) {
         return genreRepository.findByName(genreName);
     }
