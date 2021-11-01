@@ -50,7 +50,6 @@ public class AuthorServiceImpl implements AuthorService {
      * @return автор
      */
     @Override
-    @Transactional(readOnly = true)
     public Optional<Author> findById(Long id) {
         return authorRepository.findById(id);
     }
