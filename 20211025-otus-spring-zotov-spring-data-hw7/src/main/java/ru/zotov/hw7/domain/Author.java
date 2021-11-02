@@ -6,16 +6,18 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+
 /**
  * @author Created by ZotovES on 29.09.2021
  * Автор
  */
 @Getter
 @Setter
-@Entity
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
 @Table(name = "author")
 public class Author {
     /**
@@ -31,6 +33,7 @@ public class Author {
      */
     @Column(name = "fio")
     private String fio;
+
     /**
      * Книги автора
      */

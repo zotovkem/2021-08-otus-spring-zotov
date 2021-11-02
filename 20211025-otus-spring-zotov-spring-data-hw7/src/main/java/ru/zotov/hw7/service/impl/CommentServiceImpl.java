@@ -30,7 +30,6 @@ public class CommentServiceImpl implements CommentService {
      * @return комментарий
      */
     @Override
-    @Transactional
     public Comment create(Comment comment) {
         return commentRepository.save(comment);
     }

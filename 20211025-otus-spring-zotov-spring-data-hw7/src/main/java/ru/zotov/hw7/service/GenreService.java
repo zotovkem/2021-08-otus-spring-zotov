@@ -11,20 +11,12 @@ import java.util.Optional;
  */
 public interface GenreService {
     /**
-     * Создать
+     * Сохранить
      *
      * @param genre жанр
      * @return жанр
      */
-    Genre create(Genre genre);
-
-    /**
-     * Редактировать
-     *
-     * @param genre жанр
-     * @return жанр
-     */
-    Genre update(Genre genre);
+    Genre save(Genre genre);
 
     /**
      * Получить жанр по ид

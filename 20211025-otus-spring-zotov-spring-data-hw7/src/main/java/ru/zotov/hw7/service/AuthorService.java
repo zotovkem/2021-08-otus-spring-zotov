@@ -11,20 +11,12 @@ import java.util.Optional;
  */
 public interface AuthorService {
     /**
-     * Создать автора
-     *
-     * @param author автор
-     * @return автор
-     */
-    Author create(Author author);
-
-    /**
-     * Редактировать автора
+     * Сохранить автора
      *
      * @param author Автор
      * @return Автор
      */
-    Author update(Author author);
+    Author save(Author author);
 
     /**
      * Получить автора по ид

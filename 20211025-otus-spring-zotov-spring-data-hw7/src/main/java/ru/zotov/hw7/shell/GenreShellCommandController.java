@@ -28,7 +28,7 @@ public class GenreShellCommandController {
      */
     @ShellMethod(value = "Create genre", key = {"genre-add"})
     public void getById(@ShellOption({"-name"}) String name) {
-        genreService.create(new Genre(null, name, Collections.emptyList()));
+        genreService.save(new Genre(null, name, Collections.emptyList()));
     }
 
     /**
@@ -62,7 +62,7 @@ public class GenreShellCommandController {
      */
     @ShellMethod(value = "Update genre", key = "genre-update")
     public Genre update(@ShellOption({"-id"}) Long id, @ShellOption({"-name"}) String name) {
-        return genreService.update(new Genre(id, name, Collections.emptyList()));
+        return genreService.save(new Genre(id, name, Collections.emptyList()));
     }
 
     /**

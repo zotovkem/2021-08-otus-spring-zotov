@@ -37,14 +37,13 @@ class BookServiceImplTest {
     @DisplayName("Создать книгу")
     void createTest() {
         Book book = Book.builder().name("Книга про тестирование")
-                .id(1L)
                 .releaseYear(2021)
                 .genres(Set.of(new Genre(1L, "", Collections.emptyList())))
                 .authors(Set.of(new Author(1L, "", Collections.emptyList())))
                 .build();
         when(bookDao.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Book result = bookService.create(book);
+        Book result = bookService.save(book);
 
         assertThat(result).isNotNull().hasNoNullFieldsOrPropertiesExcept("id")
                 .usingRecursiveComparison().ignoringFields("id").isEqualTo(book);
@@ -63,7 +62,7 @@ class BookServiceImplTest {
                 .build();
         when(bookDao.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Book result = bookService.update(book);
+        Book result = bookService.save(book);
 
         assertThat(result).isNotNull().usingRecursiveComparison().isEqualTo(book);
 

@@ -11,20 +11,12 @@ import java.util.Optional;
  */
 public interface BookService {
     /**
-     * Создать книгу
-     *
-     * @param book книга
-     * @return книга
-     */
-    Book create(Book book);
-
-    /**
-     * Редактировать книгу
+     * Сохранить книгу
      *
      * @param book Книга
      * @return книга
      */
-    Book update(Book book);
+    Book save(Book book);
 
     /**
      * Удалить книгу по ид

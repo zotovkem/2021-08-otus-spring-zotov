@@ -28,26 +28,13 @@ public class BookServiceImpl implements BookService {
     private final GenreService genreService;
 
     /**
-     * Создать книгу
-     *
-     * @param book книга
-     * @return книга
-     */
-    @Override
-    @Transactional
-    public Book create(Book book) {
-        return bookDao.save(book);
-    }
-
-    /**
-     * Редактировать книгу
+     * Сохранить книгу
      *
      * @param book Книга
      * @return книга
      */
     @Override
-    @Transactional
-    public Book update(Book book) {
+    public Book save(Book book) {
         return bookDao.save(book);
     }
 

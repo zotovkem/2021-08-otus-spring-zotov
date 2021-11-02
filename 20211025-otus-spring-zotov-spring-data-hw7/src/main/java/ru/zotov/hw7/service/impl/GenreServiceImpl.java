@@ -18,28 +18,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GenreServiceImpl implements GenreService {
     private final GenreRepository genreRepository;
-
     /**
-     * Создать
+     * Сохранить жанр
      *
      * @param genre жанр
      * @return жанр
      */
     @Override
-    @Transactional
-    public Genre create(Genre genre) {
-        return genreRepository.save(genre);
-    }
-
-    /**
-     * Редактировать
-     *
-     * @param genre жанр
-     * @return жанр
-     */
-    @Override
-    @Transactional
-    public Genre update(Genre genre) {
+    public Genre save(Genre genre) {
         return genreRepository.save(genre);
     }
 

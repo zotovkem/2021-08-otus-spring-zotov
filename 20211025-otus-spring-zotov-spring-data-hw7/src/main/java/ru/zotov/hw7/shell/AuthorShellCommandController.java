@@ -29,7 +29,7 @@ public class AuthorShellCommandController {
      */
     @ShellMethod(value = "Create author", key = {"author-add"})
     public void create(@ShellOption("-fio") String fio) {
-        authorService.create(new Author(null, fio, Collections.emptyList()));
+        authorService.save(new Author(null, fio, Collections.emptyList()));
     }
 
     /**
@@ -64,7 +64,7 @@ public class AuthorShellCommandController {
      */
     @ShellMethod(value = "Update author", key = {"author-update"})
     public Author update(@ShellOption("-id") Long id, @ShellOption("-fio") String fio) {
-        return authorService.update(new Author(id, fio, Collections.emptyList()));
+        return authorService.save(new Author(id, fio, Collections.emptyList()));
     }
 
     /**

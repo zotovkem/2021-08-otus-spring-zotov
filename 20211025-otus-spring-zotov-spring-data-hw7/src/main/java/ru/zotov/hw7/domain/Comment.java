@@ -12,9 +12,10 @@ import java.time.format.DateTimeFormatter;
  */
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
 @Table(name = "comment_for_book")
 public class Comment {
     /**

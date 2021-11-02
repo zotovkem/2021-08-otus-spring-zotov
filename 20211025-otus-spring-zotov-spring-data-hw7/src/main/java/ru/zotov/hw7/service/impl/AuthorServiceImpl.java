@@ -18,28 +18,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
-
     /**
-     * Создать автора
-     *
-     * @param author автор
-     * @return автор
-     */
-    @Override
-    @Transactional
-    public Author create(Author author) {
-        return authorRepository.save(author);
-    }
-
-    /**
-     * Редактировать автора
+     * Сохранить автора
      *
      * @param author Автор
      * @return Автор
      */
     @Override
-    @Transactional
-    public Author update(Author author) {
+    public Author save(Author author) {
         return authorRepository.save(author);
     }
 

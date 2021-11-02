@@ -47,7 +47,7 @@ public class BookShellCommandController {
                         .mapToObj(id -> new Genre(id, null, Collections.emptyList()))
                         .collect(Collectors.toSet()))
                 .build();
-        Book savedBook = bookService.create(book);
+        Book savedBook = bookService.save(book);
         return getById(savedBook.getId());
     }
 
@@ -129,7 +129,7 @@ public class BookShellCommandController {
                 .genres(Arrays.stream(genreIds).filter(id -> id > 0).mapToObj(id -> new Genre(id, null, Collections.emptyList()))
                         .collect(Collectors.toSet()))
                 .build();
-        Book savedBook = bookService.update(book);
+        Book savedBook = bookService.save(book);
         return getById(savedBook.getId());
     }
 

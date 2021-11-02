@@ -12,10 +12,11 @@ import java.util.Objects;
  */
 @Getter
 @Setter
-@Entity
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
 @Table(name = "genre")
 public class Genre {
     /**

@@ -14,10 +14,11 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Setter
-@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
 @Table(name = "book")
 public class Book {
     /**
