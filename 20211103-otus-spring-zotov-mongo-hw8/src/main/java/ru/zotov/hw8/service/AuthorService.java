@@ -1,6 +1,6 @@
-package ru.zotov.hw7.service;
+package ru.zotov.hw8.service;
 
-import ru.zotov.hw7.domain.Author;
+import ru.zotov.hw8.domain.Author;
 
 import java.util.List;
 import java.util.Optional;

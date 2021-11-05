@@ -1,11 +1,11 @@
-package ru.zotov.hw7.service.impl;
+package ru.zotov.hw8.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.zotov.hw7.dao.GenreRepository;
-import ru.zotov.hw7.domain.Genre;
-import ru.zotov.hw7.service.GenreService;
+import ru.zotov.hw8.dao.GenreRepository;
+import ru.zotov.hw8.domain.Genre;
+import ru.zotov.hw8.service.GenreService;
 
 import java.util.List;
 import java.util.Optional;

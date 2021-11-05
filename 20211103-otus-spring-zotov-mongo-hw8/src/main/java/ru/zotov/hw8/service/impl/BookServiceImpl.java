@@ -1,15 +1,15 @@
-package ru.zotov.hw7.service.impl;
+package ru.zotov.hw8.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.zotov.hw7.dao.BookRepository;
-import ru.zotov.hw7.domain.Author;
-import ru.zotov.hw7.domain.Book;
-import ru.zotov.hw7.domain.Genre;
-import ru.zotov.hw7.service.AuthorService;
-import ru.zotov.hw7.service.BookService;
-import ru.zotov.hw7.service.GenreService;
+import ru.zotov.hw8.dao.BookRepository;
+import ru.zotov.hw8.domain.Author;
+import ru.zotov.hw8.domain.Book;
+import ru.zotov.hw8.domain.Genre;
+import ru.zotov.hw8.service.AuthorService;
+import ru.zotov.hw8.service.BookService;
+import ru.zotov.hw8.service.GenreService;
 
 import java.util.Collection;
 import java.util.List;
