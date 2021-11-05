@@ -1,4 +1,4 @@
-package ru.zotov.hw7.dao;
+package ru.zotov.hw8.dao;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
-import ru.zotov.hw7.domain.Author;
+import ru.zotov.hw8.domain.Author;
 
 import java.util.Collections;
 import java.util.List;

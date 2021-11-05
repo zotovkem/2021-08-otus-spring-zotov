@@ -1,16 +1,16 @@
-package ru.zotov.hw7.service.impl;
+package ru.zotov.hw8.service.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.zotov.hw7.dao.BookRepository;
-import ru.zotov.hw7.domain.Author;
-import ru.zotov.hw7.domain.Book;
-import ru.zotov.hw7.domain.Genre;
-import ru.zotov.hw7.service.AuthorService;
-import ru.zotov.hw7.service.GenreService;
+import ru.zotov.hw8.dao.BookRepository;
+import ru.zotov.hw8.domain.Author;
+import ru.zotov.hw8.domain.Book;
+import ru.zotov.hw8.domain.Genre;
+import ru.zotov.hw8.service.AuthorService;
+import ru.zotov.hw8.service.GenreService;
 
 import java.util.Collections;
 import java.util.List;

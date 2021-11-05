@@ -1,14 +1,14 @@
-package ru.zotov.hw7.service.impl;
+package ru.zotov.hw8.service.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.zotov.hw7.dao.CommentRepository;
-import ru.zotov.hw7.domain.Book;
-import ru.zotov.hw7.domain.Comment;
-import ru.zotov.hw7.service.BookService;
+import ru.zotov.hw8.dao.CommentRepository;
+import ru.zotov.hw8.domain.Book;
+import ru.zotov.hw8.domain.Comment;
+import ru.zotov.hw8.service.BookService;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;

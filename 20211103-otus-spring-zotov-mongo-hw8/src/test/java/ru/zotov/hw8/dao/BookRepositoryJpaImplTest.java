@@ -1,4 +1,4 @@
-package ru.zotov.hw7.dao;
+package ru.zotov.hw8.dao;
 
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
-import ru.zotov.hw7.domain.Book;
+import ru.zotov.hw8.domain.Book;
 
 import java.util.List;
 import java.util.Optional;
