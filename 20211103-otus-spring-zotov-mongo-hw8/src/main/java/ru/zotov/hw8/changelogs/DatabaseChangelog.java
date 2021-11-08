@@ -25,22 +25,10 @@ public class DatabaseChangelog {
     private List<Author> authorList;
     private List<Book> bookList;
 
-//    @ChangeSet(order = "001", id = "dropDb", author = "stvort", runAlways = true)
-//    public void dropDb(MongoDatabase db) {
-//        db.drop();
-//}
-
     @ChangeSet(order = "000", id = "initCollection", author = "ezotov", runAlways = true)
     public void dropDb(MongoDatabase db) {
         db.drop();
     }
-
-//    @ChangeSet(order = "000", id = "addBook", author = "ezotov")
-//    public void insertLermontov(MongoDatabase db) {
-//        MongoCollection<Document> myCollection = db.getCollection("persons");
-//        var doc = new Document().append("name", "Lermontov");
-//        myCollection.insertOne(doc);
-//    }
 
     /**
      * Заполнение коллекции авторов
