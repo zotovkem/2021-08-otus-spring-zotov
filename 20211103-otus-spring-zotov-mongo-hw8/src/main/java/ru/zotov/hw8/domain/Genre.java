@@ -1,9 +1,10 @@
-package ru.zotov.hw7.domain;
+package ru.zotov.hw8.domain;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -16,27 +17,18 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Entity
-@Table(name = "genre")
+@Document(collection = "genre")
 public class Genre {
     /**
      * Ид
      */
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     /**
      * Наименование жанра
      */
-    @Column(name = "name")
+    @Field(name = "name")
     private String name;
-    /**
-     * Книги жанра
-     */
-    @ToString.Exclude
-    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
-    private List<Book> books;
 
     @Override
     public boolean equals(Object o) {

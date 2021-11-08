@@ -1,9 +1,9 @@
-package ru.zotov.hw7.domain;
+package ru.zotov.hw8.domain;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -17,29 +17,17 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Entity
-@Table(name = "author")
+@Document(collection = "author")
 public class Author {
     /**
      * Ид автора
      */
     @Id
-    @Column(name = "id", unique = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
     /**
      * ФИО автора
      */
-    @Column(name = "fio")
     private String fio;
-
-    /**
-     * Книги автора
-     */
-    @ToString.Exclude
-    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
-    private List<Book> books;
 
     @Override
     public boolean equals(Object o) {

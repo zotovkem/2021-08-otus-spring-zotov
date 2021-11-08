@@ -1,11 +1,12 @@
-package ru.zotov.hw7.domain;
+package ru.zotov.hw8.domain;
 
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -18,25 +19,20 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Entity
-@Table(name = "book")
+@Document(collection = "book")
 public class Book {
     /**
      * Ид книги
      */
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     /**
      * Наименование книги
      */
-    @Column(name = "name")
     private String name;
     /**
      * Год издания
      */
-    @Column(name = "release_year")
     private int releaseYear;
     /**
      * Авторы
@@ -44,10 +40,6 @@ public class Book {
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @Fetch(FetchMode.SUBSELECT)
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "mtm_book_author", joinColumns = {@JoinColumn(name = "book_id")},
-               inverseJoinColumns = {@JoinColumn(name = "author_id")})
     private Set<Author> authors = new HashSet<>();
     /**
      * Жанры
@@ -55,18 +47,7 @@ public class Book {
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @Fetch(FetchMode.SUBSELECT)
-    @ManyToMany(targetEntity = Genre.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "mtm_book_genre", joinColumns = {@JoinColumn(name = "book_id")},
-               inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     private Set<Genre> genres = new HashSet<>();
-
-    @Fetch(FetchMode.SUBSELECT)
-    @Builder.Default
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
-    private List<Comment> comments = new ArrayList<>();
 
     @Override
     public String toString() {

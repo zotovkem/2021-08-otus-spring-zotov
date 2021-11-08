@@ -1,8 +1,11 @@
-package ru.zotov.hw7.domain;
+package ru.zotov.hw8.domain;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -15,37 +18,34 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Entity
-@Table(name = "comment_for_book")
+@Document(collection = "comment_for_book")
 public class Comment {
     /**
      * Ид
      */
     @Id
-    @Column(name = "id", unique = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
+    /**
+     * Книга
+     */
+    @DBRef(lazy = true)
     @EqualsAndHashCode.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;
-
     /**
      * Содержимое комментария
      */
-    @Column(name = "content")
     private String content;
     /**
      * Автор комментария
      */
-    @Column(name = "author")
+    @Field(name = "author")
     private String author;
     /**
      * Дата создания
      */
-    @Column(name = "create_date")
+    @Field(name = "create_date")
     private ZonedDateTime createDate;
+
 
     @Override
     public String toString() {
