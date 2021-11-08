@@ -12,13 +12,13 @@ import ru.zotov.hw8.domain.Genre;
 import ru.zotov.hw8.service.AuthorService;
 import ru.zotov.hw8.service.GenreService;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,8 +38,8 @@ class BookServiceImplTest {
     void createTest() {
         Book book = Book.builder().name("Книга про тестирование")
                 .releaseYear(2021)
-                .genres(Set.of(new Genre(1L, "", Collections.emptyList())))
-                .authors(Set.of(new Author(1L, "", Collections.emptyList())))
+                .genres(Set.of(new Genre("1", "")))
+                .authors(Set.of(new Author("1", "")))
                 .build();
         when(bookDao.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -49,16 +49,18 @@ class BookServiceImplTest {
                 .usingRecursiveComparison().ignoringFields("id").isEqualTo(book);
 
         verify(bookDao).save(book);
+        verify(authorService).findByIdIn(any());
+        verify(genreService).findByIdIn(any());
     }
 
     @Test
     @DisplayName("Редактировать книгу")
     void updateTest() {
         Book book = Book.builder().name("Книга про тестирование")
-                .id(1L)
+                .id("1")
                 .releaseYear(2021)
-                .genres(Set.of(new Genre(1L, "", Collections.emptyList())))
-                .authors(Set.of(new Author(1L, "", Collections.emptyList())))
+                .genres(Set.of(new Genre("1", "")))
+                .authors(Set.of(new Author("1", "")))
                 .build();
         when(bookDao.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -73,34 +75,32 @@ class BookServiceImplTest {
     @DisplayName("Удалить по ид")
     void deleteByIdTest() {
         Book book = Book.builder().name("Книга про тестирование")
-                .id(1L)
+                .id("1")
                 .releaseYear(2021)
-                .genres(Set.of(new Genre(1L, "", Collections.emptyList())))
-                .authors(Set.of(new Author(1L, "", Collections.emptyList())))
+                .genres(Set.of(new Genre("1", "")))
+                .authors(Set.of(new Author("1", "")))
                 .build();
 
-        when(bookDao.findById(anyLong())).thenReturn(Optional.of(book));
+        bookService.deleteById("1");
 
-        bookService.deleteById(1L);
-
-        verify(bookDao).delete(any());
+        verify(bookDao).cascadeDeleteById(any());
     }
 
     @Test
     @DisplayName("Получить все книги")
     void findByAllTest() {
-        Genre genreOne = new Genre(1L, "Сказки", Collections.emptyList());
-        Genre genreTwo = new Genre(2L, "Повесть", Collections.emptyList());
-        Author authorOne = new Author(1L, "Иванов", Collections.emptyList());
-        Author authorTwo = new Author(2L, "Петров", Collections.emptyList());
+        Genre genreOne = new Genre("1", "Сказки");
+        Genre genreTwo = new Genre("2", "Повесть");
+        Author authorOne = new Author("1", "Иванов");
+        Author authorTwo = new Author("2", "Петров");
         Book bookOne = Book.builder().name("Книга про тестирование")
-                .id(1L)
+                .id("1")
                 .releaseYear(2021)
                 .genres(Set.of(genreOne))
                 .authors(Set.of(authorOne))
                 .build();
         Book bookTwo = Book.builder().name("Сказки")
-                .id(2L)
+                .id("2")
                 .releaseYear(2021)
                 .genres(Set.of(genreTwo))
                 .authors(Set.of(authorTwo))
@@ -120,35 +120,35 @@ class BookServiceImplTest {
     @Test
     @DisplayName("Поиск по ид книги")
     void findByIdTest() {
-        Genre genreOne = new Genre(1L, "Сказки", Collections.emptyList());
-        Genre genreTwo = new Genre(2L, "Повесть", Collections.emptyList());
-        Author authorOne = new Author(1L, "Иванов", Collections.emptyList());
-        Author authorTwo = new Author(2L, "Петров", Collections.emptyList());
+        Genre genreOne = new Genre("1", "Сказки");
+        Genre genreTwo = new Genre("2", "Повесть");
+        Author authorOne = new Author("1", "Иванов");
+        Author authorTwo = new Author("2", "Петров");
         Book book = Book.builder().name("Книга про тестирование")
-                .id(1L)
+                .id("1")
                 .releaseYear(2021)
                 .genres(Set.of(genreOne, genreTwo))
                 .authors(Set.of(authorOne, authorTwo))
                 .build();
 
-        when(bookDao.findById(anyLong())).thenReturn(Optional.of(book));
+        when(bookDao.findById(anyString())).thenReturn(Optional.of(book));
 
-        Optional<Book> result = bookService.findById(1L);
+        Optional<Book> result = bookService.findById("1");
 
         assertThat(result).isPresent().get().usingRecursiveComparison().isEqualTo(book);
 
-        verify(bookDao).findById(anyLong());
+        verify(bookDao).findById(anyString());
     }
 
     @Test
     @DisplayName("Поиск по наименование книги")
     void findByNameTest() {
-        Genre genreOne = new Genre(1L, "Сказки", Collections.emptyList());
-        Genre genreTwo = new Genre(2L, "Повесть", Collections.emptyList());
-        Author authorOne = new Author(1L, "Иванов", Collections.emptyList());
-        Author authorTwo = new Author(2L, "Петров", Collections.emptyList());
+        Genre genreOne = new Genre("1", "Сказки");
+        Genre genreTwo = new Genre("2", "Повесть");
+        Author authorOne = new Author("1", "Иванов");
+        Author authorTwo = new Author("2", "Петров");
         Book book = Book.builder().name("Книга про тестирование")
-                .id(1L)
+                .id("1")
                 .releaseYear(2021)
                 .genres(Set.of(genreOne, genreTwo))
                 .authors(Set.of(authorOne, authorTwo))
@@ -168,43 +168,39 @@ class BookServiceImplTest {
     @DisplayName("Поиск книг по наименованию жанра")
     void findByGenreNameTest() {
         Book book = Book.builder().name("Книга про тестирование")
-                .id(1L)
+                .id("1")
                 .releaseYear(2021)
                 .build();
-        Genre genre = new Genre(1L, "Сказки", List.of(book));
-
-        when(genreService.findByName(anyString())).thenReturn(List.of(genre));
+        when(bookDao.findByGenreName(anyString())).thenReturn(List.of(book));
 
         List<Book> result = bookService.findByGenreName("test");
 
         assertThat(result).isNotNull().asList().isNotEmpty()
                 .allSatisfy(b -> assertThat(b).usingRecursiveComparison().isEqualTo(b));
 
-        verify(genreService).findByName(anyString());
+        verify(bookDao).findByGenreName(anyString());
     }
 
     @Test
     @DisplayName("Поиск книг по ФИО автора")
     void findByAuthorFioTest() {
-        Genre genreOne = new Genre(1L, "Сказки", Collections.emptyList());
-        Genre genreTwo = new Genre(2L, "Повесть", Collections.emptyList());
-        Author authorOne = new Author(1L, "Иванов", Collections.emptyList());
-        Author authorTwo = new Author(2L, "Петров", Collections.emptyList());
+        Genre genreOne = new Genre("1", "Сказки");
+        Genre genreTwo = new Genre("2", "Повесть");
+        Author authorOne = new Author("1", "Иванов");
+        Author authorTwo = new Author("2", "Петров");
         Book book = Book.builder().name("Книга про тестирование")
-                .id(1L)
+                .id("1")
                 .releaseYear(2021)
                 .genres(Set.of(genreOne, genreTwo))
                 .authors(Set.of(authorOne, authorTwo))
                 .build();
-        Author author = new Author(1L, "test", List.of(book));
-
-        when(authorService.findByFio(anyString())).thenReturn(List.of(author));
+        when(bookDao.findByAuthorFio(anyString())).thenReturn(List.of(book));
 
         List<Book> result = bookService.findByAuthorFio("test");
 
         assertThat(result).isNotNull().asList().isNotEmpty()
                 .allSatisfy(b -> assertThat(b).usingRecursiveComparison().isEqualTo(b));
 
-        verify(authorService).findByFio(anyString());
+        verify(bookDao).findByAuthorFio(anyString());
     }
 }

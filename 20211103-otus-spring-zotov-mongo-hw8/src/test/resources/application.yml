@@ -1,17 +1,18 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:bookdb
-  sql:
-    init:
-      mode: always
-      data-locations: data.sql
-  jpa:
-    generate-ddl: false
-    hibernate:
-      ddl-auto: validate
+  data:
+    mongodb:
+      port: 0
+      database: bookdb
 
-    show-sql: true
+mongock:
+  runner-type: "ApplicationRunner"
+  change-logs-scan-package:
+    - ru.zotov.hw8.changelogs
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
 
 logging:
   level:
-    ROOT: ERROR
+    root: ERROR

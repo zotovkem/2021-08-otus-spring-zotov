@@ -3,11 +3,12 @@ package ru.zotov.hw8.dao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Rollback;
 import ru.zotov.hw8.domain.Genre;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Created by ZotovES on 09.10.2021
  */
-@DataJpaTest
+@DataMongoTest
+@EnableConfigurationProperties
+@ComponentScan(value = {"ru.zotov.hw8.converters", "ru.zotov.hw8.dao"})
 @DisplayName("Тестирование репозитория жанров")
 class GenreDaoRepositoryJpaImplTest {
     @Autowired private GenreRepository genreDao;
@@ -25,7 +28,7 @@ class GenreDaoRepositoryJpaImplTest {
     @Test
     @DisplayName("Создать жанр")
     void createTest() {
-        Genre genre = new Genre(3L, "Повесть", Collections.emptyList());
+        Genre genre = new Genre("3", "Повесть");
         Genre result = genreDao.save(genre);
 
         assertThat(result).usingRecursiveComparison().isEqualTo(genre);
@@ -35,7 +38,7 @@ class GenreDaoRepositoryJpaImplTest {
     @Rollback
     @DisplayName("Обновить жанр")
     void updateTest() {
-        Genre genre = new Genre(1L, "Повесть", Collections.emptyList());
+        Genre genre = new Genre("1", "Повесть");
         Genre result = genreDao.save(genre);
 
         assertThat(result).usingRecursiveComparison().isEqualTo(genre);
@@ -44,7 +47,7 @@ class GenreDaoRepositoryJpaImplTest {
     @Test
     @DisplayName("Получить жанр по ид")
     void getByIdTest() {
-        Optional<Genre> result = genreDao.findById(1L);
+        Optional<Genre> result = genreDao.findById("1");
         assertThat(result).isPresent().get().hasFieldOrPropertyWithValue("name", "Детектив");
     }
 
@@ -52,12 +55,12 @@ class GenreDaoRepositoryJpaImplTest {
     @Rollback
     @DisplayName("Удалить жанр по ид")
     void deleteByIdTest() {
-        Optional<Genre> genre = genreDao.findById(3L);
-        assertThat(genre).isPresent();
+        Optional<String> genreId = genreDao.findById("3").map(Genre::getId);
+        assertThat(genreId).isPresent();
 
-        genreDao.delete(genre.get());
+        genreDao.deleteById(genreId.get());
 
-        Optional<Genre> result = genreDao.findById(3L);
+        Optional<Genre> result = genreDao.findById("3");
         assertThat(result).isEmpty();
     }
 
@@ -66,10 +69,10 @@ class GenreDaoRepositoryJpaImplTest {
     void getAllTest() {
         List<Genre> result = genreDao.findAll();
 
-        assertThat(result).asList().hasSize(3)
-                .anySatisfy(genre -> assertThat(genre).hasFieldOrPropertyWithValue("id", 1L)
-                        .hasFieldOrPropertyWithValue("name", "Детектив"))
-                .anySatisfy(genre -> assertThat(genre).hasFieldOrPropertyWithValue("id", 2L)
+        assertThat(result).asList()
+                .anySatisfy(genre -> assertThat(genre).hasFieldOrPropertyWithValue("id", "5")
+                        .hasFieldOrPropertyWithValue("name", "Программирование"))
+                .anySatisfy(genre -> assertThat(genre).hasFieldOrPropertyWithValue("id", "2")
                         .hasFieldOrPropertyWithValue("name", "Компьютерная литература"));
     }
 }

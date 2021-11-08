@@ -6,17 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.zotov.hw8.dao.CommentRepository;
+import ru.zotov.hw8.domain.Author;
 import ru.zotov.hw8.domain.Book;
 import ru.zotov.hw8.domain.Comment;
+import ru.zotov.hw8.domain.Genre;
 import ru.zotov.hw8.service.BookService;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,21 +37,33 @@ class CommentServiceImplTest {
     @Test
     @DisplayName("Добавить комментарий")
     void createTest() {
+        Genre genreOne = new Genre("1", "Сказки");
+        Genre genreTwo = new Genre("2", "Повесть");
+        Author authorOne = new Author("1", "Иванов");
+        Author authorTwo = new Author("2", "Петров");
+        Book book = Book.builder().name("Книга про тестирование")
+                .id("1")
+                .releaseYear(2021)
+                .genres(Set.of(genreOne, genreTwo))
+                .authors(Set.of(authorOne, authorTwo))
+                .build();
+        when(bookService.findById(anyString())).thenReturn(Optional.of(book));
         when(commentRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Comment comment = new Comment(null, Book.builder().id(1L).build(), "testComment", "testAuthor", ZonedDateTime.now());
+        Comment comment = new Comment(null, Book.builder().id("1").build(), "testComment", "testAuthor", ZonedDateTime.now());
         Comment result = commentService.create(comment);
 
         assertThat(result).isNotNull().hasNoNullFieldsOrPropertiesExcept("id")
                 .usingRecursiveComparison().ignoringFields("id").isEqualTo(comment);
 
+        verify(bookService).findById(anyString());
         verify(commentRepository).save(comment);
     }
 
     @Test
     @DisplayName("Редактировать комментарий")
     void updateTest() {
-        Comment comment = new Comment(1L, Book.builder().id(1L).build(), "testComment", "testAuthor", ZonedDateTime.now());
+        Comment comment = new Comment("1", Book.builder().id("1").build(), "testComment", "testAuthor", ZonedDateTime.now());
         when(commentRepository.findById(any())).thenReturn(Optional.of(comment));
         when(commentRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -64,21 +79,19 @@ class CommentServiceImplTest {
     @Test
     @DisplayName("Удалить комментарий по ид")
     void deleteByIdTest() {
-        Comment comment = new Comment(1L, Book.builder().id(1L).build(), "testComment", "testAuthor", ZonedDateTime.now());
-        when(commentRepository.findById(any())).thenReturn(Optional.of(comment));
 
-        commentService.deleteById(1L);
+        commentService.deleteById("1");
 
-        verify(commentRepository).delete(any());
+        verify(commentRepository).deleteById(any());
     }
 
     @Test
     @DisplayName("Найти комментарий по ид")
     void findByIdTest() {
-        Comment comment = new Comment(1L, Book.builder().id(1L).build(), "testComment", "testAuthor", ZonedDateTime.now());
+        Comment comment = new Comment("1", Book.builder().id("1").build(), "testComment", "testAuthor", ZonedDateTime.now());
         when(commentRepository.findById(any())).thenReturn(Optional.of(comment));
 
-        Comment result = commentService.findById(1L);
+        Comment result = commentService.findById("1");
 
         assertThat(result).isNotNull().hasNoNullFieldsOrPropertiesExcept("id").usingRecursiveComparison().isEqualTo(comment);
 
@@ -88,7 +101,7 @@ class CommentServiceImplTest {
     @Test
     @DisplayName("Получить список всех комментариев")
     void findAllTest() {
-        Comment comment = new Comment(1L, Book.builder().id(1L).build(), "testComment", "testAuthor", ZonedDateTime.now());
+        Comment comment = new Comment("1", Book.builder().id("1").build(), "testComment", "testAuthor", ZonedDateTime.now());
         when(commentRepository.findAll()).thenReturn(List.of(comment));
 
         List<Comment> result = commentService.findAll();
@@ -103,22 +116,15 @@ class CommentServiceImplTest {
     @Test
     @DisplayName("Получить список комментариев по ид книги")
     void findByBookIdTest() {
-        Comment comment = new Comment(1L, Book.builder().id(1L).build(), "testComment", "testAuthor", ZonedDateTime.now());
-        Book book = Book.builder().name("Книга про тестирование")
-                .id(1L)
-                .releaseYear(2021)
-                .genres(Collections.emptySet())
-                .authors(Collections.emptySet())
-                .comments(List.of(comment))
-                .build();
-        when(bookService.findById(1L)).thenReturn(Optional.of(book));
+        Comment comment = new Comment("1", Book.builder().id("1").build(), "testComment", "testAuthor", ZonedDateTime.now());
+        when(commentRepository.findByBookId(anyString())).thenReturn(List.of(comment));
 
-        List<Comment> result = commentService.findByBookId(1L);
+        List<Comment> result = commentService.findByBookId("1");
 
         assertThat(result).isNotNull().asList().allSatisfy(c ->
                 assertThat(c).hasNoNullFieldsOrPropertiesExcept("id").usingRecursiveComparison().isEqualTo(comment)
         );
 
-        verify(bookService).findById(1L);
+        verify(commentRepository).findByBookId(anyString());
     }
 }
