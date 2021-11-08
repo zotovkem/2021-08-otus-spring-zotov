@@ -7,7 +7,6 @@ import org.springframework.shell.standard.ShellOption;
 import ru.zotov.hw8.domain.Genre;
 import ru.zotov.hw8.service.GenreService;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,8 +26,8 @@ public class GenreShellCommandController {
      * @param name наименование жанра
      */
     @ShellMethod(value = "Create genre", key = {"genre-add"})
-    public void getById(@ShellOption({"-name"}) String name) {
-        genreService.save(new Genre(null, name, Collections.emptyList()));
+    public void addGenre(@ShellOption({"-name"}) String name) {
+        genreService.save(new Genre(null, name));
     }
 
     /**
@@ -38,7 +37,7 @@ public class GenreShellCommandController {
      * @return жанр
      */
     @ShellMethod(value = "Find genres by list id", key = {"genre-find-by-id"})
-    public Genre getById(Long id) {
+    public Genre getById(String id) {
         return genreService.findById(id).orElseThrow(() -> new IllegalArgumentException("Not found book by id = " + id));
     }
 
@@ -61,8 +60,8 @@ public class GenreShellCommandController {
      * @return жанр
      */
     @ShellMethod(value = "Update genre", key = "genre-update")
-    public Genre update(@ShellOption({"-id"}) Long id, @ShellOption({"-name"}) String name) {
-        return genreService.save(new Genre(id, name, Collections.emptyList()));
+    public Genre update(@ShellOption({"-id"}) String id, @ShellOption({"-name"}) String name) {
+        return genreService.save(new Genre(id, name));
     }
 
     /**
@@ -71,7 +70,7 @@ public class GenreShellCommandController {
      * @param id ид жанра
      */
     @ShellMethod(value = "Delete genre by id", key = {"genre-delete-by-id"})
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         genreService.deleteById(id);
     }
 }

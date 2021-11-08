@@ -10,8 +10,8 @@ import ru.zotov.hw8.domain.Genre;
 import ru.zotov.hw8.service.BookService;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -35,16 +35,18 @@ public class BookShellCommandController {
      */
     @ShellMethod(value = "Create new book", key = {"book-create"})
     public Book createBook(@ShellOption("-name") String name, @ShellOption("-release-year") Integer releaseYear,
-            @ShellOption(arity = 5, value = "-author-ids") long[] authorIds,
-            @ShellOption(arity = 5, value = "-genre-ids") long[] genreIds) {
+            @ShellOption(arity = 5, value = "-author-ids") String[] authorIds,
+            @ShellOption(arity = 5, value = "-genre-ids") String[] genreIds) {
         Book book = Book.builder()
                 .name(name)
                 .releaseYear(releaseYear)
-                .authors(Arrays.stream(authorIds).filter(id -> id > 0)
-                        .mapToObj(id -> new Author(id, null, Collections.emptyList()))
+                .authors(Arrays.stream(authorIds)
+                        .filter(id -> !"0".equals(id))
+                        .map(id -> new Author(id, null))
                         .collect(Collectors.toSet()))
-                .genres(Arrays.stream(genreIds).filter(id -> id > 0)
-                        .mapToObj(id -> new Genre(id, null, Collections.emptyList()))
+                .genres(Arrays.stream(genreIds)
+                        .filter(id -> !"0".equals(id))
+                        .map(id -> new Genre(id, null))
                         .collect(Collectors.toSet()))
                 .build();
         Book savedBook = bookService.save(book);
@@ -101,7 +103,7 @@ public class BookShellCommandController {
      * @return книга
      */
     @ShellMethod(value = "Get book by id", key = "book-get-id")
-    public Book getById(Long id) {
+    public Book getById(String id) {
         return bookService.findById(id).orElseThrow(() -> new IllegalArgumentException("Not found book by id = " + id));
     }
 
@@ -115,18 +117,21 @@ public class BookShellCommandController {
      * @param genreIds    список ид жанров
      */
     @ShellMethod(value = "Update book info", key = {"book-update"})
-    public Book updateBook(@ShellOption("-id") Long bookId, @ShellOption("-name") String name,
+    public Book updateBook(@ShellOption("-id") String bookId, @ShellOption("-name") String name,
             @ShellOption("-release-year") Integer releaseYear,
-            @ShellOption(arity = 5, value = "-author-ids") long[] authorIds,
-            @ShellOption(arity = 5, value = "-genre-ids") long[] genreIds) {
+            @ShellOption(arity = 5, value = "-author-ids") String[] authorIds,
+            @ShellOption(arity = 5, value = "-genre-ids") String[] genreIds) {
         Book book = Book.builder()
                 .id(bookId)
                 .name(name)
                 .releaseYear(releaseYear)
-                .authors(Arrays.stream(authorIds).filter(id -> id > 0)
-                        .mapToObj(id -> new Author(id, null, Collections.emptyList()))
+                .authors(Arrays.stream(authorIds)
+                        .filter(Objects::nonNull)
+                        .map(id -> new Author(id, null))
                         .collect(Collectors.toSet()))
-                .genres(Arrays.stream(genreIds).filter(id -> id > 0).mapToObj(id -> new Genre(id, null, Collections.emptyList()))
+                .genres(Arrays.stream(genreIds)
+                        .filter(Objects::nonNull)
+                        .map(id -> new Genre(id, null))
                         .collect(Collectors.toSet()))
                 .build();
         Book savedBook = bookService.save(book);
@@ -139,7 +144,7 @@ public class BookShellCommandController {
      * @param id ид
      */
     @ShellMethod(value = "Delete book by id", key = "book-delete-by-id")
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         bookService.deleteById(id);
     }
 }

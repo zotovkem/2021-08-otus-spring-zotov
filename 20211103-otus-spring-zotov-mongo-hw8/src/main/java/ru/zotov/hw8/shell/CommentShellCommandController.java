@@ -30,7 +30,7 @@ public class CommentShellCommandController {
      * @param author         автор комментария
      */
     @ShellMethod(value = "Add comment for book", key = {"comment-add"})
-    public void addCommentBook(@ShellOption("-book-id") Long bookId, @ShellOption("-text") String commentContent,
+    public void addCommentBook(@ShellOption("-book-id") String bookId, @ShellOption("-text") String commentContent,
             @ShellOption("-author") String author) {
         commentService.create(new Comment(null, Book.builder().id(bookId).build(), commentContent, author,
                 ZonedDateTime.now()));
@@ -45,7 +45,7 @@ public class CommentShellCommandController {
      * @param author         автор комментария
      */
     @ShellMethod(value = "Update comment for book", key = {"comment-update"})
-    public void updateCommentBook(@ShellOption("-id") Long id, @ShellOption("-text") String commentContent,
+    public void updateCommentBook(@ShellOption("-id") String id, @ShellOption("-text") String commentContent,
             @ShellOption("-author") String author) {
         commentService.update(new Comment(id, null, commentContent, author,
                 ZonedDateTime.now()));
@@ -56,7 +56,7 @@ public class CommentShellCommandController {
      * Пример comment-delete-by-id 1
      */
     @ShellMethod(value = "Delete comment by id", key = {"comment-delete-by-id"})
-    public void deleteCommentBook(Long id) {
+    public void deleteCommentBook(String id) {
         commentService.deleteById(id);
     }
 
@@ -77,7 +77,7 @@ public class CommentShellCommandController {
      * @return комментарий
      */
     @ShellMethod(value = "Get Comment by id", key = {"comment-get-by-id"})
-    public Comment getById(Long id) {
+    public Comment getById(String id) {
         return commentService.findById(id);
     }
 
@@ -88,7 +88,7 @@ public class CommentShellCommandController {
      * @return список комментариев
      */
     @ShellMethod(value = "Find comment by bookId", key = {"comment-find-by-book-id"})
-    public List<Comment> findByBookId(Long bookId) {
+    public List<Comment> findByBookId(String bookId) {
         return commentService.findByBookId(bookId);
     }
 }

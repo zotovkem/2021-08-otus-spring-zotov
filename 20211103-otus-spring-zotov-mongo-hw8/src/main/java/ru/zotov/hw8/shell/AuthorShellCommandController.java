@@ -7,7 +7,6 @@ import org.springframework.shell.standard.ShellOption;
 import ru.zotov.hw8.domain.Author;
 import ru.zotov.hw8.service.AuthorService;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ public class AuthorShellCommandController {
      */
     @ShellMethod(value = "Create author", key = {"author-add"})
     public void create(@ShellOption("-fio") String fio) {
-        authorService.save(new Author(null, fio, Collections.emptyList()));
+        authorService.save(new Author(null, fio));
     }
 
     /**
@@ -49,7 +48,7 @@ public class AuthorShellCommandController {
      * @return автор
      */
     @ShellMethod(value = "Find author by id", key = {"author-find-by-id"})
-    public Author getById(Long id) {
+    public Author getById(String id) {
         return authorService.findById(id).orElseThrow(() -> new IllegalArgumentException("Not found author by id = " + id));
     }
 
@@ -63,8 +62,8 @@ public class AuthorShellCommandController {
      * @return автор
      */
     @ShellMethod(value = "Update author", key = {"author-update"})
-    public Author update(@ShellOption("-id") Long id, @ShellOption("-fio") String fio) {
-        return authorService.save(new Author(id, fio, Collections.emptyList()));
+    public Author update(@ShellOption("-id") String id, @ShellOption("-fio") String fio) {
+        return authorService.save(new Author(id, fio));
     }
 
     /**
@@ -73,7 +72,7 @@ public class AuthorShellCommandController {
      * @param id ид
      */
     @ShellMethod(value = "Delete author by id", key = {"author-delete-by-id"})
-    public void deleteById(@ShellOption("-id") Long id) {
+    public void deleteById(@ShellOption("-id") String id) {
         authorService.deleteById(id);
     }
 }
