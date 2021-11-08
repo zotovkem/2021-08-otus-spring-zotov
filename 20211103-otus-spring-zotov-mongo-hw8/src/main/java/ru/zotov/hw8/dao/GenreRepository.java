@@ -1,7 +1,6 @@
 package ru.zotov.hw8.dao;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 import ru.zotov.hw8.domain.Genre;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.Set;
  * @author Created by ZotovES on 04.10.2021
  * Репозиторий Жанров книг
  */
-@Repository
 public interface GenreRepository extends MongoRepository<Genre, String> {
     /**
      * Найти жанры по наименованию

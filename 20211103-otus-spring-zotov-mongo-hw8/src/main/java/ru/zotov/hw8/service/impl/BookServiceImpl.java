@@ -2,6 +2,7 @@ package ru.zotov.hw8.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw8.dao.BookRepository;
 import ru.zotov.hw8.domain.Author;
 import ru.zotov.hw8.domain.Book;
@@ -32,6 +33,7 @@ public class BookServiceImpl implements BookService {
      * @return книга
      */
     @Override
+    @Transactional
     public Book save(Book book) {
         List<String> authorIds = book.getAuthors().stream()
                 .map(Author::getId)
@@ -51,6 +53,7 @@ public class BookServiceImpl implements BookService {
      * @param id ид
      */
     @Override
+    @Transactional
     public void deleteById(String id) {
         bookDao.cascadeDeleteById(id);
     }

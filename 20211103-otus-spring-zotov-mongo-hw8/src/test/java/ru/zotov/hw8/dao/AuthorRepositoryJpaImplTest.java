@@ -4,11 +4,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Rollback;
 import ru.zotov.hw8.domain.Author;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 /**
  * @author Created by ZotovES on 09.10.2021
  */
-@DataJpaTest
+@DataMongoTest
+@EnableConfigurationProperties
+@ComponentScan(value = {"ru.zotov.hw8.converters", "ru.zotov.hw8.dao"})
 @DisplayName("Тестирование репозитория авторов")
 class AuthorRepositoryJpaImplTest {
     @Autowired private AuthorRepository authorDao;
@@ -25,7 +28,7 @@ class AuthorRepositoryJpaImplTest {
     @Test
     @DisplayName("Создать автора")
     void createTest() {
-        Author author = new Author(null, "Иванов", Collections.emptyList());
+        Author author = new Author(null, "Иванов");
         Author result = authorDao.save(author);
 
         assertThat(result).isNotNull().hasFieldOrProperty("id").isNotNull()
@@ -33,9 +36,10 @@ class AuthorRepositoryJpaImplTest {
     }
 
     @Test
+    @Rollback
     @DisplayName("Обновить автора")
     void updateTest() {
-        Author author = new Author(1L, "Иванов", null);
+        Author author = new Author("1", "Иванов");
         Author result = authorDao.save(author);
 
         assertThat(result).usingRecursiveComparison().isEqualTo(author);
@@ -44,20 +48,20 @@ class AuthorRepositoryJpaImplTest {
     @Test
     @DisplayName("Получить автора по ид")
     void getByIdTest() {
-        Optional<Author> result = authorDao.findById(2L);
-        assertThat(result).isPresent().get().hasFieldOrPropertyWithValue("fio", "Александр Сергеевич Пушкин");
+        Optional<Author> result = authorDao.findById("2");
+        assertThat(result).isPresent().get().hasFieldOrPropertyWithValue("fio", "Мартин Клеппман");
     }
 
     @Test
     @Rollback
     @DisplayName("Удалить автора")
     void deleteByIdTest() {
-        Optional<Author> author = authorDao.findById(3L);
+        Optional<Author> author = authorDao.findById("3");
         assertThat(author).isPresent();
 
-        authorDao.delete(author.get());
+        authorDao.deleteById("3");
 
-        Optional<Author> result = authorDao.findById(3L);
+        Optional<Author> result = authorDao.findById("3");
         assertThat(result).isEmpty();
     }
 
@@ -66,12 +70,12 @@ class AuthorRepositoryJpaImplTest {
     void findByAllTest() {
         List<Author> result = authorDao.findAll();
 
-        assertThat(result).asList().hasSize(3)
+        assertThat(result).asList()
                 .anySatisfy(author ->
-                        assertThat(author).hasFieldOrPropertyWithValue("id", 1L)
-                                .hasFieldOrPropertyWithValue("fio", "Роберт Мартин"))
+                        assertThat(author).hasFieldOrPropertyWithValue("id", "7")
+                                .hasFieldOrPropertyWithValue("fio", "Александр Киселев"))
                 .anySatisfy(author ->
-                        assertThat(author).hasFieldOrPropertyWithValue("id", 2L)
+                        assertThat(author).hasFieldOrPropertyWithValue("id", "4")
                                 .hasFieldOrPropertyWithValue("fio", "Александр Сергеевич Пушкин"));
     }
 

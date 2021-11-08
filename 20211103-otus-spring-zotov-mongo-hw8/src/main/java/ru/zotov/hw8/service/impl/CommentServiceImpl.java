@@ -2,6 +2,7 @@ package ru.zotov.hw8.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw8.dao.CommentRepository;
 import ru.zotov.hw8.domain.Book;
 import ru.zotov.hw8.domain.Comment;
@@ -28,6 +29,7 @@ public class CommentServiceImpl implements CommentService {
      * @return комментарий
      */
     @Override
+    @Transactional
     public Comment create(Comment comment) {
         Optional<Book> book = bookService.findById(comment.getBook().getId());
 
@@ -45,6 +47,7 @@ public class CommentServiceImpl implements CommentService {
      * @return комментарий
      */
     @Override
+    @Transactional
     public Comment update(Comment comment) {
         Comment persistComment = commentRepository.findById(comment.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid comment id"));
