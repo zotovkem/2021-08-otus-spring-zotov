@@ -30,7 +30,7 @@ public interface CommentService {
      *
      * @param id ид
      */
-    void deleteById(Long id);
+    void deleteById(String id);
 
     /**
      * Поиск комментария по ид
@@ -38,7 +38,7 @@ public interface CommentService {
      * @param id ид
      * @return комментарий
      */
-    Comment findById(Long id);
+    Comment findById(String id);
 
     /**
      * Поиск комментариев по ид книги
@@ -46,7 +46,7 @@ public interface CommentService {
      * @param bookId ид книги
      * @return список комментариев
      */
-    List<Comment> findByBookId(Long bookId);
+    List<Comment> findByBookId(String bookId);
 
     /**
      * Получить список всех комментариев

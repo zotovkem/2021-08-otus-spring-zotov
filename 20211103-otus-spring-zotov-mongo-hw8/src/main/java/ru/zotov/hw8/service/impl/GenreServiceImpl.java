@@ -2,13 +2,13 @@ package ru.zotov.hw8.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw8.dao.GenreRepository;
 import ru.zotov.hw8.domain.Genre;
 import ru.zotov.hw8.service.GenreService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Created by ZotovES on 28.10.2021
@@ -37,7 +37,7 @@ public class GenreServiceImpl implements GenreService {
      * @return жанр
      */
     @Override
-    public Optional<Genre> findById(Long id) {
+    public Optional<Genre> findById(String id) {
         return genreRepository.findById(id);
     }
 
@@ -47,9 +47,8 @@ public class GenreServiceImpl implements GenreService {
      * @param id ид жанра
      */
     @Override
-    @Transactional
-    public void deleteById(Long id) {
-        findById(id).ifPresent(genreRepository::delete);
+    public void deleteById(String id) {
+        genreRepository.deleteById(id);
     }
 
     /**
@@ -71,5 +70,16 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public List<Genre> findByName(String genreName) {
         return genreRepository.findByName(genreName);
+    }
+
+    /**
+     * Поиск жанров по списку ид
+     *
+     * @param ids список ид
+     * @return список жанров
+     */
+    @Override
+    public Set<Genre> findByIdIn(List<String> ids) {
+        return genreRepository.findByIdIn(ids);
     }
 }

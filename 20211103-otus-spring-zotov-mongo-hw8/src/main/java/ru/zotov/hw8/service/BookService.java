@@ -23,7 +23,7 @@ public interface BookService {
      *
      * @param id ид
      */
-    void deleteById(Long id);
+    void deleteById(String id);
 
     /**
      * Получить список всех книг
@@ -62,5 +62,5 @@ public interface BookService {
      * @param id ид
      * @return книга
      */
-    Optional<Book> findById(Long id);
+    Optional<Book> findById(String id);
 }

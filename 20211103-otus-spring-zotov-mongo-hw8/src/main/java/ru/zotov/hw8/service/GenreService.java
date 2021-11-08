@@ -4,6 +4,7 @@ import ru.zotov.hw8.domain.Genre;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Created by ZotovES on 28.10.2021
@@ -24,14 +25,14 @@ public interface GenreService {
      * @param id ид
      * @return жанр
      */
-    Optional<Genre> findById(Long id);
+    Optional<Genre> findById(String id);
 
     /**
      * Удалить по ид
      *
      * @param id ид жанра
      */
-    void deleteById(Long id);
+    void deleteById(String id);
 
     /**
      * Получить все жанры
@@ -47,4 +48,12 @@ public interface GenreService {
      * @return список жанров
      */
     List<Genre> findByName(String genreName);
+
+    /**
+     * Поиск жанров по списку ид
+     *
+     * @param ids список ид
+     * @return список жанров
+     */
+    Set<Genre> findByIdIn(List<String> ids);
 }

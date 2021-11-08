@@ -2,7 +2,6 @@ package ru.zotov.hw8.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw8.dao.BookRepository;
 import ru.zotov.hw8.domain.Author;
 import ru.zotov.hw8.domain.Book;
@@ -11,7 +10,6 @@ import ru.zotov.hw8.service.AuthorService;
 import ru.zotov.hw8.service.BookService;
 import ru.zotov.hw8.service.GenreService;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +33,15 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public Book save(Book book) {
+        List<String> authorIds = book.getAuthors().stream()
+                .map(Author::getId)
+                .collect(Collectors.toList());
+        List<String> genreIds = book.getGenres().stream()
+                .map(Genre::getId)
+                .collect(Collectors.toList());
+        book.setAuthors(authorService.findByIdIn(authorIds));
+        book.setGenres(genreService.findByIdIn(genreIds));
+
         return bookDao.save(book);
     }
 
@@ -44,9 +51,8 @@ public class BookServiceImpl implements BookService {
      * @param id ид
      */
     @Override
-    @Transactional
-    public void deleteById(Long id) {
-        findById(id).ifPresent(bookDao::delete);
+    public void deleteById(String id) {
+        bookDao.cascadeDeleteById(id);
     }
 
     /**
@@ -55,12 +61,8 @@ public class BookServiceImpl implements BookService {
      * @return список книг
      */
     @Override
-    @Transactional(readOnly = true)
     public List<Book> findByAll() {
-        List<Book> all = bookDao.findAll();
-        loadLazyFields(all);
-
-        return all;
+        return bookDao.findAll();
     }
 
     /**
@@ -70,12 +72,8 @@ public class BookServiceImpl implements BookService {
      * @return книга
      */
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Book> findById(Long id) {
-        List<Book> books = bookDao.findById(id).stream().collect(Collectors.toList());
-        loadLazyFields(books);
-
-        return books.stream().findAny();
+    public Optional<Book> findById(String id) {
+        return bookDao.findById(id);
     }
 
     /**
@@ -85,12 +83,8 @@ public class BookServiceImpl implements BookService {
      * @return список книг
      */
     @Override
-    @Transactional(readOnly = true)
     public List<Book> findByName(String name) {
-        List<Book> books = bookDao.findByName(name);
-        loadLazyFields(books);
-
-        return books;
+        return bookDao.findByName(name);
     }
 
     /**
@@ -100,16 +94,8 @@ public class BookServiceImpl implements BookService {
      * @return список книг
      */
     @Override
-    @Transactional(readOnly = true)
     public List<Book> findByGenreName(String name) {
-        List<Book> books = genreService.findByName(name).stream()
-                .map(Genre::getBooks)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-
-        loadLazyFields(books);
-
-        return books;
+        return bookDao.findByGenreName(name);
     }
 
     /**
@@ -119,26 +105,7 @@ public class BookServiceImpl implements BookService {
      * @return список книг
      */
     @Override
-    @Transactional(readOnly = true)
     public List<Book> findByAuthorFio(String fio) {
-        List<Book> books = authorService.findByFio(fio).stream()
-                .map(Author::getBooks)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-
-        loadLazyFields(books);
-        return books;
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void loadLazyFields(List<Book> all) {
-        all.stream()
-                .map(Book::getGenres)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-        all.stream()
-                .map(Book::getAuthors)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+        return bookDao.findByAuthorFio(fio);
     }
 }

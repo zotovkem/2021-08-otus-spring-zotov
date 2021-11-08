@@ -4,6 +4,7 @@ import ru.zotov.hw8.domain.Author;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Created by ZotovES on 28.10.2021
@@ -24,14 +25,14 @@ public interface AuthorService {
      * @param id ид
      * @return автор
      */
-    Optional<Author> findById(Long id);
+    Optional<Author> findById(String id);
 
     /**
      * Удалить автора
      *
      * @param id ид
      */
-    void deleteById(Long id);
+    void deleteById(String id);
 
     /**
      * Получить всех авторов
@@ -47,4 +48,12 @@ public interface AuthorService {
      * @return список авторов
      */
     List<Author> findByFio(String fio);
+
+    /**
+     * Поиск авторов по списку ид
+     *
+     * @param ids список ид
+     * @return список авторов
+     */
+    Set<Author> findByIdIn(List<String> ids);
 }

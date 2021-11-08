@@ -2,16 +2,14 @@ package ru.zotov.hw8.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw8.dao.CommentRepository;
 import ru.zotov.hw8.domain.Book;
 import ru.zotov.hw8.domain.Comment;
 import ru.zotov.hw8.service.BookService;
 import ru.zotov.hw8.service.CommentService;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * @author Created by ZotovES on 25.10.2021
@@ -31,6 +29,12 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public Comment create(Comment comment) {
+        Optional<Book> book = bookService.findById(comment.getBook().getId());
+
+        book.ifPresentOrElse(comment::setBook, () -> {
+            throw new IllegalArgumentException("Invalid book id");
+        });
+
         return commentRepository.save(comment);
     }
 
@@ -41,7 +45,6 @@ public class CommentServiceImpl implements CommentService {
      * @return комментарий
      */
     @Override
-    @Transactional
     public Comment update(Comment comment) {
         Comment persistComment = commentRepository.findById(comment.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid comment id"));
@@ -57,9 +60,8 @@ public class CommentServiceImpl implements CommentService {
      * @param id ид
      */
     @Override
-    @Transactional
-    public void deleteById(Long id) {
-        commentRepository.delete(findById(id));
+    public void deleteById(String id) {
+        commentRepository.deleteById(id);
     }
 
     /**
@@ -69,7 +71,7 @@ public class CommentServiceImpl implements CommentService {
      * @return комментарий
      */
     @Override
-    public Comment findById(Long id) {
+    public Comment findById(String id) {
         return commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid comment id"));
     }
@@ -91,20 +93,7 @@ public class CommentServiceImpl implements CommentService {
      * @return список комментариев
      */
     @Override
-    @Transactional(readOnly = true)
-    public List<Comment> findByBookId(Long bookId) {
-        List<Comment> comments = bookService.findById(bookId)
-                .map(Book::getComments)
-                .orElse(Collections.emptyList());
-        loadLazyFields(comments);
-
-        return comments;
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void loadLazyFields(List<Comment> comments) {
-        comments.stream()
-                .map(Comment::getContent)
-                .collect(Collectors.toList());
+    public List<Comment> findByBookId(String bookId) {
+        return commentRepository.findByBookId(bookId);
     }
 }
