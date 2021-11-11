@@ -2,7 +2,6 @@ package ru.zotov.hw8.domain;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -28,7 +27,6 @@ public class Comment {
     /**
      * Книга
      */
-    @DBRef(lazy = true)
     @EqualsAndHashCode.Exclude
     private Book book;
     /**
