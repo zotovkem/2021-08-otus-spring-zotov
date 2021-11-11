@@ -38,15 +38,11 @@ public class Book {
      * Авторы
      */
     @Builder.Default
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private Set<Author> authors = new HashSet<>();
     /**
      * Жанры
      */
     @Builder.Default
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private Set<Genre> genres = new HashSet<>();
 
     @Override
