@@ -48,7 +48,7 @@ public class GenreServiceImpl implements GenreService {
      */
     @Override
     public void deleteById(String id) {
-        genreRepository.deleteById(id);
+        genreRepository.deleteWithConstraintsById(id);
     }
 
     /**

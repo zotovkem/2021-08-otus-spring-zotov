@@ -10,7 +10,7 @@ import java.util.Set;
  * @author Created by ZotovES on 04.10.2021
  * Репозиторий Авторов книг
  */
-public interface AuthorRepository extends MongoRepository<Author, String> {
+public interface AuthorRepository extends MongoRepository<Author, String>, AuthorRepositoryCustom {
     /**
      * Поиск автора по фио
      *

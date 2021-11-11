@@ -10,7 +10,7 @@ import java.util.Set;
  * @author Created by ZotovES on 04.10.2021
  * Репозиторий Жанров книг
  */
-public interface GenreRepository extends MongoRepository<Genre, String> {
+public interface GenreRepository extends MongoRepository<Genre, String>, GenreRepositoryCustom {
     /**
      * Найти жанры по наименованию
      *
