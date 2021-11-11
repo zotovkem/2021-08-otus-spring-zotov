@@ -58,7 +58,7 @@ class GenreServiceImplTest {
     void deleteByIdTest() {
         genreService.deleteById("1");
 
-        verify(genreRepository).deleteById(any());
+        verify(genreRepository).deleteWithConstraintsById(any());
     }
 
     @Test

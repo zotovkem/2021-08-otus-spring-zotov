@@ -60,7 +60,7 @@ class AuthorServiceImplTest {
     void deleteByIdTest() {
         authorService.deleteById("1");
 
-        verify(authorRepository).deleteById(any());
+        verify(authorRepository).deleteWithConstraintsById(any());
     }
 
     @Test
