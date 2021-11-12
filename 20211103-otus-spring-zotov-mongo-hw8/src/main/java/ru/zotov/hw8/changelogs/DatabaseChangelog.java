@@ -13,6 +13,7 @@ import ru.zotov.hw8.domain.Comment;
 import ru.zotov.hw8.domain.Genre;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +25,7 @@ public class DatabaseChangelog {
     private List<Genre> genreList;
     private List<Author> authorList;
     private List<Book> bookList;
+    private List<Comment> commentList;
 
     @ChangeSet(order = "000", id = "initCollection", author = "ezotov", runAlways = true)
     public void dropDb(MongoDatabase db) {
@@ -69,50 +71,54 @@ public class DatabaseChangelog {
     }
 
     /**
-     * Заполнение коллекции книг
+     * Заполнение коллекции комментариев к книгам
      */
-    @ChangeSet(order = "003", id = "fillBooks", author = "ezotov")
-    public void addBooks(BookRepository bookRepository) {
-        List<Book> books = List.of(
-                new Book("1", "Высоконагруженные приложения", 2017, getAuthorSet(Set.of("2", "6")),
-                        getGenreSet(Set.of("2", "5"))),
-                new Book("2", "Чистая архитектура", 2018, getAuthorSet(Set.of("1", "7")), getGenreSet(Set.of("2", "7"))),
-                new Book("3", "Правильное питание", 2021, getAuthorSet("3"), getGenreSet("4")),
-                new Book("4", "Экстремальная археология", 2021, getAuthorSet("5"), getGenreSet("4")),
-                new Book("5", "Сказки пушкина", 2008, getAuthorSet("4"), getGenreSet(Set.of("3", "8"))),
-                new Book("6", "Отдаленные последствия", 2021, getAuthorSet("8"), getGenreSet("1")));
+    @ChangeSet(order = "003", id = "fillComments", author = "ezotov")
+    public void addBookComments(CommentRepository commentsRepository) {
+        List<Comment> comments = List.of(
+                new Comment("1", "Вроде не чего, еще не дочитал", "ЗотовЕС",
+                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
+                new Comment("2", "Хорошая книга", "ЗотовЕС",
+                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
+                new Comment("3", "Не про гречку", "ЗотовЕС",
+                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
+                new Comment("4", "Странное название", "ЗотовЕС",
+                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
+                new Comment("6", "Детектива, детектива", "ЗотовЕС",
+                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
+                new Comment("7", "Комментарий ", "Иванов",
+                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
+                new Comment("8", "Тестовый комментарий", "Петров",
+                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
+                new Comment("9", "Еще один комментарий", "Сидоров",
+                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
+                new Comment("10", "Как много комментарием нужно написать", "Тестов",
+                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
+                new Comment("12", "Последний комментарий", "Лютый критик",
+                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")));
 
-        bookList = bookRepository.saveAll(books);
+        commentList = commentsRepository.saveAll(comments);
     }
 
     /**
-     * Заполнение коллекции комментариев к книгам
+     * Заполнение коллекции книг
      */
-    @ChangeSet(order = "004", id = "fillComments", author = "ezotov")
-    public void addBookComments(CommentRepository commentsRepository) {
-        List<Comment> comments = List.of(
-                new Comment("1", getBookById("1"), "Вроде не чего, еще не дочитал", "ЗотовЕС",
-                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
-                new Comment("2", getBookById("2"), "Хорошая книга", "ЗотовЕС",
-                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
-                new Comment("3", getBookById("3"), "Не про гречку", "ЗотовЕС",
-                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
-                new Comment("4", getBookById("4"), "Странное название", "ЗотовЕС",
-                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
-                new Comment("6", getBookById("6"), "Детектива, детектива", "ЗотовЕС",
-                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
-                new Comment("7", getBookById("1"), "Комментарий ", "Иванов",
-                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
-                new Comment("8", getBookById("2"), "Тестовый комментарий", "Петров",
-                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
-                new Comment("9", getBookById("3"), "Еще один комментарий", "Сидоров",
-                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
-                new Comment("10", getBookById("4"), "Как много комментарием нужно написать", "Тестов",
-                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
-                new Comment("12", getBookById("6"), "Последний комментарий", "Лютый критик",
-                        ZonedDateTime.parse("2020-02-01T19:10:25+07:00")));
+    @ChangeSet(order = "004", id = "fillBooks", author = "ezotov")
+    public void addBooks(BookRepository bookRepository) {
+        List<Book> books = List.of(
+                new Book("1", "Высоконагруженные приложения", 2017, getAuthorSet(Set.of("2", "6")),
+                        getGenreSet(Set.of("2", "5")), getCommentList(Set.of("1", "7"))),
+                new Book("2", "Чистая архитектура", 2018, getAuthorSet(Set.of("1", "7")),
+                        getGenreSet(Set.of("2", "7")), getCommentList(Set.of("2", "8"))),
+                new Book("3", "Правильное питание", 2021, getAuthorSet("3"),
+                        getGenreSet("4"), getCommentList(Set.of("3", "9"))),
+                new Book("4", "Экстремальная археология", 2021, getAuthorSet("5"),
+                        getGenreSet("4"), getCommentList(Set.of("4", "10"))),
+                new Book("5", "Сказки пушкина", 2008, getAuthorSet("4"), getGenreSet(Set.of("3", "8")), Collections.emptyList()),
+                new Book("6", "Отдаленные последствия", 2021, getAuthorSet("8"),
+                        getGenreSet("1"), getCommentList(Set.of("6", "12"))));
 
-        commentsRepository.saveAll(comments);
+        bookList = bookRepository.saveAll(books);
     }
 
     private Book getBookById(String id) {
@@ -133,5 +139,13 @@ public class DatabaseChangelog {
 
     private Set<Genre> getGenreSet(String s) {
         return getGenreSet(Set.of(s));
+    }
+
+    private List<Comment> getCommentList(Set<String> ids) {
+        return commentList.stream().filter(comment -> ids.contains(comment.getId())).collect(Collectors.toList());
+    }
+
+    private List<Comment> getCommentList(String s) {
+        return getCommentList(Set.of(s));
     }
 }
