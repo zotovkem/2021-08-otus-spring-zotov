@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import ru.zotov.hw8.domain.Book;
 import ru.zotov.hw8.domain.Comment;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Тестирование репозитория книг")
 class BookRepositoryJpaImplTest {
     @Autowired private BookRepository bookRepository;
-    @Autowired private CommentRepository commentRepository;
 
     @Test
     @DisplayName("Создание")
@@ -61,14 +61,14 @@ class BookRepositoryJpaImplTest {
     void cascadeDeleteByIdTest() {
         Optional<String> bookId = bookRepository.findById("3").map(Book::getId);
         assertThat(bookId).isPresent();
-        List<Comment> comments = commentRepository.findByBookId("3");
+        List<Comment> comments = bookRepository.findById("3").map(Book::getComments).orElse(Collections.emptyList());
         assertThat(comments).isNotEmpty();
 
         bookRepository.cascadeDeleteById(bookId.get());
 
         Optional<Book> result = bookRepository.findById("3");
         assertThat(result).isEmpty();
-        comments = commentRepository.findByBookId("3");
+        comments = bookRepository.findById("3").map(Book::getComments).orElse(Collections.emptyList());
         assertThat(comments).isEmpty();
     }
 

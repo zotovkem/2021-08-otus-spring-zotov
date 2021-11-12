@@ -50,8 +50,8 @@ class CommentServiceImplTest {
         when(bookService.findById(anyString())).thenReturn(Optional.of(book));
         when(commentRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Comment comment = new Comment(null, Book.builder().id("1").build(), "testComment", "testAuthor", ZonedDateTime.now());
-        Comment result = commentService.create(comment);
+        Comment comment = new Comment(null, "testComment", "testAuthor", ZonedDateTime.now());
+        Comment result = commentService.create(comment, book.getId());
 
         assertThat(result).isNotNull().hasNoNullFieldsOrPropertiesExcept("id")
                 .usingRecursiveComparison().ignoringFields("id").isEqualTo(comment);
@@ -63,17 +63,15 @@ class CommentServiceImplTest {
     @Test
     @DisplayName("Редактировать комментарий")
     void updateTest() {
-        Comment comment = new Comment("1", Book.builder().id("1").build(), "testComment", "testAuthor", ZonedDateTime.now());
-        when(commentRepository.findById(any())).thenReturn(Optional.of(comment));
-        when(commentRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        Comment comment = new Comment("1", "testComment", "testAuthor", ZonedDateTime.now());
+        when(commentRepository.cascadeSave(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Comment result = commentService.update(comment);
 
         assertThat(result).isNotNull().hasNoNullFieldsOrPropertiesExcept("id")
                 .usingRecursiveComparison().isEqualTo(comment);
 
-        verify(commentRepository).findById(any());
-        verify(commentRepository).save(comment);
+        verify(commentRepository).cascadeSave(comment);
     }
 
     @Test
@@ -82,13 +80,13 @@ class CommentServiceImplTest {
 
         commentService.deleteById("1");
 
-        verify(commentRepository).deleteById(any());
+        verify(commentRepository).cascadeDelete(any());
     }
 
     @Test
     @DisplayName("Найти комментарий по ид")
     void findByIdTest() {
-        Comment comment = new Comment("1", Book.builder().id("1").build(), "testComment", "testAuthor", ZonedDateTime.now());
+        Comment comment = new Comment("1", "testComment", "testAuthor", ZonedDateTime.now());
         when(commentRepository.findById(any())).thenReturn(Optional.of(comment));
 
         Comment result = commentService.findById("1");
@@ -101,7 +99,7 @@ class CommentServiceImplTest {
     @Test
     @DisplayName("Получить список всех комментариев")
     void findAllTest() {
-        Comment comment = new Comment("1", Book.builder().id("1").build(), "testComment", "testAuthor", ZonedDateTime.now());
+        Comment comment = new Comment("1", "testComment", "testAuthor", ZonedDateTime.now());
         when(commentRepository.findAll()).thenReturn(List.of(comment));
 
         List<Comment> result = commentService.findAll();
@@ -116,8 +114,14 @@ class CommentServiceImplTest {
     @Test
     @DisplayName("Получить список комментариев по ид книги")
     void findByBookIdTest() {
-        Comment comment = new Comment("1", Book.builder().id("1").build(), "testComment", "testAuthor", ZonedDateTime.now());
-        when(commentRepository.findByBookId(anyString())).thenReturn(List.of(comment));
+        Comment comment = new Comment("1", "testComment", "testAuthor", ZonedDateTime.now());
+        Book book = Book.builder().name("Книга про тестирование")
+                .releaseYear(2021)
+                .genres(Set.of(new Genre("1", "")))
+                .authors(Set.of(new Author("1", "")))
+                .comments(List.of(comment))
+                .build();
+        when(bookService.findById(anyString())).thenReturn(Optional.of(book));
 
         List<Comment> result = commentService.findByBookId("1");
 
@@ -125,6 +129,6 @@ class CommentServiceImplTest {
                 assertThat(c).hasNoNullFieldsOrPropertiesExcept("id").usingRecursiveComparison().isEqualTo(comment)
         );
 
-        verify(commentRepository).findByBookId(anyString());
+        verify(bookService).findById(anyString());
     }
 }

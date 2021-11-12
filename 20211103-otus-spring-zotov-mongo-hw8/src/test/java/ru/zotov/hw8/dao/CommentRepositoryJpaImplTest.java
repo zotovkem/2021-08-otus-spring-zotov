@@ -6,14 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import ru.zotov.hw8.domain.Book;
 import ru.zotov.hw8.domain.Comment;
 
 import java.time.ZonedDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 /**
  * @author Created by ZotovES on 22.10.2021
@@ -24,11 +29,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @DisplayName("Тестирование репозитория комментариев")
 class CommentRepositoryJpaImplTest {
     @Autowired private CommentRepository commentRepository;
+    @Autowired private MongoTemplate mongoTemplate;
 
     @Test
     @DisplayName("Добавить комментарий")
     void createTest() {
-        Comment comment = new Comment(null, Book.builder().id("1").build(), "testComment", "testAuthor", ZonedDateTime.now());
+        Comment comment = new Comment(null, "testComment", "testAuthor", ZonedDateTime.now());
         Comment result = commentRepository.save(comment);
 
         assertThat(result).isNotNull().hasFieldOrProperty("id").isNotNull()
@@ -38,7 +44,7 @@ class CommentRepositoryJpaImplTest {
     @Test
     @DisplayName("Редактировать комментарий")
     void updateTest() {
-        Comment comment = new Comment("1", Book.builder().id("1").build(), "testComment", "testAuthor", ZonedDateTime.now());
+        Comment comment = new Comment("1", "testComment", "testAuthor", ZonedDateTime.now());
         Comment result = commentRepository.save(comment);
 
         assertThat(result).isNotNull().usingRecursiveComparison().ignoringFields("book", "createDate").isEqualTo(comment);
@@ -79,5 +85,41 @@ class CommentRepositoryJpaImplTest {
                         assertThat(comment).hasFieldOrPropertyWithValue("id", "8")
                                 .hasFieldOrPropertyWithValue("content", "Тестовый комментарий")
                                 .hasFieldOrPropertyWithValue("author", "Петров"));
+    }
+
+    @Test
+    @DisplayName("Каскадное редактирование комментария")
+    public void cascadeSaveTest() {
+        Comment comment = new Comment("2", "testComment", "testAuthor", ZonedDateTime.now());
+        Comment result = commentRepository.cascadeSave(comment);
+
+        assertThat(result).isNotNull().usingRecursiveComparison().ignoringFields("createDate").isEqualTo(comment);
+
+        List<Comment> comments = Optional.of(comment.getId())
+                .map(id -> new Query(where("comments.id").is(id)))
+                .map(query -> mongoTemplate.findOne(query, Book.class))
+                .map(Book::getComments).stream().flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        assertThat(comments).isNotNull().asList()
+                .anySatisfy(c -> assertThat(c).hasFieldOrPropertyWithValue("id", "2")
+                        .hasFieldOrPropertyWithValue("content", "testComment")
+                        .hasFieldOrPropertyWithValue("author", "testAuthor"));
+    }
+
+    @Test
+    @DisplayName("Каскадное удаление комментария")
+    public void cascadeDeleteTest() {
+        commentRepository.cascadeDelete("2");
+
+        List<Comment> comments = Optional.of("2")
+                .map(id -> new Query(where("comments.id").is(id)))
+                .map(query -> mongoTemplate.findOne(query, Book.class))
+                .map(Book::getComments).stream().flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        assertThat(comments).isNotNull().asList()
+                .noneSatisfy(c -> assertThat(c).hasFieldOrPropertyWithValue("id", "2")
+                        .hasFieldOrPropertyWithValue("content", "testComment")
+                        .hasFieldOrPropertyWithValue("author", "testAuthor"));
+
     }
 }
