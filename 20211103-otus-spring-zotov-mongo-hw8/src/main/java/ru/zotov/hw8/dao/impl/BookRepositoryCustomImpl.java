@@ -2,11 +2,16 @@ package ru.zotov.hw8.dao.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import ru.zotov.hw8.dao.BookRepositoryCustom;
 import ru.zotov.hw8.domain.Book;
 import ru.zotov.hw8.domain.Comment;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 /**
  * @author Created by ZotovES on 08.11.2021
@@ -23,7 +28,11 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
      */
     @Override
     public void cascadeDeleteById(String bookId) {
-        mongoTemplate.remove(new Query(Criteria.where("book.id").is(bookId)), Comment.class);
-        mongoTemplate.remove(new Query(Criteria.where("id").is(bookId)), Book.class);
+        Optional.ofNullable(mongoTemplate.findAndRemove(new Query(where("id").is(bookId)), Book.class)).ifPresent(book -> {
+            List<String> commentsIds = book.getComments().stream()
+                    .map(Comment::getId)
+                    .collect(Collectors.toList());
+            mongoTemplate.remove(new Query(where("id").in(commentsIds)), Comment.class);
+        });
     }
 }

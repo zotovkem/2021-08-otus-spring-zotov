@@ -5,9 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +45,11 @@ public class Book {
     @DBRef
     @Builder.Default
     private Set<Genre> genres = new HashSet<>();
+    /**
+     * Комментарии
+     */
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
 
     @Override
     public String toString() {
