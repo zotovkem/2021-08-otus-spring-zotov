@@ -2,6 +2,7 @@ package ru.zotov.hw8.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw8.dao.AuthorRepository;
 import ru.zotov.hw8.domain.Author;
 import ru.zotov.hw8.service.AuthorService;
@@ -47,6 +48,7 @@ public class AuthorServiceImpl implements AuthorService {
      * @param id ид
      */
     @Override
+    @Transactional
     public void deleteById(String id) {
         authorRepository.deleteWithConstraintsById(id);
     }

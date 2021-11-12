@@ -9,8 +9,8 @@ import ru.zotov.hw8.domain.Comment;
 import ru.zotov.hw8.service.BookService;
 import ru.zotov.hw8.service.CommentService;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Created by ZotovES on 25.10.2021
@@ -30,14 +30,16 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     @Transactional
-    public Comment create(Comment comment) {
-        Optional<Book> book = bookService.findById(comment.getBook().getId());
-
-        book.ifPresentOrElse(comment::setBook, () -> {
+    public Comment create(Comment comment, String bookId) {
+        Book book = bookService.findById(bookId).orElseThrow(() -> {
             throw new IllegalArgumentException("Invalid book id");
         });
 
-        return commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
+        book.getComments().add(savedComment);
+        bookService.save(book);
+
+        return savedComment;
     }
 
     /**
@@ -49,12 +51,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Comment update(Comment comment) {
-        Comment persistComment = commentRepository.findById(comment.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid comment id"));
-        persistComment.setContent(comment.getContent());
-        persistComment.setAuthor(comment.getAuthor());
-
-        return commentRepository.save(persistComment);
+        return commentRepository.cascadeSave(comment);
     }
 
     /**
@@ -63,8 +60,9 @@ public class CommentServiceImpl implements CommentService {
      * @param id ид
      */
     @Override
+    @Transactional
     public void deleteById(String id) {
-        commentRepository.deleteById(id);
+        commentRepository.cascadeDelete(id);
     }
 
     /**
@@ -97,6 +95,8 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<Comment> findByBookId(String bookId) {
-        return commentRepository.findByBookId(bookId);
+        return bookService.findById(bookId)
+                .map(Book::getComments)
+                .orElse(Collections.emptyList());
     }
 }

@@ -13,9 +13,10 @@ public interface CommentService {
      * Создать комментарий
      *
      * @param comment комментарий
+     * @param bookId  ид книги
      * @return комментарий
      */
-    Comment create(Comment comment);
+    Comment create(Comment comment, String bookId);
 
     /**
      * Редактировать комментарий

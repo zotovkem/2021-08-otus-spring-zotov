@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import ru.zotov.hw8.domain.Book;
 import ru.zotov.hw8.domain.Comment;
 import ru.zotov.hw8.service.CommentService;
 
@@ -32,8 +31,8 @@ public class CommentShellCommandController {
     @ShellMethod(value = "Add comment for book", key = {"comment-add"})
     public void addCommentBook(@ShellOption("-book-id") String bookId, @ShellOption("-text") String commentContent,
             @ShellOption("-author") String author) {
-        commentService.create(new Comment(null, Book.builder().id(bookId).build(), commentContent, author,
-                ZonedDateTime.now()));
+        commentService.create(new Comment(null, commentContent, author,
+                ZonedDateTime.now()), bookId);
     }
 
     /**
@@ -47,7 +46,7 @@ public class CommentShellCommandController {
     @ShellMethod(value = "Update comment for book", key = {"comment-update"})
     public void updateCommentBook(@ShellOption("-id") String id, @ShellOption("-text") String commentContent,
             @ShellOption("-author") String author) {
-        commentService.update(new Comment(id, null, commentContent, author,
+        commentService.update(new Comment(id, commentContent, author,
                 ZonedDateTime.now()));
     }
 
