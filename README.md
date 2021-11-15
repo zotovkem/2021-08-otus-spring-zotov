@@ -18,3 +18,7 @@
 ДЗ7 20211025-otus-spring-zotov-spring-data-hw7
 
 ДЗ8 20211103-otus-spring-zotov-mongo-hw8
+
+ДЗ9 20211115-otus-spring-zotov-mvc-hw10
+
+ДЗ10 20211115-otus-spring-zotov-mvc-hw10
