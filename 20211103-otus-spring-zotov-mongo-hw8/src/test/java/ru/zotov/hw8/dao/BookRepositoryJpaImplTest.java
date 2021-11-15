@@ -105,4 +105,27 @@ class BookRepositoryJpaImplTest {
                         .hasFieldOrPropertyWithValue("releaseYear", 2017)
                         .hasFieldOrPropertyWithValue("id", "1"));
     }
+
+    @Test
+    @DisplayName("Найти по наименованию жанра")
+    void findByGenreNameTest() {
+        List<Book> result = bookRepository.findByGenreName("сказ");
+
+        assertThat(result).asList().hasSize(1)
+                .allSatisfy(book -> assertThat(book)
+                        .hasFieldOrPropertyWithValue("name", "Сказки пушкина")
+                        .hasFieldOrPropertyWithValue("releaseYear", 2008)
+                        .hasFieldOrPropertyWithValue("id", "5"));
+    }
+
+    @Test
+    @DisplayName("Найти по фио автора")
+    void findByAuthorFioTest() {
+        List<Book> result = bookRepository.findByAuthorFio("алек");
+
+        assertThat(result).asList().hasSize(3)
+                .anySatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Сказки пушкина")
+                        .hasFieldOrPropertyWithValue("releaseYear", 2008)
+                        .hasFieldOrPropertyWithValue("id", "5"));
+    }
 }

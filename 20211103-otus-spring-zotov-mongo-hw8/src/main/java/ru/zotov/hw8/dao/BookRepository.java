@@ -20,22 +20,4 @@ public interface BookRepository extends MongoRepository<Book, String>, BookRepos
      */
     @Query(value = "{'name': { $regex: :#{#name}, $options: 'i' }}")
     List<Book> findByName(@Param("name") String name);
-
-    /**
-     * Поиск по наименованию жанра
-     *
-     * @param name наименование жанра
-     * @return список книг
-     */
-    @Query(value = "{'genres.name': { $regex: :#{#name}, $options: 'i' }}")
-    List<Book> findByGenreName(@Param("name") String name);
-
-    /**
-     * Поиск по ФИО автора книги
-     *
-     * @param fio ФИО автора
-     * @return список книг
-     */
-    @Query(value = "{'authors.fio': { $regex: :#{#fio}, $options: 'i' }}")
-    List<Book> findByAuthorFio(@Param("fio") String fio);
 }

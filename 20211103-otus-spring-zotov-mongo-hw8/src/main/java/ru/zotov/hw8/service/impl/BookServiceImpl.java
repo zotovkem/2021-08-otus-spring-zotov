@@ -97,6 +97,7 @@ public class BookServiceImpl implements BookService {
      * @return список книг
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Book> findByGenreName(String name) {
         return bookDao.findByGenreName(name);
     }
@@ -108,6 +109,7 @@ public class BookServiceImpl implements BookService {
      * @return список книг
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Book> findByAuthorFio(String fio) {
         return bookDao.findByAuthorFio(fio);
     }
