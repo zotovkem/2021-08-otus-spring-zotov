@@ -8,6 +8,8 @@ import ru.zotov.hw10.dao.GenreRepositoryCustom;
 import ru.zotov.hw10.domain.Book;
 import ru.zotov.hw10.domain.Genre;
 
+import java.util.List;
+
 /**
  * @author Created by ZotovES on 11.11.2021
  * Реализация кастомного репозитория жанров
@@ -19,13 +21,13 @@ public class GenreRepositoryCustomImpl implements GenreRepositoryCustom {
     /**
      * Удаление с проверкой зависимых сущностей
      *
-     * @param genreId ид жанра
+     * @param genreIds список ид жанров
      */
     @Override
-    public void deleteWithConstraintsById(String genreId) {
-        if (mongoTemplate.exists(new Query(Criteria.where("genres.id").is(genreId)), Book.class)) {
+    public void deleteWithConstraintsByIds(List<String> genreIds) {
+        if (mongoTemplate.exists(new Query(Criteria.where("genres.$id").in(genreIds)), Book.class)) {
             throw new IllegalArgumentException("Impossible remove genre");
         }
-        mongoTemplate.remove(new Query(Criteria.where("id").is(genreId)), Genre.class);
+        mongoTemplate.remove(new Query(Criteria.where("id").in(genreIds)), Genre.class);
     }
 }

@@ -55,11 +55,11 @@ class GenreServiceImplTest {
     }
 
     @Test
-    @DisplayName("Удаление по ид")
-    void deleteByIdTest() {
-        genreService.deleteById("1");
+    @DisplayName("Удаление по списку ид")
+    void deleteByListIdsTest() {
+        genreService.deleteByListIds(List.of("1", "2"));
 
-        verify(genreRepository).deleteWithConstraintsById(any());
+        verify(genreRepository).deleteWithConstraintsByIds(any());
     }
 
     @Test

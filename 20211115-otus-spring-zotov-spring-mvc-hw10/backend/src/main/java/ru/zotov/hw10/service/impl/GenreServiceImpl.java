@@ -2,6 +2,7 @@ package ru.zotov.hw10.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw10.dao.GenreRepository;
 import ru.zotov.hw10.domain.Genre;
 import ru.zotov.hw10.service.GenreService;
@@ -42,16 +43,6 @@ public class GenreServiceImpl implements GenreService {
     }
 
     /**
-     * Удалить по ид
-     *
-     * @param id ид жанра
-     */
-    @Override
-    public void deleteById(String id) {
-        genreRepository.deleteWithConstraintsById(id);
-    }
-
-    /**
      * Получить все жанры
      *
      * @return список жанров
@@ -81,5 +72,16 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public Set<Genre> findByIdIn(List<String> ids) {
         return genreRepository.findByIdIn(ids);
+    }
+
+    /**
+     * Удалить жанры по списку ид
+     *
+     * @param ids список ид жанра
+     */
+    @Override
+    @Transactional
+    public void deleteByListIds(List<String> ids) {
+        genreRepository.deleteWithConstraintsByIds(ids);
     }
 }

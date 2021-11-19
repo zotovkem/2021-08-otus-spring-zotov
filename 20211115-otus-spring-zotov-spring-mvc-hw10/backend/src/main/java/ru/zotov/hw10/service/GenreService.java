@@ -28,13 +28,6 @@ public interface GenreService {
     Optional<Genre> findById(String id);
 
     /**
-     * Удалить по ид
-     *
-     * @param id ид жанра
-     */
-    void deleteById(String id);
-
-    /**
      * Получить все жанры
      *
      * @return список жанров
@@ -56,4 +49,11 @@ public interface GenreService {
      * @return список жанров
      */
     Set<Genre> findByIdIn(List<String> ids);
+
+    /**
+     * Удалить жанры по списку ид
+     *
+     * @param ids список ид жанра
+     */
+    void deleteByListIds(List<String> ids);
 }
