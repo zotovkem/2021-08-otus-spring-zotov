@@ -6,7 +6,7 @@ const AuthorTitle = ({record}) => {
 };
 
 export const authorEdit = props => (
-    <Edit {...props} title={<AuthorTitle/>}>
+    <Edit {...props}  title={<AuthorTitle/>}>
         <SimpleForm>
             <TextInput disabled source="id" label="Ид"/>
             <TextInput source="fio" label="ФИО"/>
