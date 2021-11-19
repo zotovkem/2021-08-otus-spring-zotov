@@ -35,6 +35,13 @@ public interface AuthorService {
     void deleteById(String id);
 
     /**
+     * Удалить авторов по списку ид
+     *
+     * @param ids список ид
+     */
+    void deleteByListIds(List<String> ids);
+
+    /**
      * Получить всех авторов
      *
      * @return список авторов

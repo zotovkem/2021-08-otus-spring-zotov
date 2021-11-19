@@ -24,8 +24,8 @@ public class AuthorController {
      * @param author автор
      */
     @PostMapping
-    public void create(@RequestBody Author author) {
-        authorService.save(new Author(null, author.getFio()));
+    public Author create(@RequestBody Author author) {
+        return authorService.save(new Author(null, author.getFio()));
     }
 
     /**
@@ -65,8 +65,8 @@ public class AuthorController {
      *
      * @param ids ид
      */
-    @DeleteMapping()
-    public void deleteByListIds(@RequestParam("ids") List<String> ids) {
+    @DeleteMapping
+    public void deleteByListIds(@RequestBody List<String> ids) {
         authorService.deleteByListIds(ids);
     }
 }

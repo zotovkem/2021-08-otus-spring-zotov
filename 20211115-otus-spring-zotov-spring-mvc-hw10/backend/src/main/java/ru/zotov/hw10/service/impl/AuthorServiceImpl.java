@@ -45,12 +45,23 @@ public class AuthorServiceImpl implements AuthorService {
     /**
      * Удалить автора
      *
-     * @param id ид
+     * @param ids ид
      */
     @Override
     @Transactional
-    public void deleteById(String id) {
-        authorRepository.deleteWithConstraintsById(id);
+    public void deleteById(String ids) {
+        authorRepository.deleteWithConstraintsById(ids);
+    }
+
+    /**
+     * Удалить авторов по списку ид
+     *
+     * @param ids список ид
+     */
+    @Override
+    @Transactional
+    public void deleteByListIds(List<String> ids) {
+        ids.forEach(this::deleteById);
     }
 
     /**
