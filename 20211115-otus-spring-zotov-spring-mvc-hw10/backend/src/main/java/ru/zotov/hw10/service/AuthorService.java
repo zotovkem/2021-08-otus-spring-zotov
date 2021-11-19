@@ -28,13 +28,6 @@ public interface AuthorService {
     Optional<Author> findById(String id);
 
     /**
-     * Удалить автора
-     *
-     * @param id ид
-     */
-    void deleteById(String id);
-
-    /**
      * Удалить авторов по списку ид
      *
      * @param ids список ид

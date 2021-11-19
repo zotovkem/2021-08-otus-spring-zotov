@@ -1,14 +1,16 @@
 package ru.zotov.hw10.dao;
 
+import java.util.List;
+
 /**
  * @author Created by ZotovES on 11.11.2021
  * Кастомный репозиторий авторов
  */
 public interface AuthorRepositoryCustom {
     /**
-     * Удаление с проверкой зависимых сущностей
+     * Удаление авторов с проверкой зависимых сущностей
      *
-     * @param id ид автора
+     * @param ids список ид авторов
      */
-    void deleteWithConstraintsById(String id);
+    void deleteWithConstraintsByIds(List<String> ids);
 }

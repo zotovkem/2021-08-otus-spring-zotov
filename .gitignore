@@ -55,3 +55,9 @@ Thumbs.db
 # Folder config file
 Desktop.ini
 spring-shell.log
+######################
+# React
+######################
+node_modules
+npm-debug.log
+yarn.lock

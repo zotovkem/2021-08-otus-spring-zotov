@@ -18,7 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Created by ZotovES on 08.11.2021
@@ -56,19 +57,11 @@ class AuthorServiceImplTest {
     }
 
     @Test
-    @DisplayName("Удаление по ид")
-    void deleteByIdTest() {
-        authorService.deleteById("1");
-
-        verify(authorRepository).deleteWithConstraintsById(any());
-    }
-
-    @Test
     @DisplayName("Удаление по списку ид")
     void deleteByListIdsTest() {
         authorService.deleteByListIds(List.of("1", "2"));
 
-        verify(authorRepository, times(2)).deleteWithConstraintsById(any());
+        verify(authorRepository).deleteWithConstraintsByIds(any());
     }
 
     @Test

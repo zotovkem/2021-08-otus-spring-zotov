@@ -8,6 +8,8 @@ import ru.zotov.hw10.dao.AuthorRepositoryCustom;
 import ru.zotov.hw10.domain.Author;
 import ru.zotov.hw10.domain.Book;
 
+import java.util.List;
+
 /**
  * @author Created by ZotovES on 11.11.2021
  * Реализация кастомного репозитория авторов
@@ -17,15 +19,15 @@ public class AuthorRepositoryCustomImpl implements AuthorRepositoryCustom {
     private final MongoTemplate mongoTemplate;
 
     /**
-     * Удаление с проверкой зависимых сущностей
+     * Удаление авторов с проверкой зависимых сущностей
      *
-     * @param id ид автора
+     * @param ids список ид авторов
      */
     @Override
-    public void deleteWithConstraintsById(String id) {
-        if (mongoTemplate.exists(new Query(Criteria.where("authors.id").is(id)), Book.class)) {
+    public void deleteWithConstraintsByIds(List<String> ids) {
+        if (mongoTemplate.exists(new Query(Criteria.where("authors.$id").in(ids)), Book.class)) {
             throw new IllegalArgumentException("Impossible remove author");
         }
-        mongoTemplate.remove(new Query(Criteria.where("id").is(id)), Author.class);
+        mongoTemplate.remove(new Query(Criteria.where("id").in(ids)), Author.class);
     }
 }
