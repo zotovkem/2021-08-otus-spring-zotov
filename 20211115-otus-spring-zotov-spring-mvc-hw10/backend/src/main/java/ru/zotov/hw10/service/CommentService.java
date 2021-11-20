@@ -22,24 +22,18 @@ public interface CommentService {
      * Редактировать комментарий
      *
      * @param comment комментарий
+     * @param bookId  ид книги
      * @return комментарий
      */
-    Comment update(Comment comment);
+    Comment update(Comment comment, String bookId);
 
     /**
      * Удалить комментарий
      *
-     * @param id ид
+     * @param ids    список ид
+     * @param bookId ид книги
      */
-    void deleteById(String id);
-
-    /**
-     * Поиск комментария по ид
-     *
-     * @param id ид
-     * @return комментарий
-     */
-    Comment findById(String id);
+    void deleteByIds(List<String> ids, String bookId);
 
     /**
      * Поиск комментариев по ид книги
@@ -48,6 +42,8 @@ public interface CommentService {
      * @return список комментариев
      */
     List<Comment> findByBookId(String bookId);
+
+    Comment findById(String id, String bookId);
 
     /**
      * Получить список всех комментариев

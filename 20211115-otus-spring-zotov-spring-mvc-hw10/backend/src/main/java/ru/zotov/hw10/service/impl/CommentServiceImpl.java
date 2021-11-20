@@ -9,8 +9,13 @@ import ru.zotov.hw10.domain.Comment;
 import ru.zotov.hw10.service.BookService;
 import ru.zotov.hw10.service.CommentService;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 /**
  * @author Created by ZotovES on 25.10.2021
@@ -31,49 +36,71 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Comment create(Comment comment, String bookId) {
-        Book book = bookService.findById(bookId).orElseThrow(() -> {
-            throw new IllegalArgumentException("Invalid book id");
-        });
+        Book book = getBookById(bookId);
 
-        Comment savedComment = commentRepository.save(comment);
-        book.getComments().add(savedComment);
+        comment.setId(UUID.randomUUID().toString());
+        book.getComments().add(comment);
         bookService.save(book);
 
-        return savedComment;
+        return comment;
     }
 
     /**
      * Редактировать комментарий
      *
      * @param comment комментарий
+     * @param bookId  ид книги
      * @return комментарий
      */
     @Override
     @Transactional
-    public Comment update(Comment comment) {
-        return commentRepository.cascadeSave(comment);
+    public Comment update(Comment comment, String bookId) {
+        Book book = getBookById(bookId);
+
+        List<Comment> commentList = book.getComments().stream()
+                .filter(c -> nonNull(c.getId()) && c.getId().equals(comment.getId()))
+                .collect(Collectors.toList());
+        commentList.add(comment);
+        book.setComments(commentList);
+
+        bookService.save(book);
+
+        return comment;
     }
 
     /**
      * Удалить комментарий
      *
-     * @param id ид
+     * @param ids    список ид
+     * @param bookId ид книги
      */
     @Override
     @Transactional
-    public void deleteById(String id) {
-        commentRepository.cascadeDelete(id);
+    public void deleteByIds(List<String> ids, String bookId) {
+        Book book = getBookById(bookId);
+
+        List<Comment> commentList = book.getComments().stream()
+                .filter(c -> nonNull(c.getId()) && ids.contains(c.getId()))
+                .collect(Collectors.toList());
+        book.setComments(commentList);
+
+        bookService.save(book);
     }
 
     /**
      * Поиск комментария по ид
      *
-     * @param id ид
+     * @param id     ид
+     * @param bookId ид книги
      * @return комментарий
      */
     @Override
-    public Comment findById(String id) {
-        return commentRepository.findById(id)
+    public Comment findById(String id, String bookId) {
+        return bookService.findById(bookId)
+                .map(Book::getComments).stream()
+                .flatMap(Collection::stream)
+                .filter(c -> nonNull(c.getId()) && c.getId().equals(id))
+                .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Invalid comment id"));
     }
 
@@ -98,5 +125,17 @@ public class CommentServiceImpl implements CommentService {
         return bookService.findById(bookId)
                 .map(Book::getComments)
                 .orElse(Collections.emptyList());
+    }
+
+    /**
+     * Получить книгу по ид
+     *
+     * @param bookId ид книги
+     * @return книга
+     */
+    private Book getBookById(String bookId) {
+        return bookService.findById(bookId).orElseThrow(() -> {
+            throw new IllegalArgumentException("Invalid book id");
+        });
     }
 }
