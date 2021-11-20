@@ -50,12 +50,12 @@ public class BookServiceImpl implements BookService {
     /**
      * Удалить книгу по ид
      *
-     * @param id ид
+     * @param ids список ид
      */
     @Override
     @Transactional
-    public void deleteById(String id) {
-        bookDao.cascadeDeleteById(id);
+    public void deleteByIds(List<String> ids) {
+        bookDao.deleteByIds(ids);
     }
 
     /**

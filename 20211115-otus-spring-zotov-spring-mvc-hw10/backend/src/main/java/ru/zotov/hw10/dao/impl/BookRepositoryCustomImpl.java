@@ -2,15 +2,14 @@ package ru.zotov.hw10.dao.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import ru.zotov.hw10.dao.BookRepositoryCustom;
 import ru.zotov.hw10.domain.Author;
 import ru.zotov.hw10.domain.Book;
-import ru.zotov.hw10.domain.Comment;
 import ru.zotov.hw10.domain.Genre;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -24,18 +23,13 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
     private final MongoTemplate mongoTemplate;
 
     /**
-     * Каскадное удаление зависимых сущностей
+     * Удаление книг по списку ид
      *
-     * @param bookId ид книги
+     * @param ids список ид книг
      */
     @Override
-    public void cascadeDeleteById(String bookId) {
-        Optional.ofNullable(mongoTemplate.findAndRemove(new Query(where("id").is(bookId)), Book.class)).ifPresent(book -> {
-            List<String> commentsIds = book.getComments().stream()
-                    .map(Comment::getId)
-                    .collect(Collectors.toList());
-            mongoTemplate.remove(new Query(where("id").in(commentsIds)), Comment.class);
-        });
+    public void deleteByIds(List<String> ids) {
+        mongoTemplate.remove(new Query(Criteria.where("id").in(ids)), Book.class);
     }
 
     /**

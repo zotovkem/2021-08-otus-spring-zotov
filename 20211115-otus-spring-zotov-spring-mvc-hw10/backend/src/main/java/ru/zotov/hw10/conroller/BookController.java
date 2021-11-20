@@ -3,7 +3,9 @@ package ru.zotov.hw10.conroller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.zotov.hw10.domain.Book;
+import ru.zotov.hw10.domain.Comment;
 import ru.zotov.hw10.service.BookService;
+import ru.zotov.hw10.service.CommentService;
 
 import java.util.List;
 
@@ -16,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
+    private final CommentService commentService;
 
     /**
      * Создание книги
@@ -94,10 +97,60 @@ public class BookController {
     /**
      * Удалить книгу по ид
      *
-     * @param id ид
+     * @param ids список ид
      */
-    @DeleteMapping(value = "/{id}")
-    public void deleteById(@PathVariable("id") String id) {
-        bookService.deleteById(id);
+    @DeleteMapping
+    public void deleteById(@RequestBody List<String> ids) {
+        bookService.deleteByIds(ids);
+    }
+
+    /**
+     * Добавить комментарий к книге
+     *
+     * @param bookId  ид книги
+     * @param comment комментарий
+     */
+    @PostMapping("/{bookId}/comments")
+    public Comment addCommentBook(@RequestBody Comment comment, @PathVariable("bookId") String bookId) {
+        return commentService.create(comment, bookId);
+    }
+
+    /**
+     * Редактировать комментарий к книге
+     *
+     * @param comment комментарий
+     */
+    @PutMapping("/{bookId}/comments")
+    public Comment updateCommentBook(@RequestBody Comment comment, @PathVariable("bookId") String bookId) {
+        return commentService.update(comment, bookId);
+    }
+
+    /**
+     * Удалить комментарий по списку ид
+     */
+    @DeleteMapping("/{bookId}/comments")
+    public void deleteCommentBook(@RequestBody List<String> ids, @PathVariable("bookId") String bookId) {
+        commentService.deleteByIds(ids, bookId);
+    }
+
+    /**
+     * Получить все комментарии
+     *
+     * @return список комментариев
+     */
+    @GetMapping("/{bookId}/comments")
+    public List<Comment> getAll(@PathVariable("bookId") String bookId) {
+        return commentService.findByBookId(bookId);
+    }
+
+    /**
+     * Получить комментарий по ид
+     *
+     * @param id ид комментария
+     * @return комментарий
+     */
+    @GetMapping("/{bookId}/comments/{id}")
+    public Comment findCommentById(@PathVariable("id") String id, @PathVariable("bookId") String bookid) {
+        return commentService.findById(id, bookid);
     }
 }

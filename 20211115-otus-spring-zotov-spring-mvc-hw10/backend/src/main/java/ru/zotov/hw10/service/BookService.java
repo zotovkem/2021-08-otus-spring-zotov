@@ -21,9 +21,9 @@ public interface BookService {
     /**
      * Удалить книгу по ид
      *
-     * @param id ид
+     * @param ids список ид
      */
-    void deleteById(String id);
+    void deleteByIds(List<String> ids);
 
     /**
      * Получить список всех книг

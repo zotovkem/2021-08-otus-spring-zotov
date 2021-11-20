@@ -11,11 +11,11 @@ import java.util.List;
  */
 public interface BookRepositoryCustom {
     /**
-     * Каскадное удаление зависимых сущностей
+     * Удаление книг по списку ид
      *
-     * @param bookId ид книги
+     * @param ids список ид книг
      */
-    void cascadeDeleteById(String bookId);
+    void deleteByIds(List<String> ids);
 
     /**
      * Поиск по наименованию жанра
