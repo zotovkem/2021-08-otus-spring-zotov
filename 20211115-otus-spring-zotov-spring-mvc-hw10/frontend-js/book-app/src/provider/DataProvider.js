@@ -7,7 +7,16 @@ export const dataProvider = {
     getList: (resource) => {
         const url = `${apiUrl}/${resource}`
 
-        return httpClient(url).then(({ json}) => ({
+        return httpClient(url).then(({json}) => ({
+            data: json,
+            total: json.length,
+        }));
+    },
+
+    getMany: (resource) => {
+        const url = `${apiUrl}/${resource}`
+
+        return httpClient(url).then(({json}) => ({
             data: json,
             total: json.length,
         }));
@@ -19,7 +28,7 @@ export const dataProvider = {
         })),
 
     update: (resource, params) =>
-        httpClient(`${apiUrl}/${resource}/${params.id}`, {
+        httpClient(`${apiUrl}/${resource}`, {
             method: 'PUT',
             body: JSON.stringify(params.data),
         }).then(({json}) => ({data: json})),
@@ -39,7 +48,7 @@ export const dataProvider = {
         }).then(({json}) => ({data: []})),
 
     deleteMany: (resource, params) =>
-         httpClient(`${apiUrl}/${resource}`, {
+        httpClient(`${apiUrl}/${resource}`, {
             method: 'DELETE',
             body: JSON.stringify(params.ids)
         }).then(({json}) => ({data: []}))
