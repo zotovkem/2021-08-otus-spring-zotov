@@ -6,13 +6,16 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw10.dao.BookRepository;
 import ru.zotov.hw10.domain.Author;
 import ru.zotov.hw10.domain.Book;
+import ru.zotov.hw10.domain.Comment;
 import ru.zotov.hw10.domain.Genre;
 import ru.zotov.hw10.service.AuthorService;
 import ru.zotov.hw10.service.BookService;
 import ru.zotov.hw10.service.GenreService;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +44,16 @@ public class BookServiceImpl implements BookService {
         List<String> genreIds = book.getGenres().stream()
                 .map(Genre::getId)
                 .collect(Collectors.toList());
+        List<Comment> comments = book.getComments();
+        comments.forEach(comment -> {
+            if (comment.getId() == null) {
+                comment.setId(UUID.randomUUID().toString());
+            }
+            if (comment.getCreateDate() == null) {
+                comment.setCreateDate(ZonedDateTime.now());
+            }
+        });
+        book.setComments(comments);
         book.setAuthors(authorService.findByIdIn(authorIds));
         book.setGenres(genreService.findByIdIn(genreIds));
 

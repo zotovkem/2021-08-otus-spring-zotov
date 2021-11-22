@@ -65,7 +65,7 @@ class BookRepositoryJpaImplTest {
         List<Comment> comments = bookRepository.findById("3").map(Book::getComments).orElse(Collections.emptyList());
         assertThat(comments).isNotEmpty();
 
-        bookRepository.cascadeDeleteById(bookId.get());
+        bookRepository.deleteByIds(List.of(bookId.get()));
 
         Optional<Book> result = bookRepository.findById("3");
         assertThat(result).isEmpty();

@@ -18,8 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -75,16 +74,9 @@ class BookServiceImplTest {
     @Test
     @DisplayName("Удалить по ид")
     void deleteByIdTest() {
-        Book book = Book.builder().name("Книга про тестирование")
-                .id("1")
-                .releaseYear(2021)
-                .genres(Set.of(new Genre("1", "")))
-                .authors(Set.of(new Author("1", "")))
-                .build();
+        bookService.deleteByIds(List.of("1"));
 
-        bookService.deleteById("1");
-
-        verify(bookDao).cascadeDeleteById(any());
+        verify(bookDao).deleteByIds(anyList());
     }
 
     @Test
