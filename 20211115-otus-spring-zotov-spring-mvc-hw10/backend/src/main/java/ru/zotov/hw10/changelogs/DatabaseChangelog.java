@@ -5,7 +5,6 @@ import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.client.MongoDatabase;
 import ru.zotov.hw10.dao.AuthorRepository;
 import ru.zotov.hw10.dao.BookRepository;
-import ru.zotov.hw10.dao.CommentRepository;
 import ru.zotov.hw10.dao.GenreRepository;
 import ru.zotov.hw10.domain.Author;
 import ru.zotov.hw10.domain.Book;
@@ -74,8 +73,8 @@ public class DatabaseChangelog {
      * Заполнение коллекции комментариев к книгам
      */
     @ChangeSet(order = "003", id = "fillComments", author = "ezotov")
-    public void addBookComments(CommentRepository commentsRepository) {
-        List<Comment> comments = List.of(
+    public void addBookComments() {
+        commentList = List.of(
                 new Comment("1", "Вроде не чего, еще не дочитал", "ЗотовЕС",
                         ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
                 new Comment("2", "Хорошая книга", "ЗотовЕС",
@@ -96,8 +95,6 @@ public class DatabaseChangelog {
                         ZonedDateTime.parse("2020-02-01T19:10:25+07:00")),
                 new Comment("12", "Последний комментарий", "Лютый критик",
                         ZonedDateTime.parse("2020-02-01T19:10:25+07:00")));
-
-        commentList = commentsRepository.saveAll(comments);
     }
 
     /**

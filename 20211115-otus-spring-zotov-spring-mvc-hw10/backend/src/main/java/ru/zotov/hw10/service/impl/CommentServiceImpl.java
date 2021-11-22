@@ -3,7 +3,6 @@ package ru.zotov.hw10.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.zotov.hw10.dao.CommentRepository;
 import ru.zotov.hw10.domain.Book;
 import ru.zotov.hw10.domain.Comment;
 import ru.zotov.hw10.service.BookService;
@@ -24,7 +23,6 @@ import static java.util.Objects.nonNull;
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
-    private final CommentRepository commentRepository;
     private final BookService bookService;
 
     /**
@@ -111,7 +109,8 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<Comment> findAll() {
-        return commentRepository.findAll();
+//        return commentRepository.findAll();
+        return Collections.emptyList();
     }
 
     /**
