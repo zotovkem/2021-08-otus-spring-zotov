@@ -1,11 +1,15 @@
 package ru.zotov.hw10.conroller;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.zotov.hw10.domain.Author;
+import ru.zotov.hw10.dto.AuthorDto;
 import ru.zotov.hw10.service.AuthorService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -16,16 +20,18 @@ import java.util.List;
 @RequestMapping(value = "/api/authors")
 @RequiredArgsConstructor
 public class AuthorController {
+    private final ModelMapper mapper;
     private final AuthorService authorService;
 
     /**
      * Создать автора
      *
-     * @param author автор
+     * @param authorDto автор
      */
     @PostMapping
-    public Author create(@RequestBody Author author) {
-        return authorService.save(new Author(null, author.getFio()));
+    @ResponseStatus(HttpStatus.CREATED)
+    public AuthorDto create(@RequestBody AuthorDto authorDto) {
+        return mapper.map(authorService.save(new Author(null, authorDto.getFio())), AuthorDto.class);
     }
 
     /**
@@ -34,8 +40,10 @@ public class AuthorController {
      * @return список авторов
      */
     @GetMapping
-    public List<Author> getAll() {
-        return authorService.findByAll();
+    public List<AuthorDto> getAll() {
+        return authorService.findByAll().stream()
+                .map(author -> mapper.map(author, AuthorDto.class))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -45,19 +53,22 @@ public class AuthorController {
      * @return автор
      */
     @GetMapping("/{id}")
-    public Author getById(@PathVariable(value = "id") String id) {
-        return authorService.findById(id).orElseThrow(() -> new IllegalArgumentException("Not found author by id = " + id));
+    public AuthorDto getById(@PathVariable(value = "id") String id) {
+        return authorService.findById(id)
+                .map(author -> mapper.map(author, AuthorDto.class))
+                .orElseThrow(() -> new IllegalArgumentException("Not found author by id = " + id));
     }
 
     /**
      * Редактировать автора
      *
-     * @param author автор
+     * @param authorDto автор
      * @return автор
      */
     @PutMapping
-    public Author update(@RequestBody Author author) {
-        return authorService.save(author);
+    public AuthorDto update(@RequestBody AuthorDto authorDto) {
+        Author author = mapper.map(authorDto, Author.class);
+        return mapper.map(authorService.save(author), AuthorDto.class);
     }
 
     /**
@@ -66,6 +77,7 @@ public class AuthorController {
      * @param ids ид
      */
     @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByListIds(@RequestBody List<String> ids) {
         authorService.deleteByListIds(ids);
     }
