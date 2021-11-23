@@ -33,30 +33,6 @@ public interface BookService {
     List<Book> findByAll();
 
     /**
-     * Найти книги по наименованию
-     *
-     * @param name наименование
-     * @return список книг
-     */
-    List<Book> findByName(String name);
-
-    /**
-     * Найти книги по жанру
-     *
-     * @param name наименование жанра
-     * @return список книг
-     */
-    List<Book> findByGenreName(String name);
-
-    /**
-     * Поиск книг по фио автора
-     *
-     * @param fio фио автора
-     * @return список книг
-     */
-    List<Book> findByAuthorFio(String fio);
-
-    /**
      * Найти книгу по ид
      *
      * @param id ид

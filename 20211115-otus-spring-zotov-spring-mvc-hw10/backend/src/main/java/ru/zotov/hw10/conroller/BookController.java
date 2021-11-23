@@ -60,32 +60,6 @@ public class BookController {
     }
 
     /**
-     * Найти книги по жанру
-     *
-     * @param name наименование жанра
-     * @return список книг
-     */
-    @GetMapping("/find-by-genre-name")
-    public List<BookDto> findByGenreName(@RequestParam("genre-name") String name) {
-        return bookService.findByGenreName(name).stream()
-                .map(book -> mapper.map(book, BookDto.class))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Поиск книг по фио автора
-     *
-     * @param fio фио автора
-     * @return список книг
-     */
-    @GetMapping("/find-by-author-fio")
-    public List<BookDto> findByAuthorFio(@RequestParam("author-fio") String fio) {
-        return bookService.findByAuthorFio(fio).stream()
-                .map(book -> mapper.map(book, BookDto.class))
-                .collect(Collectors.toList());
-    }
-
-    /**
      * Получить книгу по ид
      *
      * @param id ид

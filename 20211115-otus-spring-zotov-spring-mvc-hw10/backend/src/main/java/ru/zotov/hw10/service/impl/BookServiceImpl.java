@@ -91,39 +91,4 @@ public class BookServiceImpl implements BookService {
     public Optional<Book> findById(String id) {
         return bookDao.findById(id);
     }
-
-    /**
-     * Найти книги по наименованию
-     *
-     * @param name наименование
-     * @return список книг
-     */
-    @Override
-    public List<Book> findByName(String name) {
-        return bookDao.findByName(name);
-    }
-
-    /**
-     * Найти книги по жанру
-     *
-     * @param name наименование жанра
-     * @return список книг
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Book> findByGenreName(String name) {
-        return bookDao.findByGenreName(name);
-    }
-
-    /**
-     * Поиск книг по фио автора
-     *
-     * @param fio фио автора
-     * @return список книг
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Book> findByAuthorFio(String fio) {
-        return bookDao.findByAuthorFio(fio);
-    }
 }
