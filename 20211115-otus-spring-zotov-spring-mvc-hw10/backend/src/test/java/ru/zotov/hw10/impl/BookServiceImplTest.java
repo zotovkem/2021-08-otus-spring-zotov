@@ -1,4 +1,4 @@
-package ru.zotov.hw8.service.impl;
+package ru.zotov.hw10.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -131,69 +131,5 @@ class BookServiceImplTest {
         assertThat(result).isPresent().get().usingRecursiveComparison().isEqualTo(book);
 
         verify(bookDao).findById(anyString());
-    }
-
-    @Test
-    @DisplayName("Поиск по наименование книги")
-    void findByNameTest() {
-        Genre genreOne = new Genre("1", "Сказки");
-        Genre genreTwo = new Genre("2", "Повесть");
-        Author authorOne = new Author("1", "Иванов");
-        Author authorTwo = new Author("2", "Петров");
-        Book book = Book.builder().name("Книга про тестирование")
-                .id("1")
-                .releaseYear(2021)
-                .genres(Set.of(genreOne, genreTwo))
-                .authors(Set.of(authorOne, authorTwo))
-                .build();
-
-        when(bookDao.findByName(anyString())).thenReturn(List.of(book));
-
-        List<Book> result = bookService.findByName("test");
-
-        assertThat(result).isNotNull().asList().isNotEmpty()
-                .allSatisfy(b -> assertThat(b).usingRecursiveComparison().isEqualTo(b));
-
-        verify(bookDao).findByName(anyString());
-    }
-
-    @Test
-    @DisplayName("Поиск книг по наименованию жанра")
-    void findByGenreNameTest() {
-        Book book = Book.builder().name("Книга про тестирование")
-                .id("1")
-                .releaseYear(2021)
-                .build();
-        when(bookDao.findByGenreName(anyString())).thenReturn(List.of(book));
-
-        List<Book> result = bookService.findByGenreName("test");
-
-        assertThat(result).isNotNull().asList().isNotEmpty()
-                .allSatisfy(b -> assertThat(b).usingRecursiveComparison().isEqualTo(b));
-
-        verify(bookDao).findByGenreName(anyString());
-    }
-
-    @Test
-    @DisplayName("Поиск книг по ФИО автора")
-    void findByAuthorFioTest() {
-        Genre genreOne = new Genre("1", "Сказки");
-        Genre genreTwo = new Genre("2", "Повесть");
-        Author authorOne = new Author("1", "Иванов");
-        Author authorTwo = new Author("2", "Петров");
-        Book book = Book.builder().name("Книга про тестирование")
-                .id("1")
-                .releaseYear(2021)
-                .genres(Set.of(genreOne, genreTwo))
-                .authors(Set.of(authorOne, authorTwo))
-                .build();
-        when(bookDao.findByAuthorFio(anyString())).thenReturn(List.of(book));
-
-        List<Book> result = bookService.findByAuthorFio("test");
-
-        assertThat(result).isNotNull().asList().isNotEmpty()
-                .allSatisfy(b -> assertThat(b).usingRecursiveComparison().isEqualTo(b));
-
-        verify(bookDao).findByAuthorFio(anyString());
     }
 }

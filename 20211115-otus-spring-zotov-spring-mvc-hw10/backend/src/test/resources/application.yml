@@ -7,7 +7,7 @@ spring:
 mongock:
   runner-type: "ApplicationRunner"
   change-logs-scan-package:
-    - ru.zotov.hw8.changelogs
+    - ru.zotov.hw10.changelogs
   mongo-db:
     write-concern:
       journal: false

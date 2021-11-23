@@ -43,7 +43,10 @@ public class DatabaseChangelog {
                         5, "Артем Каменистый",
                         6, "А. Тумаркин",
                         7, "Александр Киселев",
-                        8, "Александра Маринина").entrySet().stream()
+                        8, "Александра Маринина",
+                        9, "Иванов",
+                        10, "Петров")
+                .entrySet().stream()
                 .map(e -> new Author(e.getKey().toString(), e.getValue()))
                 .collect(Collectors.toList());
 
@@ -62,7 +65,10 @@ public class DatabaseChangelog {
                         5, "Программирование",
                         6, "Базы данных",
                         7, "Архитектура ИС",
-                        8, "Аудио книги").entrySet().stream()
+                        8, "Аудио книги",
+                        9, "Стихи",
+                        10, "Басни")
+                .entrySet().stream()
                 .map(e -> new Genre(e.getKey().toString(), e.getValue()))
                 .collect(Collectors.toList());
 

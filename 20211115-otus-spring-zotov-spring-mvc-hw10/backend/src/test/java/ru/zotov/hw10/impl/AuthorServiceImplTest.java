@@ -1,4 +1,4 @@
-package ru.zotov.hw8.service.impl;
+package ru.zotov.hw10.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.zotov.hw10.dao.AuthorRepository;
 import ru.zotov.hw10.domain.Author;
+import ru.zotov.hw10.exception.ConstrainDeleteException;
 import ru.zotov.hw10.service.impl.AuthorServiceImpl;
 
 import java.util.List;
@@ -58,7 +59,7 @@ class AuthorServiceImplTest {
 
     @Test
     @DisplayName("Удаление по списку ид")
-    void deleteByListIdsTest() {
+    void deleteByListIdsTest() throws ConstrainDeleteException {
         authorService.deleteByListIds(List.of("1", "2"));
 
         verify(authorRepository).deleteWithConstraintsByIds(any());

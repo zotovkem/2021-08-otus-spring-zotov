@@ -1,4 +1,4 @@
-package ru.zotov.hw8.dao;
+package ru.zotov.hw10.dao;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
-import ru.zotov.hw10.dao.BookRepository;
 import ru.zotov.hw10.domain.Book;
 import ru.zotov.hw10.domain.Comment;
 
@@ -21,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @DataMongoTest
 @EnableConfigurationProperties
-@ComponentScan(value = {"ru.zotov.hw8.converters", "ru.zotov.hw8.dao"})
+@ComponentScan(value = {"ru.zotov.hw10.converters", "ru.zotov.hw10.dao"})
 @DisplayName("Тестирование репозитория книг")
 class BookRepositoryJpaImplTest {
     @Autowired private BookRepository bookRepository;
@@ -105,28 +104,5 @@ class BookRepositoryJpaImplTest {
                 .allSatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Высоконагруженные приложения")
                         .hasFieldOrPropertyWithValue("releaseYear", 2017)
                         .hasFieldOrPropertyWithValue("id", "1"));
-    }
-
-    @Test
-    @DisplayName("Найти по наименованию жанра")
-    void findByGenreNameTest() {
-        List<Book> result = bookRepository.findByGenreName("сказ");
-
-        assertThat(result).asList().hasSize(1)
-                .allSatisfy(book -> assertThat(book)
-                        .hasFieldOrPropertyWithValue("name", "Сказки пушкина")
-                        .hasFieldOrPropertyWithValue("releaseYear", 2008)
-                        .hasFieldOrPropertyWithValue("id", "5"));
-    }
-
-    @Test
-    @DisplayName("Найти по фио автора")
-    void findByAuthorFioTest() {
-        List<Book> result = bookRepository.findByAuthorFio("алек");
-
-        assertThat(result).asList().hasSize(3)
-                .anySatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Сказки пушкина")
-                        .hasFieldOrPropertyWithValue("releaseYear", 2008)
-                        .hasFieldOrPropertyWithValue("id", "5"));
     }
 }

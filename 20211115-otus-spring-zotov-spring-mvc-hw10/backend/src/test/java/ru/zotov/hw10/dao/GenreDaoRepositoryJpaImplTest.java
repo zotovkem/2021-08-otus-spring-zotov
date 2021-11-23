@@ -1,4 +1,4 @@
-package ru.zotov.hw8.dao;
+package ru.zotov.hw10.dao;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,13 +7,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Rollback;
-import ru.zotov.hw10.dao.GenreRepository;
 import ru.zotov.hw10.domain.Genre;
+import ru.zotov.hw10.exception.ConstrainDeleteException;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 
 /**
@@ -21,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @DataMongoTest
 @EnableConfigurationProperties
-@ComponentScan(value = {"ru.zotov.hw8.converters", "ru.zotov.hw8.dao"})
+@ComponentScan(value = {"ru.zotov.hw10.converters", "ru.zotov.hw10.dao"})
 @DisplayName("Тестирование репозитория жанров")
 class GenreDaoRepositoryJpaImplTest {
     @Autowired private GenreRepository genreDao;
@@ -54,14 +55,21 @@ class GenreDaoRepositoryJpaImplTest {
 
     @Test
     @Rollback
+    @DisplayName("Ошибка удаления жанра")
+    void deleteWithConstraintsByIdsExceptionTest() {
+        assertThatThrownBy(() -> genreDao.deleteWithConstraintsByIds(List.of("3"))).isInstanceOf(ConstrainDeleteException.class);
+    }
+
+    @Test
+    @Rollback
     @DisplayName("Удалить жанр по ид")
-    void deleteByIdTest() {
-        Optional<String> genreId = genreDao.findById("3").map(Genre::getId);
+    void deleteWithConstraintsByIdsTest() throws ConstrainDeleteException {
+        Optional<String> genreId = genreDao.findById("9").map(Genre::getId);
         assertThat(genreId).isPresent();
 
-        genreDao.deleteById(genreId.get());
+        genreDao.deleteWithConstraintsByIds(List.of(genreId.get()));
 
-        Optional<Genre> result = genreDao.findById("3");
+        Optional<Genre> result = genreDao.findById("9");
         assertThat(result).isEmpty();
     }
 

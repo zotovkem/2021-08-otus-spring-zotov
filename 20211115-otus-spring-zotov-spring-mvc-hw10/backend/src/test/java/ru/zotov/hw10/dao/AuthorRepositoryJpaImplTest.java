@@ -1,4 +1,4 @@
-package ru.zotov.hw8.dao;
+package ru.zotov.hw10.dao;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -8,20 +8,21 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Rollback;
-import ru.zotov.hw10.dao.AuthorRepository;
 import ru.zotov.hw10.domain.Author;
+import ru.zotov.hw10.exception.ConstrainDeleteException;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 /**
  * @author Created by ZotovES on 09.10.2021
  */
 @DataMongoTest
 @EnableConfigurationProperties
-@ComponentScan(value = {"ru.zotov.hw8.converters", "ru.zotov.hw8.dao"})
+@ComponentScan(value = {"ru.zotov.hw10.converters", "ru.zotov.hw10.dao"})
 @DisplayName("Тестирование репозитория авторов")
 class AuthorRepositoryJpaImplTest {
     @Autowired private AuthorRepository authorDao;
@@ -56,14 +57,21 @@ class AuthorRepositoryJpaImplTest {
     @Test
     @Rollback
     @DisplayName("Удалить автора")
-    void deleteByIdTest() {
-        Optional<Author> author = authorDao.findById("3");
+    void deleteWithConstraintsByIdsTest() throws ConstrainDeleteException {
+        Optional<Author> author = authorDao.findById("9");
         assertThat(author).isPresent();
 
-        authorDao.deleteById("3");
+        authorDao.deleteWithConstraintsByIds(List.of("9"));
 
-        Optional<Author> result = authorDao.findById("3");
+        Optional<Author> result = authorDao.findById("9");
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    @Rollback
+    @DisplayName("Ошибка удаления автора")
+    void deleteWithConstraintsByIdsExceptionTest() {
+        assertThatThrownBy(() -> authorDao.deleteWithConstraintsByIds(List.of("3"))).isInstanceOf(ConstrainDeleteException.class);
     }
 
     @Test
