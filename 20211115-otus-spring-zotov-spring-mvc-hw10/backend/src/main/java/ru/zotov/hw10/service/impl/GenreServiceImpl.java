@@ -54,17 +54,6 @@ public class GenreServiceImpl implements GenreService {
     }
 
     /**
-     * Найти жанры по наименованию
-     *
-     * @param genreName наименование жанра
-     * @return список жанров
-     */
-    @Override
-    public List<Genre> findByName(String genreName) {
-        return genreRepository.findByName(genreName);
-    }
-
-    /**
      * Поиск жанров по списку ид
      *
      * @param ids список ид

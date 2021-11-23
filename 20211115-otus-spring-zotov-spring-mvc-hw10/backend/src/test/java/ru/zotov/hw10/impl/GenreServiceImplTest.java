@@ -16,7 +16,6 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -74,19 +73,6 @@ class GenreServiceImplTest {
         assertFalse(result.isEmpty());
 
         verify(genreRepository).findAll();
-    }
-
-    @Test
-    @DisplayName("Поиск по наименованию")
-    void findByNameTest() {
-        Genre genre = new Genre(null, "genre");
-        when(genreRepository.findByName(anyString())).thenReturn(List.of(genre));
-
-        List<Genre> result = genreService.findByName("test");
-
-        assertFalse(result.isEmpty());
-
-        verify(genreRepository).findByName(anyString());
     }
 
     @Test

@@ -12,14 +12,6 @@ import java.util.Set;
  */
 public interface GenreRepository extends MongoRepository<Genre, String>, GenreRepositoryCustom {
     /**
-     * Найти жанры по наименованию
-     *
-     * @param genreName наименование жанра
-     * @return список жанров
-     */
-    List<Genre> findByName(String genreName);
-
-    /**
      * Поиск жанров по списку ид
      *
      * @param ids список ид

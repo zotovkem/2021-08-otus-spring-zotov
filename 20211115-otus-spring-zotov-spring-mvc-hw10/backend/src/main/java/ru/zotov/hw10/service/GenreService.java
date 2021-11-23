@@ -36,14 +36,6 @@ public interface GenreService {
     List<Genre> findAll();
 
     /**
-     * Найти жанры по наименованию
-     *
-     * @param genreName наименование жанра
-     * @return список жанров
-     */
-    List<Genre> findByName(String genreName);
-
-    /**
      * Поиск жанров по списку ид
      *
      * @param ids список ид
