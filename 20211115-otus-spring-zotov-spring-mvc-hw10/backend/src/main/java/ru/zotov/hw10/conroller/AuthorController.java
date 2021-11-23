@@ -54,10 +54,11 @@ public class AuthorController {
      * @return автор
      */
     @GetMapping("/{id}")
-    public AuthorDto getById(@PathVariable(value = "id") String id) {
+    public ResponseEntity<AuthorDto> getById(@PathVariable(value = "id") String id) {
         return authorService.findById(id)
                 .map(author -> mapper.map(author, AuthorDto.class))
-                .orElseThrow(() -> new IllegalArgumentException("Not found author by id = " + id));
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     /**

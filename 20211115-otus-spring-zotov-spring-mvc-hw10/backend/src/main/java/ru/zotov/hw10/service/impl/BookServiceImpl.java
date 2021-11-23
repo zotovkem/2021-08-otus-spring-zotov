@@ -13,6 +13,7 @@ import ru.zotov.hw10.service.BookService;
 import ru.zotov.hw10.service.GenreService;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,7 +45,7 @@ public class BookServiceImpl implements BookService {
         List<String> genreIds = book.getGenres().stream()
                 .map(Genre::getId)
                 .collect(Collectors.toList());
-        List<Comment> comments = book.getComments();
+        List<Comment> comments = Optional.ofNullable(book.getComments()).orElse(Collections.emptyList());
         comments.forEach(comment -> {
             if (comment.getId() == null) {
                 comment.setId(UUID.randomUUID().toString());

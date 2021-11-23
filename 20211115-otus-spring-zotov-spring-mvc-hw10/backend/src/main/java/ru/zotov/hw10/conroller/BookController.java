@@ -3,6 +3,7 @@ package ru.zotov.hw10.conroller;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.zotov.hw10.domain.Book;
 import ru.zotov.hw10.dto.BookDto;
@@ -47,29 +48,17 @@ public class BookController {
     }
 
     /**
-     * Найти книги по наименованию
-     *
-     * @param name наименование
-     * @return список книг
-     */
-    @GetMapping("/find-by-name")
-    public List<BookDto> findByName(@RequestParam("name") String name) {
-        return bookService.findByName(name).stream()
-                .map(book -> mapper.map(book, BookDto.class))
-                .collect(Collectors.toList());
-    }
-
-    /**
      * Получить книгу по ид
      *
      * @param id ид
      * @return книга
      */
     @GetMapping("/{id}")
-    public BookDto getById(@PathVariable("id") String id) {
+    public ResponseEntity<BookDto> getById(@PathVariable("id") String id) {
         return bookService.findById(id)
                 .map(book -> mapper.map(book, BookDto.class))
-                .orElseThrow(() -> new IllegalArgumentException("Not found book by id = " + id));
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     /**

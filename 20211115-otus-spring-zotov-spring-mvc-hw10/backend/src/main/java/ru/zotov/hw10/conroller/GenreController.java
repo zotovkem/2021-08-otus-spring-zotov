@@ -41,10 +41,11 @@ public class GenreController {
      * @return жанр
      */
     @GetMapping("/{id}")
-    public GenreDto getById(@PathVariable("id") String id) {
+    public ResponseEntity<GenreDto> getById(@PathVariable("id") String id) {
         return genreService.findById(id)
                 .map(genre -> mapper.map(genre, GenreDto.class))
-                .orElseThrow(() -> new IllegalArgumentException("Not found book by id = " + id));
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     /**
