@@ -3,6 +3,7 @@ package ru.zotov.hw10.conroller;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.zotov.hw10.domain.Author;
 import ru.zotov.hw10.dto.AuthorDto;
@@ -77,8 +78,12 @@ public class AuthorController {
      * @param ids ид
      */
     @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteByListIds(@RequestBody List<String> ids) {
-        authorService.deleteByListIds(ids);
+    public ResponseEntity<?> deleteByListIds(@RequestBody List<String> ids) {
+        try {
+            authorService.deleteByListIds(ids);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

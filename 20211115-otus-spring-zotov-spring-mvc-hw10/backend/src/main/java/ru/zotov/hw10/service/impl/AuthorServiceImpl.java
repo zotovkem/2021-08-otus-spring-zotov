@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw10.dao.AuthorRepository;
 import ru.zotov.hw10.domain.Author;
+import ru.zotov.hw10.exception.ConstrainDeleteException;
 import ru.zotov.hw10.service.AuthorService;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class AuthorServiceImpl implements AuthorService {
      */
     @Override
     @Transactional
-    public void deleteByListIds(List<String> ids) {
+    public void deleteByListIds(List<String> ids) throws ConstrainDeleteException {
         authorRepository.deleteWithConstraintsByIds(ids);
     }
 

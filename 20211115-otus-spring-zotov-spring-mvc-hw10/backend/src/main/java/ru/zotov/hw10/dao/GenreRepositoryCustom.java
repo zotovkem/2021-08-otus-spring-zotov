@@ -1,5 +1,7 @@
 package ru.zotov.hw10.dao;
 
+import ru.zotov.hw10.exception.ConstrainDeleteException;
+
 import java.util.List;
 
 /**
@@ -12,5 +14,5 @@ public interface GenreRepositoryCustom {
      *
      * @param genreIds список ид жанров
      */
-    void deleteWithConstraintsByIds(List<String> genreIds);
+    void deleteWithConstraintsByIds(List<String> genreIds) throws ConstrainDeleteException;
 }

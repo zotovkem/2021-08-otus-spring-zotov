@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import ru.zotov.hw10.dao.AuthorRepositoryCustom;
 import ru.zotov.hw10.domain.Author;
 import ru.zotov.hw10.domain.Book;
+import ru.zotov.hw10.exception.ConstrainDeleteException;
 
 import java.util.List;
 
@@ -24,9 +25,9 @@ public class AuthorRepositoryCustomImpl implements AuthorRepositoryCustom {
      * @param ids список ид авторов
      */
     @Override
-    public void deleteWithConstraintsByIds(List<String> ids) {
+    public void deleteWithConstraintsByIds(List<String> ids) throws ConstrainDeleteException {
         if (mongoTemplate.exists(new Query(Criteria.where("authors.$id").in(ids)), Book.class)) {
-            throw new IllegalArgumentException("Impossible remove author");
+            throw new ConstrainDeleteException("Impossible remove author");
         }
         mongoTemplate.remove(new Query(Criteria.where("id").in(ids)), Author.class);
     }

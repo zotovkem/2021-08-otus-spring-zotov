@@ -1,6 +1,7 @@
 package ru.zotov.hw10.service;
 
 import ru.zotov.hw10.domain.Genre;
+import ru.zotov.hw10.exception.ConstrainDeleteException;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,5 +56,5 @@ public interface GenreService {
      *
      * @param ids список ид жанра
      */
-    void deleteByListIds(List<String> ids);
+    void deleteByListIds(List<String> ids) throws ConstrainDeleteException;
 }

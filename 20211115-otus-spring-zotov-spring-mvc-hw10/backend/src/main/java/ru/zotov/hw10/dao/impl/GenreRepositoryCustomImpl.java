@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import ru.zotov.hw10.dao.GenreRepositoryCustom;
 import ru.zotov.hw10.domain.Book;
 import ru.zotov.hw10.domain.Genre;
+import ru.zotov.hw10.exception.ConstrainDeleteException;
 
 import java.util.List;
 
@@ -24,9 +25,9 @@ public class GenreRepositoryCustomImpl implements GenreRepositoryCustom {
      * @param genreIds список ид жанров
      */
     @Override
-    public void deleteWithConstraintsByIds(List<String> genreIds) {
+    public void deleteWithConstraintsByIds(List<String> genreIds) throws ConstrainDeleteException {
         if (mongoTemplate.exists(new Query(Criteria.where("genres.$id").in(genreIds)), Book.class)) {
-            throw new IllegalArgumentException("Impossible remove genre");
+            throw new ConstrainDeleteException("Impossible remove genre");
         }
         mongoTemplate.remove(new Query(Criteria.where("id").in(genreIds)), Genre.class);
     }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw10.dao.GenreRepository;
 import ru.zotov.hw10.domain.Genre;
+import ru.zotov.hw10.exception.ConstrainDeleteException;
 import ru.zotov.hw10.service.GenreService;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public class GenreServiceImpl implements GenreService {
      */
     @Override
     @Transactional
-    public void deleteByListIds(List<String> ids) {
+    public void deleteByListIds(List<String> ids) throws ConstrainDeleteException {
         genreRepository.deleteWithConstraintsByIds(ids);
     }
 }

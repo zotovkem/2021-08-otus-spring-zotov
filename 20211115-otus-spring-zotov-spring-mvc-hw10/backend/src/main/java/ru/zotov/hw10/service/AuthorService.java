@@ -1,6 +1,7 @@
 package ru.zotov.hw10.service;
 
 import ru.zotov.hw10.domain.Author;
+import ru.zotov.hw10.exception.ConstrainDeleteException;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public interface AuthorService {
      *
      * @param ids список ид
      */
-    void deleteByListIds(List<String> ids);
+    void deleteByListIds(List<String> ids) throws ConstrainDeleteException;
 
     /**
      * Получить всех авторов

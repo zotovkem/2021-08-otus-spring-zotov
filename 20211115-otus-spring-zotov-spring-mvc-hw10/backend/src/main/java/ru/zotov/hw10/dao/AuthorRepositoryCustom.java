@@ -1,5 +1,7 @@
 package ru.zotov.hw10.dao;
 
+import ru.zotov.hw10.exception.ConstrainDeleteException;
+
 import java.util.List;
 
 /**
@@ -12,5 +14,5 @@ public interface AuthorRepositoryCustom {
      *
      * @param ids список ид авторов
      */
-    void deleteWithConstraintsByIds(List<String> ids);
+    void deleteWithConstraintsByIds(List<String> ids) throws ConstrainDeleteException;
 }
