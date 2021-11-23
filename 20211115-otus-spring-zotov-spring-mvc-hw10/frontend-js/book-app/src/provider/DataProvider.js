@@ -44,7 +44,7 @@ export const dataProvider = {
     delete: (resource, params) =>
         httpClient(`${apiUrl}/${resource}`, {
             method: 'DELETE',
-            body: JSON.stringify({id: [params.id]}),
+            body: JSON.stringify([params.id]),
         }).then(({json}) => ({data: []})),
 
     deleteMany: (resource, params) =>
