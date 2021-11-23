@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author Created by ZotovES on 29.09.2021
- * Автор
+ * Dto автора
  */
 @Data
 @NoArgsConstructor

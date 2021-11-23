@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  * @author Created by ZotovES on 29.09.2021
- * Книга
+ * Dto книги
  */
 @Data
 @Builder

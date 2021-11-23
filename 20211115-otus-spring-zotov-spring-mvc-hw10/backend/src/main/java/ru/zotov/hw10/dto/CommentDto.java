@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 
 /**
  * @author Created by ZotovES on 21.10.2021
- * Комментарий к книге
+ * Dto комментария к книге
  */
 @Data
 @NoArgsConstructor

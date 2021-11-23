@@ -43,14 +43,6 @@ public interface AuthorService {
     List<Author> findByAll();
 
     /**
-     * Поиск авторов по фио
-     *
-     * @param fio фио автора
-     * @return список авторов
-     */
-    List<Author> findByFio(String fio);
-
-    /**
      * Поиск авторов по списку ид
      *
      * @param ids список ид

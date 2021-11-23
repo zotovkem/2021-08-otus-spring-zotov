@@ -65,17 +65,6 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     /**
-     * Поиск авторов по фио
-     *
-     * @param fio фио автора
-     * @return список авторов
-     */
-    @Override
-    public List<Author> findByFio(String fio) {
-        return authorRepository.findByFio(fio);
-    }
-
-    /**
      * Поиск авторов по списку ид
      *
      * @param ids список ид

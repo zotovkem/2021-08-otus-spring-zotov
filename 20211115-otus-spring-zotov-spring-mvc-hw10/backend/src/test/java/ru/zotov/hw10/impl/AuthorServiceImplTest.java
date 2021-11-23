@@ -18,7 +18,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -76,19 +75,6 @@ class AuthorServiceImplTest {
         assertThat(result).isNotNull().asList().isNotEmpty();
 
         verify(authorRepository).findAll();
-    }
-
-    @Test
-    @DisplayName("Поиск автора по ФИО")
-    void findByFioTest() {
-        Author author = new Author("1", "test");
-        when(authorRepository.findByFio(anyString())).thenReturn(List.of(author));
-
-        List<Author> result = authorService.findByFio("test");
-
-        assertThat(result).isNotNull().asList().isNotEmpty();
-
-        verify(authorRepository).findByFio(anyString());
     }
 
     @Test
