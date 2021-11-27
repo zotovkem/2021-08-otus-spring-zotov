@@ -1,0 +1,17 @@
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      username: root
+      password: example
+      port: 27017
+      host: localhost
+      database: bookdb
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.zotov.hw10.changelogs
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
