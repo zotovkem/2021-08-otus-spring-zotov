@@ -1,9 +1,10 @@
 package ru.zotov.hw11.dao.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import reactor.core.publisher.Mono;
 import ru.zotov.hw11.dao.GenreRepositoryCustom;
 import ru.zotov.hw11.domain.Book;
 import ru.zotov.hw11.domain.Genre;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 public class GenreRepositoryCustomImpl implements GenreRepositoryCustom {
-    private final MongoTemplate mongoTemplate;
+    private final ReactiveMongoTemplate mongoTemplate;
 
     /**
      * Удаление с проверкой зависимых сущностей
@@ -25,10 +26,13 @@ public class GenreRepositoryCustomImpl implements GenreRepositoryCustom {
      * @param genreIds список ид жанров
      */
     @Override
-    public void deleteWithConstraintsByIds(List<String> genreIds) throws ConstrainDeleteException {
-        if (mongoTemplate.exists(new Query(Criteria.where("genres.$id").in(genreIds)), Book.class)) {
-            throw new ConstrainDeleteException("Impossible remove genre");
-        }
-        mongoTemplate.remove(new Query(Criteria.where("id").in(genreIds)), Genre.class);
+    public Mono<Void> deleteWithConstraintsByIds(List<String> genreIds) throws ConstrainDeleteException {
+        return mongoTemplate.exists(new Query(Criteria.where("genres.$id").in(genreIds)), Book.class)
+                .filter(Boolean.TRUE::equals)
+                .map(exist -> {
+                    throw new ConstrainDeleteException("Impossible remove genre");
+                })
+                .then()
+                .switchIfEmpty(mongoTemplate.remove(new Query(Criteria.where("id").in(genreIds)), Genre.class).then());
     }
 }

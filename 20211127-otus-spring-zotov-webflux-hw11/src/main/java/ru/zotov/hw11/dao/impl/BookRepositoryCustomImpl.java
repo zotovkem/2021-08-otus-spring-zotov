@@ -1,7 +1,7 @@
 package ru.zotov.hw11.dao.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import ru.zotov.hw11.dao.BookRepositoryCustom;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 public class BookRepositoryCustomImpl implements BookRepositoryCustom {
-    private final MongoTemplate mongoTemplate;
+    private final ReactiveMongoTemplate mongoTemplate;
 
     /**
      * Удаление книг по списку ид

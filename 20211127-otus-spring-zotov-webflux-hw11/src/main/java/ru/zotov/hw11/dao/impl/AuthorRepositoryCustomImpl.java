@@ -1,9 +1,10 @@
 package ru.zotov.hw11.dao.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import reactor.core.publisher.Mono;
 import ru.zotov.hw11.dao.AuthorRepositoryCustom;
 import ru.zotov.hw11.domain.Author;
 import ru.zotov.hw11.domain.Book;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 public class AuthorRepositoryCustomImpl implements AuthorRepositoryCustom {
-    private final MongoTemplate mongoTemplate;
+    private final ReactiveMongoTemplate mongoTemplate;
 
     /**
      * Удаление авторов с проверкой зависимых сущностей
@@ -25,10 +26,13 @@ public class AuthorRepositoryCustomImpl implements AuthorRepositoryCustom {
      * @param ids список ид авторов
      */
     @Override
-    public void deleteWithConstraintsByIds(List<String> ids) throws ConstrainDeleteException {
-        if (mongoTemplate.exists(new Query(Criteria.where("authors.$id").in(ids)), Book.class)) {
-            throw new ConstrainDeleteException("Impossible remove author");
-        }
-        mongoTemplate.remove(new Query(Criteria.where("id").in(ids)), Author.class);
+    public Mono<Void> deleteWithConstraintsByIds(List<String> ids) {
+        return mongoTemplate.exists(new Query(Criteria.where("authors.$id").in(ids)), Book.class)
+                .filter(Boolean.TRUE::equals)
+                .map(exist -> {
+                    throw new ConstrainDeleteException("Impossible remove author");
+                })
+                .then()
+                .switchIfEmpty(mongoTemplate.remove(new Query(Criteria.where("id").in(ids)), Author.class).then());
     }
 }

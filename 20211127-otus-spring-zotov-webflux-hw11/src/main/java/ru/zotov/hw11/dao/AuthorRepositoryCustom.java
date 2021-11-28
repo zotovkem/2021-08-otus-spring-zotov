@@ -1,6 +1,6 @@
 package ru.zotov.hw11.dao;
 
-import ru.zotov.hw11.exception.ConstrainDeleteException;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ public interface AuthorRepositoryCustom {
      *
      * @param ids список ид авторов
      */
-    void deleteWithConstraintsByIds(List<String> ids) throws ConstrainDeleteException;
+    Mono<Void> deleteWithConstraintsByIds(List<String> ids);
 }

@@ -1,5 +1,6 @@
 package ru.zotov.hw11.dao;
 
+import reactor.core.publisher.Mono;
 import ru.zotov.hw11.exception.ConstrainDeleteException;
 
 import java.util.List;
@@ -14,5 +15,5 @@ public interface GenreRepositoryCustom {
      *
      * @param genreIds список ид жанров
      */
-    void deleteWithConstraintsByIds(List<String> genreIds) throws ConstrainDeleteException;
+    Mono<Void> deleteWithConstraintsByIds(List<String> genreIds) throws ConstrainDeleteException;
 }
