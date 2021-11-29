@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>ru.zotov</groupId>
-    <artifactId>hw8</artifactId>
+    <artifactId>hw11</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>20211115-otus-spring-zotov-hw10</name>
-    <description>20211115-otus-spring-zotov-hw10</description>
+    <name>20211127-otus-spring-zotov-hw11</name>
+    <description>20211127-otus-spring-zotov-hw11</description>
     <properties>
         <java.version>11</java.version>
         <spring-shell-starter.version>2.0.1.RELEASE</spring-shell-starter.version>
@@ -33,6 +33,15 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
+        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-data-mongodb</artifactId>-->
+        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.2.3</version>
         </dependency>
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
