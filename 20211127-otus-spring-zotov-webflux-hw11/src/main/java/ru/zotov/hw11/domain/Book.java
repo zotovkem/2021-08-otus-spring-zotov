@@ -2,10 +2,11 @@ package ru.zotov.hw11.domain;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -36,15 +37,13 @@ public class Book {
     /**
      * Авторы
      */
-    @DBRef
     @Builder.Default
-    private Set<Author> authors = new HashSet<>();
+    private List<Author> authors = new ArrayList<>();
     /**
      * Жанры
      */
-    @DBRef
     @Builder.Default
-    private Set<Genre> genres = new HashSet<>();
+    private List<Genre> genres = new ArrayList<>();
     /**
      * Комментарии
      */

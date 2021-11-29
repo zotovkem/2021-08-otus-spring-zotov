@@ -27,12 +27,12 @@ public class AuthorRepositoryCustomImpl implements AuthorRepositoryCustom {
      */
     @Override
     public Mono<Void> deleteWithConstraintsByIds(List<String> ids) {
-        return mongoTemplate.exists(new Query(Criteria.where("authors.$id").in(ids)), Book.class)
+        return mongoTemplate.exists(new Query(Criteria.where("authors._id").in(ids)), Book.class)
                 .filter(Boolean.TRUE::equals)
                 .map(exist -> {
                     throw new ConstrainDeleteException("Impossible remove author");
                 })
-                .then()
-                .switchIfEmpty(mongoTemplate.remove(new Query(Criteria.where("id").in(ids)), Author.class).then());
+                .switchIfEmpty(mongoTemplate.remove(new Query(Criteria.where("id").in(ids)), Author.class))
+                .then();
     }
 }

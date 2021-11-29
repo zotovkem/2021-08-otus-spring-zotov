@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * @author Created by ZotovES on 21.10.2021
@@ -32,12 +31,12 @@ public class Comment {
     /**
      * Дата создания
      */
-    private ZonedDateTime createDate;
+    private Date createDate;
 
     @Override
     public String toString() {
         return String.format("Ид: %s%nКомментарий: %s%nАвтор: %s%nДата/время: %s%n" +
                         "=====================================",
-                getId(), getContent(), getAuthor(), getCreateDate().format(DateTimeFormatter.RFC_1123_DATE_TIME));
+                getId(), getContent(), getAuthor(), getCreateDate().toString());
     }
 }

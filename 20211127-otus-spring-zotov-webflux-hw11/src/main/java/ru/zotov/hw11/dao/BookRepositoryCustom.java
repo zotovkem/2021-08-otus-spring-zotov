@@ -1,5 +1,7 @@
 package ru.zotov.hw11.dao;
 
+import reactor.core.publisher.Mono;
+
 import java.util.List;
 
 /**
@@ -12,5 +14,5 @@ public interface BookRepositoryCustom {
      *
      * @param ids список ид книг
      */
-    void deleteByIds(List<String> ids);
+    Mono<Void> deleteByIds(List<String> ids);
 }

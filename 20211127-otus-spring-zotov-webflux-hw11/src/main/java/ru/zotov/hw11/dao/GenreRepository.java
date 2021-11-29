@@ -1,10 +1,10 @@
 package ru.zotov.hw11.dao;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Flux;
 import ru.zotov.hw11.domain.Genre;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Created by ZotovES on 04.10.2021
@@ -17,5 +17,5 @@ public interface GenreRepository extends ReactiveMongoRepository<Genre, String>,
      * @param ids список ид
      * @return список жанров
      */
-    Set<Genre> findByIdIn(List<String> ids);
+    Flux<Genre> findByIdIn(List<String> ids);
 }

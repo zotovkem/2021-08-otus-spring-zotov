@@ -27,12 +27,12 @@ public class GenreRepositoryCustomImpl implements GenreRepositoryCustom {
      */
     @Override
     public Mono<Void> deleteWithConstraintsByIds(List<String> genreIds) throws ConstrainDeleteException {
-        return mongoTemplate.exists(new Query(Criteria.where("genres.$id").in(genreIds)), Book.class)
+        return mongoTemplate.exists(new Query(Criteria.where("genres._id").in(genreIds)), Book.class)
                 .filter(Boolean.TRUE::equals)
                 .map(exist -> {
                     throw new ConstrainDeleteException("Impossible remove genre");
                 })
-                .then()
-                .switchIfEmpty(mongoTemplate.remove(new Query(Criteria.where("id").in(genreIds)), Genre.class).then());
+                .switchIfEmpty(mongoTemplate.remove(new Query(Criteria.where("id").in(genreIds)), Genre.class))
+                .then();
     }
 }
