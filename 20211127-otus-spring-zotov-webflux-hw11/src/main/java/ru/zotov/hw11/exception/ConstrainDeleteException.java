@@ -4,7 +4,7 @@ package ru.zotov.hw11.exception;
  * @author Created by ZotovES on 05.03.2021
  * Исключение удаления связанной сущности
  */
-public class ConstrainDeleteException extends Exception {
+public class ConstrainDeleteException extends RuntimeException {
 
     public ConstrainDeleteException() {
         super();

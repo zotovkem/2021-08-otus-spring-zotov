@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.ZonedDateTime;
+import java.util.Date;
 
 /**
  * @author Created by ZotovES on 21.10.2021
@@ -29,5 +29,5 @@ public class CommentDto {
     /**
      * Дата создания
      */
-    private ZonedDateTime createDate;
+    private Date createDate;
 }

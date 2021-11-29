@@ -10,7 +10,7 @@ spring:
 mongock:
   runner-type: "InitializingBean"
   change-logs-scan-package:
-    - ru.zotov.hw10.changelogs
+    - ru.zotov.hw11.changelogs
   mongo-db:
     write-concern:
       journal: false
