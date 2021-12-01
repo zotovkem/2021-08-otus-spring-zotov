@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.zotov.hw11.dto.AuthorDto;
 
@@ -110,5 +111,14 @@ class AuthorControllerTest {
                 .uri("/api/authors/{id}", 10)
                 .exchange()
                 .expectStatus().isNotFound();
+    }
+
+    @Test
+    @DisplayName("Ошибка при удалении связанного с книгой автора")
+    void deleteByListIdsExceptionTest() {
+        client.method(HttpMethod.DELETE).uri("/api/authors")
+                .body(Flux.just("1"), List.class)
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 }
