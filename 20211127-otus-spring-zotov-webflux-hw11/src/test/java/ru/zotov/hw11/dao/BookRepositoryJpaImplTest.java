@@ -1,17 +1,18 @@
 package ru.zotov.hw11.dao;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 import ru.zotov.hw11.domain.Book;
-import ru.zotov.hw11.domain.Comment;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.Comparator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @DataMongoTest
 @EnableConfigurationProperties
-@ComponentScan(value = {"ru.zotov.hw11.converters", "ru.zotov.hw11.dao"})
+@ComponentScan(value = {"ru.zotov.hw11.dao"})
 @DisplayName("Тестирование репозитория книг")
 class BookRepositoryJpaImplTest {
     @Autowired private BookRepository bookRepository;
@@ -29,80 +30,85 @@ class BookRepositoryJpaImplTest {
     @DisplayName("Создание")
     void createTest() {
         Book book = Book.builder().name("Книга про тестирование").releaseYear(2021).build();
-        Book result = bookRepository.save(book);
+        Mono<Book> result = bookRepository.save(book);
 
-        assertThat(result).isNotNull().hasFieldOrProperty("id").isNotNull()
-                .usingRecursiveComparison().ignoringFields("id").isEqualTo(book);
+        StepVerifier.create(result)
+                .assertNext(resBook -> assertThat(resBook).isNotNull().hasFieldOrProperty("id").isNotNull()
+                        .usingRecursiveComparison().ignoringFields("id").isEqualTo(book))
+                .expectComplete()
+                .verify();
     }
 
     @Test
     @DisplayName("Редактирование")
     void updateTest() {
         Book book = Book.builder().id("1").name("Книга про тестирование").releaseYear(2021).build();
-        Book result = bookRepository.save(book);
+        Mono<Book> result = bookRepository.save(book);
 
-        assertThat(result).isNotNull().usingRecursiveComparison().isEqualTo(book);
+        StepVerifier.create(result)
+                .assertNext(resBook -> assertThat(resBook).isNotNull().usingRecursiveComparison().isEqualTo(book))
+                .expectComplete()
+                .verify();
     }
 
     @Test
     @DisplayName("Удалить по ид")
     void deleteByIdTest() {
-        Optional<String> bookId = bookRepository.findById("1").map(Book::getId);
-        assertThat(bookId).isPresent();
+        String bookId = "1";
+        Mono<Book> book = bookRepository.findById(bookId);
+        StepVerifier.create(book)
+                .assertNext(Assertions::assertNotNull)
+                .expectComplete()
+                .verify();
 
-        bookRepository.deleteById(bookId.get());
+        StepVerifier.create(bookRepository.deleteById(bookId))
+                .expectNextCount(0)
+                .verifyComplete();
 
-        Optional<Book> result = bookRepository.findById("1");
-        assertThat(result).isEmpty();
-    }
-
-    @Test
-    @DisplayName("Каскадное удаление комментариев по ид книги ")
-    void cascadeDeleteByIdTest() {
-        Optional<String> bookId = bookRepository.findById("3").map(Book::getId);
-        assertThat(bookId).isPresent();
-        List<Comment> comments = bookRepository.findById("3").map(Book::getComments).orElse(Collections.emptyList());
-        assertThat(comments).isNotEmpty();
-
-        bookRepository.deleteByIds(List.of(bookId.get()));
-
-        Optional<Book> result = bookRepository.findById("3");
-        assertThat(result).isEmpty();
-        comments = bookRepository.findById("3").map(Book::getComments).orElse(Collections.emptyList());
-        assertThat(comments).isEmpty();
+        Mono<Book> result = bookRepository.findById(bookId);
+        StepVerifier.create(result)
+                .expectNextCount(0)
+                .verifyComplete();
     }
 
     @Test
     @DisplayName("Найти по ид")
     void getByIdTest() {
-        Optional<Book> result = bookRepository.findById("1");
+        Mono<Book> result = bookRepository.findById("1");
 
-        assertThat(result).isPresent().get().hasFieldOrPropertyWithValue("name", "Высоконагруженные приложения")
-                .hasFieldOrPropertyWithValue("releaseYear", 2017);
+        StepVerifier.create(result)
+                .assertNext(resBook -> assertThat(resBook).hasFieldOrPropertyWithValue("name", "Высоконагруженные приложения")
+                        .hasFieldOrPropertyWithValue("releaseYear", 2017));
     }
 
     @Test
     @DisplayName("Получить все книги")
     void findAllTest() {
-        List<Book> result = bookRepository.findAll();
+        Flux<Book> result = bookRepository.findAll();
 
-        assertThat(result).isNotNull()
-                .anySatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Отдаленные последствия")
+        StepVerifier.create(
+                        result.filter(b -> "2".equals(b.getId()) || "6".equals(b.getId())).sort(Comparator.comparing(Book::getId)))
+                .assertNext(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Чистая архитектура")
+                        .hasFieldOrPropertyWithValue("releaseYear", 2018)
+                        .hasFieldOrPropertyWithValue("id", "2"))
+                .assertNext(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Отдаленные последствия")
                         .hasFieldOrPropertyWithValue("releaseYear", 2021)
                         .hasFieldOrPropertyWithValue("id", "6"))
-                .anySatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Чистая архитектура")
-                        .hasFieldOrPropertyWithValue("releaseYear", 2018)
-                        .hasFieldOrPropertyWithValue("id", "2"));
+                .expectComplete()
+                .verify();
     }
 
     @Test
     @DisplayName("Найти по наименованию")
     void findByNameTest() {
-        List<Book> result = bookRepository.findByName("Высоконагруженные приложения");
+        Flux<Book> result = bookRepository.findByName("Высоконагруженные приложения");
 
-        assertThat(result).asList().hasSize(1)
-                .allSatisfy(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Высоконагруженные приложения")
+        StepVerifier.create(result)
+                .assertNext(book -> assertThat(book).hasFieldOrPropertyWithValue("name", "Высоконагруженные приложения")
                         .hasFieldOrPropertyWithValue("releaseYear", 2017)
-                        .hasFieldOrPropertyWithValue("id", "1"));
+                        .hasFieldOrPropertyWithValue("id", "1"))
+                .expectNextCount(0)
+                .expectComplete()
+                .verify();
     }
 }

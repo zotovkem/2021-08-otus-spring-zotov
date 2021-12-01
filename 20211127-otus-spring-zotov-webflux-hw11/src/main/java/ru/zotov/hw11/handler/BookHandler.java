@@ -2,6 +2,7 @@ package ru.zotov.hw11.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.server.HandlerFunction;
@@ -42,8 +43,9 @@ public class BookHandler {
      *
      * @return книга
      */
-    public HandlerFunction<ServerResponse> save() {
-        return request -> ok().contentType(APPLICATION_JSON).body(saveBook(request), BookDto.class);
+    public HandlerFunction<ServerResponse> create() {
+        return request -> ServerResponse.status(HttpStatus.CREATED).contentType(APPLICATION_JSON)
+                .body(saveBook(request), BookDto.class);
     }
 
     /**
@@ -51,8 +53,9 @@ public class BookHandler {
      */
     public HandlerFunction<ServerResponse> deleteByIds() {
         return request -> request.bodyToMono(List.class)
-                .map(bookRepository::deleteByIds)
-                .flatMap(bookDto -> noContent().build());
+                .flatMap(bookRepository::deleteByIds)
+                .flatMap(v -> noContent().build())
+                .onErrorResume(error -> badRequest().build());
     }
 
     /**
@@ -144,5 +147,12 @@ public class BookHandler {
                         return book;
                     });
         };
+    }
+
+    /**
+     * Обновить книгу
+     */
+    public HandlerFunction<ServerResponse> update() {
+        return request -> ok().contentType(APPLICATION_JSON).body(saveBook(request), BookDto.class);
     }
 }

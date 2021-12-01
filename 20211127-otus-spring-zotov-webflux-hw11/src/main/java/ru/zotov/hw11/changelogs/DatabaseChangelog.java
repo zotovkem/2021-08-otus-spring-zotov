@@ -11,7 +11,7 @@ import ru.zotov.hw11.domain.Book;
 import ru.zotov.hw11.domain.Comment;
 import ru.zotov.hw11.domain.Genre;
 
-import java.text.ParseException;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -76,28 +76,28 @@ public class DatabaseChangelog {
      * Заполнение коллекции комментариев к книгам
      */
     @ChangeSet(order = "003", id = "fillComments", author = "ezotov")
-    public void addBookComments() throws ParseException {
+    public void addBookComments() {
         commentList = List.of(
                 new Comment("1", "Вроде не чего, еще не дочитал", "ЗотовЕС",
-                        new Date()),
+                        new Date(ZonedDateTime.parse("2020-02-01T19:10:25+07:00").toEpochSecond())),
                 new Comment("2", "Хорошая книга", "ЗотовЕС",
-                        new Date()),
+                        new Date(ZonedDateTime.parse("2020-02-01T19:10:25+07:00").toEpochSecond())),
                 new Comment("3", "Не про гречку", "ЗотовЕС",
-                        new Date()),
+                        new Date(ZonedDateTime.parse("2020-02-01T19:10:25+07:00").toEpochSecond())),
                 new Comment("4", "Странное название", "ЗотовЕС",
-                        new Date()),
+                        new Date(ZonedDateTime.parse("2020-02-01T19:10:25+07:00").toEpochSecond())),
                 new Comment("6", "Детектива, детектива", "ЗотовЕС",
-                        new Date()),
+                        new Date(ZonedDateTime.parse("2020-02-01T19:10:25+07:00").toEpochSecond())),
                 new Comment("7", "Комментарий ", "Иванов",
-                        new Date()),
+                        new Date(ZonedDateTime.parse("2020-02-01T19:10:25+07:00").toEpochSecond())),
                 new Comment("8", "Тестовый комментарий", "Петров",
-                        new Date()),
+                        new Date(ZonedDateTime.parse("2020-02-01T19:10:25+07:00").toEpochSecond())),
                 new Comment("9", "Еще один комментарий", "Сидоров",
-                        new Date()),
+                        new Date(ZonedDateTime.parse("2020-02-01T19:10:25+07:00").toEpochSecond())),
                 new Comment("10", "Как много комментарием нужно написать", "Тестов",
-                        new Date()),
+                        new Date(ZonedDateTime.parse("2020-02-01T19:10:25+07:00").toEpochSecond())),
                 new Comment("12", "Последний комментарий", "Лютый критик",
-                        new Date()));
+                        new Date(ZonedDateTime.parse("2020-02-01T19:10:25+07:00").toEpochSecond())));
     }
 
     /**

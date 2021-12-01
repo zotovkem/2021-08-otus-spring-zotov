@@ -3,6 +3,7 @@ package ru.zotov.hw11.config;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import ru.zotov.hw11.dao.AuthorRepository;
@@ -17,7 +18,6 @@ import ru.zotov.hw11.handler.BookHandler;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.web.reactive.function.BodyInserters.empty;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -54,7 +54,9 @@ public class RouteConfig {
                                 .map(authorDto -> new Author(null, authorDto.getFio()))
                                 .flatMap(repository::save)
                                 .map(author -> mapper.map(author, AuthorDto.class))
-                                .flatMap(authorDto -> ok().contentType(APPLICATION_JSON).body(fromValue(authorDto)))
+                                .flatMap(authorDto -> ServerResponse.status(HttpStatus.CREATED)
+                                        .contentType(APPLICATION_JSON)
+                                        .body(fromValue(authorDto)))
                                 .switchIfEmpty(badRequest().build()))
                 //Редактировать автора
                 .PUT(AUTHORS_API_URL, accept(APPLICATION_JSON),
@@ -74,7 +76,7 @@ public class RouteConfig {
                 .DELETE(AUTHORS_API_URL, accept(APPLICATION_JSON),
                         request -> request.bodyToMono(List.class)
                                 .flatMap(repository::deleteWithConstraintsByIds)
-                                .flatMap(v -> ok().body(empty()))
+                                .flatMap(v -> noContent().build())
                                 .onErrorResume(error -> badRequest().build()))
                 .build();
     }
@@ -100,13 +102,15 @@ public class RouteConfig {
                                 .map(genreDto -> new Genre(null, genreDto.getName()))
                                 .flatMap(repository::save)
                                 .map(genre -> mapper.map(genre, GenreDto.class))
-                                .flatMap(genreDto -> ok().contentType(APPLICATION_JSON).body(fromValue(genreDto)))
+                                .flatMap(genreDto -> ServerResponse.status(HttpStatus.CREATED)
+                                        .contentType(APPLICATION_JSON)
+                                        .body(fromValue(genreDto)))
                                 .switchIfEmpty(badRequest().build()))
                 //Удалить жанр
                 .DELETE(GENRES_API_URL, accept(APPLICATION_JSON),
                         request -> request.bodyToMono(List.class)
                                 .flatMap(repository::deleteWithConstraintsByIds)
-                                .flatMap(v -> ok().body(empty()))
+                                .flatMap(v -> noContent().build())
                                 .onErrorResume(error -> badRequest().build()))
                 //Редактировать жанр
                 .PUT(GENRES_API_URL, accept(APPLICATION_JSON),
@@ -140,11 +144,11 @@ public class RouteConfig {
                 //Получить все книги
                 .GET(BOOKS_API_URL, accept(APPLICATION_JSON), bookHandler.findByAll())
                 //Создать книгу
-                .POST(BOOKS_API_URL, accept(APPLICATION_JSON), bookHandler.save())
+                .POST(BOOKS_API_URL, accept(APPLICATION_JSON), bookHandler.create())
                 //Удалить книги по списку ид
                 .DELETE(BOOKS_API_URL, accept(APPLICATION_JSON), bookHandler.deleteByIds())
                 //Редактировать книгу
-                .PUT(BOOKS_API_URL, accept(APPLICATION_JSON), bookHandler.save())
+                .PUT(BOOKS_API_URL, accept(APPLICATION_JSON), bookHandler.update())
                 //Получить книгу по ид
                 .GET(BOOKS_API_URL + "/{id}", accept(APPLICATION_JSON), bookHandler.findById())
                 .build();

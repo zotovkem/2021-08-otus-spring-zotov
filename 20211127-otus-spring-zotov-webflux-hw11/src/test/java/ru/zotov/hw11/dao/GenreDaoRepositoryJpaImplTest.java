@@ -1,5 +1,6 @@
 package ru.zotov.hw11.dao;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,14 +8,16 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Rollback;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 import ru.zotov.hw11.domain.Genre;
 import ru.zotov.hw11.exception.ConstrainDeleteException;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 
 /**
@@ -22,7 +25,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
  */
 @DataMongoTest
 @EnableConfigurationProperties
-@ComponentScan(value = {"ru.zotov.hw11.converters", "ru.zotov.hw11.dao"})
+@ComponentScan(value = {"ru.zotov.hw11.dao"})
 @DisplayName("Тестирование репозитория жанров")
 class GenreDaoRepositoryJpaImplTest {
     @Autowired private GenreRepository genreDao;
@@ -30,10 +33,13 @@ class GenreDaoRepositoryJpaImplTest {
     @Test
     @DisplayName("Создать жанр")
     void createTest() {
-        Genre genre = new Genre("3", "Повесть");
-        Genre result = genreDao.save(genre);
-
-        assertThat(result).usingRecursiveComparison().isEqualTo(genre);
+        Genre genre = new Genre(null, "Повесть");
+        Mono<Genre> result = genreDao.save(genre);
+        StepVerifier
+                .create(result)
+                .assertNext(resGenre -> assertThat(resGenre).usingRecursiveComparison().isEqualTo(genre))
+                .expectComplete()
+                .verify();
     }
 
     @Test
@@ -41,47 +47,74 @@ class GenreDaoRepositoryJpaImplTest {
     @DisplayName("Обновить жанр")
     void updateTest() {
         Genre genre = new Genre("1", "Повесть");
-        Genre result = genreDao.save(genre);
+        Mono<Genre> result = genreDao.save(genre);
 
-        assertThat(result).usingRecursiveComparison().isEqualTo(genre);
+        StepVerifier
+                .create(result)
+                .assertNext(resGenre -> assertThat(resGenre).usingRecursiveComparison().isEqualTo(genre))
+                .expectComplete()
+                .verify();
     }
 
     @Test
     @DisplayName("Получить жанр по ид")
     void getByIdTest() {
-        Optional<Genre> result = genreDao.findById("1");
-        assertThat(result).isPresent().get().hasFieldOrPropertyWithValue("name", "Детектив");
+        Mono<Genre> result = genreDao.findById("1");
+
+        StepVerifier
+                .create(result)
+                .assertNext(resGenre -> assertThat(resGenre).hasFieldOrPropertyWithValue("name", "Детектив"))
+                .expectComplete()
+                .verify();
     }
 
     @Test
     @Rollback
     @DisplayName("Ошибка удаления жанра")
     void deleteWithConstraintsByIdsExceptionTest() {
-        assertThatThrownBy(() -> genreDao.deleteWithConstraintsByIds(List.of("3"))).isInstanceOf(ConstrainDeleteException.class);
+        Mono<Void> result = genreDao.deleteWithConstraintsByIds(List.of("3"));
+
+        StepVerifier
+                .create(result)
+                .expectError(ConstrainDeleteException.class)
+                .verify();
     }
 
     @Test
     @Rollback
     @DisplayName("Удалить жанр по ид")
     void deleteWithConstraintsByIdsTest() throws ConstrainDeleteException {
-        Optional<String> genreId = genreDao.findById("9").map(Genre::getId);
-        assertThat(genreId).isPresent();
+        String genreId = "9";
+        Mono<String> genre = genreDao.findById(genreId).map(Genre::getId);
+        StepVerifier
+                .create(genre)
+                .assertNext(Assertions::assertNotNull)
+                .expectComplete()
+                .verify();
 
-        genreDao.deleteWithConstraintsByIds(List.of(genreId.get()));
+        StepVerifier
+                .create(genreDao.deleteWithConstraintsByIds(List.of(genreId)))
+                .expectNextCount(0)
+                .verifyComplete();
 
-        Optional<Genre> result = genreDao.findById("9");
-        assertThat(result).isEmpty();
+        Mono<Genre> result = genreDao.findById(genreId);
+        StepVerifier.create(result)
+                .expectNextCount(0)
+                .verifyComplete();
     }
 
     @Test
     @DisplayName("Получить все жанры")
     void getAllTest() {
-        List<Genre> result = genreDao.findAll();
+        Flux<Genre> result = genreDao.findAll();
 
-        assertThat(result).asList()
-                .anySatisfy(genre -> assertThat(genre).hasFieldOrPropertyWithValue("id", "5")
+        StepVerifier.create(
+                        result.filter(g -> "2".equals(g.getId()) || "5".equals(g.getId())).sort(Comparator.comparing(Genre::getId)))
+                .assertNext(genre -> assertThat(genre).hasFieldOrPropertyWithValue("id", "2")
+                        .hasFieldOrPropertyWithValue("name", "Компьютерная литература"))
+                .assertNext(genre -> assertThat(genre).hasFieldOrPropertyWithValue("id", "5")
                         .hasFieldOrPropertyWithValue("name", "Программирование"))
-                .anySatisfy(genre -> assertThat(genre).hasFieldOrPropertyWithValue("id", "2")
-                        .hasFieldOrPropertyWithValue("name", "Компьютерная литература"));
+                .expectComplete()
+                .verify();
     }
 }

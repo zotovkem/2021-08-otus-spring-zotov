@@ -1,27 +1,25 @@
 package ru.zotov.hw11.conroller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.HttpMethod;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.zotov.hw11.Hw11Application;
 import ru.zotov.hw11.dto.GenreDto;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Created by ZotovES on 22.11.2021
@@ -31,88 +29,88 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DisplayName("Тестирование контроллера жанров")
 class GenreControllerTest {
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new Jdk8Module())
-            .registerModule(new JavaTimeModule());
+    @Qualifier("genresRoutes")
     @Autowired
-    private MockMvc mockMvc;
+    private RouterFunction<ServerResponse> route;
+    private static WebTestClient client;
+
+    @BeforeEach
+    void setUp() {
+        if (client == null) {
+            client = WebTestClient
+                    .bindToRouterFunction(route)
+                    .build();
+        }
+    }
 
     @Test
     @DisplayName("Добавление жанра")
-    void addGenreTest() throws Exception {
-        String content = objectMapper.writeValueAsString(new GenreDto(null, "test"));
-        mockMvc.perform(post("/api/genres").content(content)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("id", notNullValue()))
-                .andExpect(jsonPath("name", is("test")))
-                .andReturn();
+    void addGenreTest() {
+        GenreDto genreDto = new GenreDto(null, "test");
+        client.post().uri("/api/genres")
+                .body(Mono.just(genreDto), GenreDto.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(GenreDto.class)
+                .value(resGenre -> assertThat(resGenre).usingRecursiveComparison().ignoringFields("id").isEqualTo(genreDto));
     }
 
     @Test
     @DisplayName("Получить жанр по ид")
-    void getByIdTest() throws Exception {
-        mockMvc.perform(get("/api/genres/{id}", 1)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id", is("1")))
-                .andExpect(jsonPath("name", is("Детектив")))
-                .andReturn();
+    void getByIdTest() {
+        GenreDto genreDto = new GenreDto("5", "Программирование");
+        client.get().uri("/api/genres/{id}", genreDto.getId())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenreDto.class)
+                .isEqualTo(genreDto);
     }
 
     @Test
     @DisplayName("Получить все жанры")
-    void getAllTest() throws Exception {
-        mockMvc.perform(get("/api/genres")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isNotEmpty())
-                .andReturn();
+    void getAllTest() {
+        client.get().uri("/api/genres")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(GenreDto.class)
+                .contains(new GenreDto("5", "Программирование"), new GenreDto("2", "Компьютерная литература"));
     }
 
     @Test
     @DisplayName("Редактировать жанр")
-    void updateTest() throws Exception {
-        String content = objectMapper.writeValueAsString(new GenreDto("1", "test"));
-        mockMvc.perform(put("/api/genres").content(content)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id", is("1")))
-                .andExpect(jsonPath("name", is("test")))
-                .andReturn();
+    void updateTest() {
+        GenreDto genreDto = new GenreDto("1", "test");
+        client.put().uri("/api/genres")
+                .body(Mono.just(genreDto), GenreDto.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenreDto.class)
+                .isEqualTo(genreDto);
     }
 
     @Test
     @DisplayName("Удалить жанры по списку ид")
-    void deleteByListIdsTest() throws Exception {
-        mockMvc.perform(get("/api/genres/{id}", 10))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id", is("10")))
-                .andReturn();
-        String content = objectMapper.writeValueAsString(List.of("10"));
-        mockMvc.perform(delete("/api/genres").content(content)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isNoContent())
-                .andReturn();
-        mockMvc.perform(get("/api/genres/{id}", 10))
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andReturn();
+    void deleteByListIdsTest() {
+        client.get().uri("/api/genres/{id}", 10)
+                .exchange()
+                .expectStatus().isOk();
+
+        client.method(HttpMethod.DELETE).uri("/api/genres")
+                .body(Flux.just("10"), List.class)
+                .exchange()
+                .expectStatus().isOk();
+
+        client.get().uri("/api/genres/{id}", 10)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
     @Test
     @DisplayName("Ошибка при удалении связанного с книгой жанра")
-    void deleteByListIdsExceptionTest() throws Exception {
-        String content = objectMapper.writeValueAsString(List.of("1"));
-        mockMvc.perform(delete("/api/genres").content(content)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andReturn();
+    void deleteByListIdsExceptionTest() {
+        client.method(HttpMethod.DELETE).uri("/api/genres")
+                .body(Flux.just("1"), List.class)
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 }
