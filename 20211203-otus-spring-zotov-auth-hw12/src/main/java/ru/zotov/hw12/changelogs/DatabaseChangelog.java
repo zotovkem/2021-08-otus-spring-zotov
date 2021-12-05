@@ -6,10 +6,8 @@ import com.mongodb.client.MongoDatabase;
 import ru.zotov.hw12.dao.AuthorRepository;
 import ru.zotov.hw12.dao.BookRepository;
 import ru.zotov.hw12.dao.GenreRepository;
-import ru.zotov.hw12.domain.Author;
-import ru.zotov.hw12.domain.Book;
-import ru.zotov.hw12.domain.Comment;
-import ru.zotov.hw12.domain.Genre;
+import ru.zotov.hw12.dao.UserLibraryRepository;
+import ru.zotov.hw12.domain.*;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -122,6 +120,16 @@ public class DatabaseChangelog {
                         getGenreSet("1"), getCommentList(Set.of("6", "12"))));
 
         bookList = bookRepository.saveAll(books);
+    }
+
+    /**
+     * Заполнение коллекции пользователей
+     */
+    @ChangeSet(order = "006", id = "fillUserLibrary", author = "ezotov")
+    public void fillUserLibrary(UserLibraryRepository userLibraryRepository) {
+        UserLibrary userLibrary = new UserLibrary("1", "admin", "$2a$10$dX/ry6AS3VlctY/jbvu3NeKjSXKm4qjiHcjAebObrmt5CqKj743Q2");
+
+        userLibraryRepository.save(userLibrary);
     }
 
     private Book getBookById(String id) {
