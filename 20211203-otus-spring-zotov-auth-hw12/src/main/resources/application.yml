@@ -15,3 +15,8 @@ mongock:
     write-concern:
       journal: false
     read-concern: local
+#JWT
+jwt:
+  token:
+    secret: secret
+    expired: 3600000
