@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import ru.zotov.hw11.dao.AuthorRepository;
-import ru.zotov.hw11.dao.BookRepository;
 import ru.zotov.hw11.dao.GenreRepository;
 import ru.zotov.hw11.domain.Author;
 import ru.zotov.hw11.domain.Genre;
@@ -132,14 +131,11 @@ public class RouteConfig {
     /**
      * Роуты управления книгами
      *
-     * @param bookRepository репозиторий книг
-     * @param mapper         маппер
+     * @param bookHandler хендлер запрос для книг
      * @return роуты
      */
     @Bean
-    public RouterFunction<ServerResponse> booksRoutes(BookRepository bookRepository, AuthorRepository authorRepository,
-            GenreRepository genreRepository, ModelMapper mapper) {
-        BookHandler bookHandler = new BookHandler(bookRepository, authorRepository, genreRepository, mapper);
+    public RouterFunction<ServerResponse> booksRoutes(BookHandler bookHandler) {
         return route()
                 //Получить все книги
                 .GET(BOOKS_API_URL, accept(APPLICATION_JSON), bookHandler.findByAll())
