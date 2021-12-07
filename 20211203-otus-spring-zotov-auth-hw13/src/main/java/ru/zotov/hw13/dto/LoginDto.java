@@ -15,7 +15,7 @@ public class LoginDto {
     /**
      * Имя пользователя
      */
-    private String userName;
+    private String username;
     /**
      * Пароль
      */

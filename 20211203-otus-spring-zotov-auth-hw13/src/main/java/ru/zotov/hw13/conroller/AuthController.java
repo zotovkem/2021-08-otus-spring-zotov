@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto) {
-        return userLibraryService.login(loginDto.getUserName(), loginDto.getPassword())
+        return userLibraryService.login(loginDto.getUsername(), loginDto.getPassword())
                 .map(TokenDto::new)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
