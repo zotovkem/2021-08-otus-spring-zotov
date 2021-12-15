@@ -54,7 +54,7 @@ public class BookController {
      * @return книга
      */
     @GetMapping("/{id}")
-    public ResponseEntity<BookDto> getById(@PathVariable("id") String id) {
+    public ResponseEntity<BookDto> getById(@PathVariable("id") Long id) {
         return bookService.findById(id)
                 .map(book -> mapper.map(book, BookDto.class))
                 .map(ResponseEntity::ok)
@@ -79,7 +79,7 @@ public class BookController {
      */
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@RequestBody List<String> ids) {
+    public void deleteById(@RequestBody List<Long> ids) {
         bookService.deleteByIds(ids);
     }
 }

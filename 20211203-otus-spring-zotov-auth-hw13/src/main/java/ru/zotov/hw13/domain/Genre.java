@@ -1,10 +1,8 @@
 package ru.zotov.hw13.domain;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -17,17 +15,20 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Document(collection = "genre")
+@Entity
+@Table(name = "genre")
 public class Genre {
     /**
      * Ид
      */
     @Id
-    private String id;
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     /**
      * Наименование жанра
      */
-    @Field(name = "name")
+    @Column(name = "name")
     private String name;
 
     @Override

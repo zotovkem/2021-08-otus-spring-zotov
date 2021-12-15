@@ -1,20 +1,27 @@
 spring:
-  data:
-    mongodb:
-      authentication-database: admin
-      username: root
-      password: example
-      port: 27017
-      host: localhost
-      database: bookdb
-mongock:
-  runner-type: "InitializingBean"
-  change-logs-scan-package:
-    - ru.zotov.hw13.changelogs
-  mongo-db:
-    write-concern:
-      journal: false
-    read-concern: local
+  datasource:
+    url: jdbc:h2:mem:bookdb
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      encoding: UTF-8
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+
+    show-sql: false
+
+  h2:
+    console:
+      path: /h2-console
+      settings:
+        web-allow-others: true
+      enabled: true
+
 #JWT
 jwt:
   token:

@@ -1,9 +1,8 @@
 package ru.zotov.hw13.domain;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 
@@ -17,16 +16,21 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Document(collection = "author")
+@Entity
+@Table(name = "author")
 public class Author {
     /**
      * Ид автора
      */
     @Id
-    private String id;
+    @Column(name = "id", unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     /**
      * ФИО автора
      */
+    @Column(name = "fio")
     private String fio;
 
     @Override

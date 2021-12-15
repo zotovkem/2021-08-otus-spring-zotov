@@ -31,6 +31,6 @@ public class UserLibraryServiceImpl implements UserLibraryService {
     public Optional<String> login(String userName, String password) {
         return userLibraryRepository.findByUsername(userName)
                 .filter(user -> passwordEncoder.matches(password, user.getPassword()))
-                .map(user -> jwtTokenProvider.generateToken(user.getId(), user.getUsername()));
+                .map(user -> jwtTokenProvider.generateToken(user.getId().toString(), user.getUsername()));
     }
 }

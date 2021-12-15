@@ -54,7 +54,7 @@ public class AuthorController {
      * @return автор
      */
     @GetMapping("/{id}")
-    public ResponseEntity<AuthorDto> getById(@PathVariable(value = "id") String id) {
+    public ResponseEntity<AuthorDto> getById(@PathVariable(value = "id") Long id) {
         return authorService.findById(id)
                 .map(author -> mapper.map(author, AuthorDto.class))
                 .map(ResponseEntity::ok)
@@ -79,7 +79,7 @@ public class AuthorController {
      * @param ids ид
      */
     @DeleteMapping
-    public ResponseEntity<?> deleteByListIds(@RequestBody List<String> ids) {
+    public ResponseEntity<?> deleteByListIds(@RequestBody List<Long> ids) {
         try {
             authorService.deleteByListIds(ids);
             return ResponseEntity.noContent().build();

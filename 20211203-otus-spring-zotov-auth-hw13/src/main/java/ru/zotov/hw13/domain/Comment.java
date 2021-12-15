@@ -1,10 +1,8 @@
 package ru.zotov.hw13.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -16,22 +14,37 @@ import java.time.format.DateTimeFormatter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
+@Table(name = "comment_for_book")
 public class Comment {
     /**
      * Ид
      */
-    private String id;
+    @Id
+    @Column(name = "id", unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id", referencedColumnName = "id")
+    private Book book;
+
     /**
      * Содержимое комментария
      */
+    @Column(name = "content")
     private String content;
     /**
      * Автор комментария
      */
+    @Column(name = "author")
     private String author;
     /**
      * Дата создания
      */
+    @Column(name = "create_date")
     private ZonedDateTime createDate;
 
     @Override

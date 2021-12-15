@@ -41,7 +41,7 @@ public class GenreController {
      * @return жанр
      */
     @GetMapping("/{id}")
-    public ResponseEntity<GenreDto> getById(@PathVariable("id") String id) {
+    public ResponseEntity<GenreDto> getById(@PathVariable("id") Long id) {
         return genreService.findById(id)
                 .map(genre -> mapper.map(genre, GenreDto.class))
                 .map(ResponseEntity::ok)
@@ -79,7 +79,7 @@ public class GenreController {
      */
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<?> deleteByListIds(@RequestBody List<String> ids) {
+    public ResponseEntity<?> deleteByListIds(@RequestBody List<Long> ids) {
         try {
             genreService.deleteByListIds(ids);
             return ResponseEntity.noContent().build();

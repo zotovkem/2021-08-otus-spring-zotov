@@ -1,10 +1,8 @@
 package ru.zotov.hw13.domain;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,37 +16,45 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Document(collection = "book")
+@Entity
+@Table(name = "book")
 public class Book {
     /**
      * Ид книги
      */
     @Id
-    private String id;
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     /**
      * Наименование книги
      */
+    @Column(name = "name")
     private String name;
     /**
      * Год издания
      */
+    @Column(name = "release_year")
     private int releaseYear;
     /**
      * Авторы
      */
-    @DBRef
     @Builder.Default
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "mtm_book_author", joinColumns = {@JoinColumn(name = "book_id")},
+               inverseJoinColumns = {@JoinColumn(name = "author_id")})
     private Set<Author> authors = new HashSet<>();
     /**
      * Жанры
      */
-    @DBRef
     @Builder.Default
+    @ManyToMany(targetEntity = Genre.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "mtm_book_genre", joinColumns = {@JoinColumn(name = "book_id")},
+               inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     private Set<Genre> genres = new HashSet<>();
-    /**
-     * Комментарии
-     */
+
     @Builder.Default
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
     @Override

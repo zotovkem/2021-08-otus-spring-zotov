@@ -22,6 +22,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         UserLibrary user = userLibraryRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with username: " + username + " not found"));
 
-        return new JwtUser(user.getId(), user.getUsername(), user.getPassword(), List.of(new SimpleGrantedAuthority("ADMIN")));
+        return new JwtUser(user.getId().toString(), user.getUsername(), user.getPassword(),
+                List.of(new SimpleGrantedAuthority("ADMIN")));
     }
 }

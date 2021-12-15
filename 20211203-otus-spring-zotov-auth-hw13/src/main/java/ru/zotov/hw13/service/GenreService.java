@@ -1,11 +1,9 @@
 package ru.zotov.hw13.service;
 
 import ru.zotov.hw13.domain.Genre;
-import ru.zotov.hw13.exception.ConstrainDeleteException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author Created by ZotovES on 28.10.2021
@@ -26,7 +24,7 @@ public interface GenreService {
      * @param id ид
      * @return жанр
      */
-    Optional<Genre> findById(String id);
+    Optional<Genre> findById(Long id);
 
     /**
      * Получить все жанры
@@ -41,12 +39,12 @@ public interface GenreService {
      * @param ids список ид
      * @return список жанров
      */
-    Set<Genre> findByIdIn(List<String> ids);
+    List<Genre> findByIdIn(List<Long> ids);
 
     /**
      * Удалить жанры по списку ид
      *
      * @param ids список ид жанра
      */
-    void deleteByListIds(List<String> ids) throws ConstrainDeleteException;
+    void deleteByListIds(List<Long> ids);
 }

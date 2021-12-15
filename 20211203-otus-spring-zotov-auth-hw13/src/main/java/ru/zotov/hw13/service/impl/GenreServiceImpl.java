@@ -2,15 +2,12 @@ package ru.zotov.hw13.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw13.dao.GenreRepository;
 import ru.zotov.hw13.domain.Genre;
-import ru.zotov.hw13.exception.ConstrainDeleteException;
 import ru.zotov.hw13.service.GenreService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author Created by ZotovES on 28.10.2021
@@ -39,7 +36,7 @@ public class GenreServiceImpl implements GenreService {
      * @return жанр
      */
     @Override
-    public Optional<Genre> findById(String id) {
+    public Optional<Genre> findById(Long id) {
         return genreRepository.findById(id);
     }
 
@@ -60,8 +57,8 @@ public class GenreServiceImpl implements GenreService {
      * @return список жанров
      */
     @Override
-    public Set<Genre> findByIdIn(List<String> ids) {
-        return genreRepository.findByIdIn(ids);
+    public List<Genre> findByIdIn(List<Long> ids) {
+        return genreRepository.findAllById(ids);
     }
 
     /**
@@ -70,8 +67,7 @@ public class GenreServiceImpl implements GenreService {
      * @param ids список ид жанра
      */
     @Override
-    @Transactional
-    public void deleteByListIds(List<String> ids) throws ConstrainDeleteException {
-        genreRepository.deleteWithConstraintsByIds(ids);
+    public void deleteByListIds(List<Long> ids) {
+        genreRepository.deleteAllByIdInBatch(ids);
     }
 }

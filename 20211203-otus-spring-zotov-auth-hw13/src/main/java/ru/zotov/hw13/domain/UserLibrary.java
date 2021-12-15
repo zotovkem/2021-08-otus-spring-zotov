@@ -1,30 +1,54 @@
 package ru.zotov.hw13.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.*;
+import org.hibernate.Hibernate;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * @author Created by ZotovES on 03.12.2021
  * Пользователь
  */
-@Data
+@Getter
+@Setter
 @Builder
-@AllArgsConstructor
+@ToString
 @NoArgsConstructor
-@Document(collection = "user")
+@AllArgsConstructor
+
+@Entity
+@Table(name = "user_library")
 public class UserLibrary {
     @Id
-    private String id;
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     /**
      * Имя пользователя
      */
+    @Column(name = "username")
     private String username;
     /**
      * Пароль
      */
+    @Column(name = "password")
     private String password;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        UserLibrary that = (UserLibrary) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password);
+    }
 }

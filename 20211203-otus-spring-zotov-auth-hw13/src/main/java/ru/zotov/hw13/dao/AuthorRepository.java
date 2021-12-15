@@ -1,16 +1,17 @@
 package ru.zotov.hw13.dao;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import ru.zotov.hw13.domain.Author;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Created by ZotovES on 04.10.2021
  * Репозиторий Авторов книг
  */
-public interface AuthorRepository extends MongoRepository<Author, String>, AuthorRepositoryCustom {
+@Repository
+public interface AuthorRepository extends JpaRepository<Author, Long> {
     /**
      * Поиск автора по фио
      *
@@ -18,12 +19,4 @@ public interface AuthorRepository extends MongoRepository<Author, String>, Autho
      * @return автор
      */
     List<Author> findByFio(String fio);
-
-    /**
-     * Поиск авторов по списку ид
-     *
-     * @param ids список ид
-     * @return список авторов
-     */
-    Set<Author> findByIdIn(List<String> ids);
 }

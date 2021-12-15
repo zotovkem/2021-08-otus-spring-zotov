@@ -5,12 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw13.dao.AuthorRepository;
 import ru.zotov.hw13.domain.Author;
-import ru.zotov.hw13.exception.ConstrainDeleteException;
 import ru.zotov.hw13.service.AuthorService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author Created by ZotovES on 28.10.2021
@@ -39,7 +37,7 @@ public class AuthorServiceImpl implements AuthorService {
      * @return автор
      */
     @Override
-    public Optional<Author> findById(String id) {
+    public Optional<Author> findById(Long id) {
         return authorRepository.findById(id);
     }
 
@@ -50,8 +48,8 @@ public class AuthorServiceImpl implements AuthorService {
      */
     @Override
     @Transactional
-    public void deleteByListIds(List<String> ids) throws ConstrainDeleteException {
-        authorRepository.deleteWithConstraintsByIds(ids);
+    public void deleteByListIds(List<Long> ids) {
+        authorRepository.deleteAllByIdInBatch(ids);
     }
 
     /**
@@ -71,7 +69,7 @@ public class AuthorServiceImpl implements AuthorService {
      * @return список авторов
      */
     @Override
-    public Set<Author> findByIdIn(List<String> ids) {
-        return authorRepository.findByIdIn(ids);
+    public List<Author> findByIdIn(List<Long> ids) {
+        return authorRepository.findAllById(ids);
     }
 }

@@ -1,11 +1,9 @@
 package ru.zotov.hw13.service;
 
 import ru.zotov.hw13.domain.Author;
-import ru.zotov.hw13.exception.ConstrainDeleteException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author Created by ZotovES on 28.10.2021
@@ -26,14 +24,14 @@ public interface AuthorService {
      * @param id ид
      * @return автор
      */
-    Optional<Author> findById(String id);
+    Optional<Author> findById(Long id);
 
     /**
      * Удалить авторов по списку ид
      *
      * @param ids список ид
      */
-    void deleteByListIds(List<String> ids) throws ConstrainDeleteException;
+    void deleteByListIds(List<Long> ids);
 
     /**
      * Получить всех авторов
@@ -48,5 +46,5 @@ public interface AuthorService {
      * @param ids список ид
      * @return список авторов
      */
-    Set<Author> findByIdIn(List<String> ids);
+    List<Author> findByIdIn(List<Long> ids);
 }
