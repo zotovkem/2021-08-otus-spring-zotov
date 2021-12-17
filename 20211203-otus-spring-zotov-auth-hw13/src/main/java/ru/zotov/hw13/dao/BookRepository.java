@@ -1,8 +1,9 @@
 package ru.zotov.hw13.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
 import ru.zotov.hw13.domain.Book;
 
@@ -14,13 +15,15 @@ import java.util.List;
  */
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    /**
-     * Найти книгу по наименованию
-     *
-     * @param name наименование книги
-     * @return список книг
-     */
-    @Query(value = "select b from Book b " +
-            "where lower(b.name) like concat(lower(:name),'%')")
-    List<Book> findByName(@Param("name") String name);
+    @Override
+    @PostFilter("hasPermission(filterObject, 'READ') or hasPermission(filterObject, 'ADMINISTRATION')")
+    List<Book> findAll();
+
+    @Override
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    Book getById(Long id);
+
+    @Override
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    <S extends Book> S save(S entity);
 }
