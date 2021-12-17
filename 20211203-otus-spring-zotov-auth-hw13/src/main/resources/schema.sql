@@ -59,6 +59,7 @@ COMMENT ON COLUMN mtm_book_genre.id IS 'Ид';
 COMMENT ON COLUMN mtm_book_genre.book_id IS 'Ид книги';
 COMMENT ON COLUMN mtm_book_genre.genre_id IS 'Ид жанра';
 CREATE INDEX mtm_genre_author_book_id_idx ON mtm_book_genre (book_id);
+
 DROP TABLE IF EXISTS comment_for_book;
 CREATE TABLE comment_for_book
 (

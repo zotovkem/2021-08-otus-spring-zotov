@@ -1,4 +1,4 @@
-package ru.zotov.hw13.security;
+package ru.zotov.hw13.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

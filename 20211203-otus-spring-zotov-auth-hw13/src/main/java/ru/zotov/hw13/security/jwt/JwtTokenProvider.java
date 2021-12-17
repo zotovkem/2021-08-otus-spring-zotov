@@ -1,4 +1,4 @@
-package ru.zotov.hw13.security;
+package ru.zotov.hw13.security.jwt;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;

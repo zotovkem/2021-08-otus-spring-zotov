@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ru.zotov.hw13.security.jwt.JwtTokenFilter;
+import ru.zotov.hw13.security.jwt.JwtTokenProvider;
 
 /**
  * @author Created by ZotovES on 28.07.2021
@@ -18,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String AUTH_ENDPOINT = "/api/auth/login";
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
     private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
@@ -40,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers(AUTH_ENDPOINT).permitAll()
                 .anyRequest().authenticated();
     }

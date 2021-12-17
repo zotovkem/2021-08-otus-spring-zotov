@@ -1,4 +1,4 @@
-package ru.zotov.hw13.security;
+package ru.zotov.hw13.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +23,6 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User with username: " + username + " not found"));
 
         return new JwtUser(user.getId().toString(), user.getUsername(), user.getPassword(),
-                List.of(new SimpleGrantedAuthority("ADMIN")));
+                List.of(new SimpleGrantedAuthority(user.getRole())));
     }
 }
