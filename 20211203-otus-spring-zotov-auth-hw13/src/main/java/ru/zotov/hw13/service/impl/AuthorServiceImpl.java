@@ -2,7 +2,6 @@ package ru.zotov.hw13.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw13.dao.AuthorRepository;
 import ru.zotov.hw13.domain.Author;
 import ru.zotov.hw13.service.AuthorService;
@@ -47,7 +46,6 @@ public class AuthorServiceImpl implements AuthorService {
      * @param ids список ид
      */
     @Override
-    @Transactional
     public void deleteByListIds(List<Long> ids) {
         authorRepository.deleteAllByIdInBatch(ids);
     }

@@ -3,8 +3,9 @@ package ru.zotov.hw13.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw13.dao.UserLibraryRepository;
-import ru.zotov.hw13.security.JwtTokenProvider;
+import ru.zotov.hw13.security.jwt.JwtTokenProvider;
 import ru.zotov.hw13.service.UserLibraryService;
 
 import java.util.Optional;
@@ -28,6 +29,7 @@ public class UserLibraryServiceImpl implements UserLibraryService {
      * @return токена
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<String> login(String userName, String password) {
         return userLibraryRepository.findByUsername(userName)
                 .filter(user -> passwordEncoder.matches(password, user.getPassword()))
