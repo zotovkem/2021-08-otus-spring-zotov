@@ -73,7 +73,7 @@ class AuthorControllerTest {
     @Test
     @DisplayName("Редактировать автора")
     void updateTest() throws Exception {
-        String content = objectMapper.writeValueAsString(new AuthorDto("2", "test"));
+        String content = objectMapper.writeValueAsString(new AuthorDto(2L, "test"));
         mockMvc.perform(put("/api/authors").content(content)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

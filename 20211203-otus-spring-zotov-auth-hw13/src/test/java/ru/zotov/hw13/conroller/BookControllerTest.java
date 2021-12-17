@@ -43,8 +43,8 @@ class BookControllerTest {
     @DisplayName("Создание книги")
     void createBookTest() throws Exception {
         BookDto bookDto = BookDto.builder()
-                .authors(Set.of(new AuthorDto("1", null)))
-                .genres(Set.of(new GenreDto("1", null)))
+                .authors(Set.of(new AuthorDto(1L, null)))
+                .genres(Set.of(new GenreDto(1L, null)))
                 .name("test")
                 .releaseYear(2010)
                 .build();
@@ -93,9 +93,9 @@ class BookControllerTest {
     @DisplayName("Редактировать книгу")
     void updateBookTest() throws Exception {
         BookDto bookDto = BookDto.builder()
-                .id("1")
-                .authors(Set.of(new AuthorDto("1", null)))
-                .genres(Set.of(new GenreDto("1", null)))
+                .id(1L)
+                .authors(Set.of(new AuthorDto(1L, null)))
+                .genres(Set.of(new GenreDto(1L, null)))
                 .name("test")
                 .releaseYear(2010)
                 .build();

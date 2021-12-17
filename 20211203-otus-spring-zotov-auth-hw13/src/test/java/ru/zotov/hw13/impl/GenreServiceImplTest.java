@@ -7,12 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.zotov.hw13.dao.GenreRepository;
 import ru.zotov.hw13.domain.Genre;
-import ru.zotov.hw13.exception.ConstrainDeleteException;
 import ru.zotov.hw13.service.impl.GenreServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,7 +45,7 @@ class GenreServiceImplTest {
         Genre genre = new Genre(null, "genre");
         when(genreRepository.findById(any())).thenReturn(Optional.of(genre));
 
-        Optional<Genre> result = genreService.findById("1");
+        Optional<Genre> result = genreService.findById(1L);
 
         assertTrue(result.isPresent());
 
@@ -56,10 +54,10 @@ class GenreServiceImplTest {
 
     @Test
     @DisplayName("Удаление по списку ид")
-    void deleteByListIdsTest() throws ConstrainDeleteException {
-        genreService.deleteByListIds(List.of("1", "2"));
+    void deleteByListIdsTest() {
+        genreService.deleteByListIds(List.of(1L, 2L));
 
-        verify(genreRepository).deleteWithConstraintsByIds(any());
+        verify(genreRepository).deleteAllByIdInBatch(any());
     }
 
     @Test
@@ -79,12 +77,12 @@ class GenreServiceImplTest {
     @DisplayName("Поиск по списку ид")
     void findByIdInTest() {
         Genre genre = new Genre(null, "genre");
-        when(genreRepository.findByIdIn(any())).thenReturn(Set.of(genre));
+        when(genreRepository.findAllById(any())).thenReturn(List.of(genre));
 
-        Set<Genre> result = genreService.findByIdIn(List.of("1"));
+        List<Genre> result = genreService.findByIdIn(List.of(1L));
 
         assertFalse(result.isEmpty());
 
-        verify(genreRepository).findByIdIn(any());
+        verify(genreRepository).findAllById(any());
     }
 }

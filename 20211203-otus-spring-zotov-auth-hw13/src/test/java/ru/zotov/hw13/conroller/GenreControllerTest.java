@@ -75,7 +75,7 @@ class GenreControllerTest {
     @Test
     @DisplayName("Редактировать жанр")
     void updateTest() throws Exception {
-        String content = objectMapper.writeValueAsString(new GenreDto("1", "test"));
+        String content = objectMapper.writeValueAsString(new GenreDto(1L, "test"));
         mockMvc.perform(put("/api/genres").content(content)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
