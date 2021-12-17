@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.zotov.hw13.domain.Genre;
 import ru.zotov.hw13.dto.GenreDto;
@@ -28,6 +29,7 @@ public class GenreController {
      *
      * @param genreDto dto жанра
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GenreDto addGenre(@RequestBody GenreDto genreDto) {
@@ -67,6 +69,7 @@ public class GenreController {
      * @return жанр
      */
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public GenreDto update(@RequestBody GenreDto genreDto) {
         Genre genre = mapper.map(genreDto, Genre.class);
         return mapper.map(genreService.save(genre), GenreDto.class);
@@ -77,6 +80,7 @@ public class GenreController {
      *
      * @param ids список ид жанра
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> deleteByListIds(@RequestBody List<Long> ids) {

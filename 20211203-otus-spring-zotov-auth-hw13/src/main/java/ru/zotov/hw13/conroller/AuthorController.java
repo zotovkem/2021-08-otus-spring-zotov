@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.zotov.hw13.domain.Author;
 import ru.zotov.hw13.dto.AuthorDto;
@@ -30,6 +31,7 @@ public class AuthorController {
      * @param authorDto автор
      */
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthorDto create(@RequestBody AuthorDto authorDto) {
         return mapper.map(authorService.save(new Author(null, authorDto.getFio())), AuthorDto.class);
@@ -68,6 +70,7 @@ public class AuthorController {
      * @return автор
      */
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public AuthorDto update(@RequestBody AuthorDto authorDto) {
         Author author = mapper.map(authorDto, Author.class);
         return mapper.map(authorService.save(author), AuthorDto.class);
@@ -79,6 +82,7 @@ public class AuthorController {
      * @param ids ид
      */
     @DeleteMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteByListIds(@RequestBody List<Long> ids) {
         try {
             authorService.deleteByListIds(ids);
