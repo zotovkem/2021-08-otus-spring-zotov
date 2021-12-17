@@ -81,7 +81,8 @@ CREATE TABLE user_library
 (
     id       IDENTITY PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    role     VARCHAR(255) NOT NULL
 );
 COMMENT ON TABLE user_library IS 'Пользователи';
 COMMENT ON COLUMN user_library.id IS 'Ид';

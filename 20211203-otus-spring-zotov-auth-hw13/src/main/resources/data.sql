@@ -59,31 +59,47 @@ VALUES (1, 1, 2),
        (7, 5, 3),
        (8, 5, 8),
        (9, 6, 1);
-INSERT INTO user_library (id, username, password)
-VALUES (1, 'admin', ''),
-       (2, 'adult', ''),
-       (3, 'children', '');
+INSERT INTO user_library (id, username, password, role)
+VALUES (1, 'admin', '$2a$10$dX/ry6AS3VlctY/jbvu3NeKjSXKm4qjiHcjAebObrmt5CqKj743Q2', 'ROLE_ADMIN'),
+       (2, 'adult', '$2a$10$dX/ry6AS3VlctY/jbvu3NeKjSXKm4qjiHcjAebObrmt5CqKj743Q2', 'ROLE_ADULT'),
+       (3, 'child', '$2a$10$dX/ry6AS3VlctY/jbvu3NeKjSXKm4qjiHcjAebObrmt5CqKj743Q2', 'ROLE_CHILD');
 -- ACL
 INSERT INTO acl_sid (id, principal, sid)
-VALUES (1, 1, 'admin'),
-       (2, 2, 'adult'),
-       (3, 3, 'children'),
-       (4, 0, 'ROLE_EDITOR');
+VALUES (1, 0, 'ROLE_ADMIN'),
+       (2, 0, 'ROLE_ADULT'),
+       (3, 0, 'ROLE_CHILD');
 
 INSERT INTO acl_class (id, class)
-VALUES (1, 'ru.zotov.hw13.domain.Book.java');
+VALUES (1, 'ru.zotov.hw13.domain.Book');
 
 INSERT INTO acl_object_identity (id, object_id_class, object_id_identity, parent_object, owner_sid, entries_inheriting)
-VALUES (1, 1, 1, NULL, 3, 0),
-       (2, 1, 2, NULL, 3, 0),
-       (3, 1, 3, NULL, 3, 0);
+VALUES (1, 1, 1, NULL, 1, 0),
+       (2, 1, 2, NULL, 1, 0),
+       (3, 1, 3, NULL, 1, 0),
+       (4, 1, 4, NULL, 1, 0),
+       (5, 1, 5, NULL, 1, 0),
+       (6, 1, 6, NULL, 1, 0);
 
-INSERT INTO acl_entry (id, acl_object_identity, ace_order, sid, mask,
-                       granting, audit_success, audit_failure)
-VALUES (1, 1, 1, 1, 1, 1, 1, 1),
-       (2, 1, 2, 1, 2, 1, 1, 1),
-       (3, 1, 3, 3, 1, 1, 1, 1),
-       (4, 2, 1, 2, 1, 1, 1, 1),
-       (5, 2, 2, 3, 1, 1, 1, 1),
-       (6, 3, 1, 3, 1, 1, 1, 1),
-       (7, 3, 2, 3, 2, 1, 1, 1);
+INSERT INTO acl_entry (id, acl_object_identity, ace_order, sid, mask, granting, audit_success, audit_failure)
+VALUES
+    --Права админа
+    (1, 1, 1, 1, 16, 1, 1, 1),
+    (2, 2, 1, 1, 16, 1, 1, 1),
+    (3, 3, 1, 1, 16, 1, 1, 1),
+    (4, 4, 1, 1, 16, 1, 1, 1),
+    (5, 5, 1, 1, 16, 1, 1, 1),
+    (6, 6, 1, 1, 16, 1, 1, 1),
+    --Права взрослого
+    (7, 1, 2, 2, 1, 1, 1, 1),
+    (8, 2, 2, 2, 1, 1, 1, 1),
+    (9, 3, 2, 2, 1, 1, 1, 1),
+    (10, 4, 2, 2, 1, 1, 1, 1),
+    (11, 5, 2, 2, 1, 1, 1, 1),
+    (12, 6, 2, 2, 1, 1, 1, 1),
+    --Права ребенка
+    (13, 1, 3, 3, 1, 0, 1, 1),
+    (14, 2, 3, 3, 1, 0, 1, 1),
+    (15, 3, 3, 3, 1, 0, 1, 1),
+    (17, 4, 3, 3, 1, 0, 1, 1),
+    (18, 5, 3, 3, 1, 1, 1, 1),
+    (19, 6, 3, 3, 1, 0, 1, 1);
