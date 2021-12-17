@@ -34,6 +34,11 @@ public class UserLibrary {
      */
     @Column(name = "password")
     private String password;
+    /**
+     * Роль
+     */
+    @Column(name = "role")
+    private String role;
 
     @Override
     public boolean equals(Object o) {

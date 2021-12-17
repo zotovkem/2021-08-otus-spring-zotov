@@ -16,7 +16,7 @@ public class AuthorDto {
     /**
      * Ид автора
      */
-    private String id;
+    private Long id;
     /**
      * ФИО автора
      */

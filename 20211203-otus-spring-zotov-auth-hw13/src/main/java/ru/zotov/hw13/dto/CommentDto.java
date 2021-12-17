@@ -17,7 +17,7 @@ public class CommentDto {
     /**
      * Ид
      */
-    private String id;
+    private Long id;
     /**
      * Содержимое комментария
      */

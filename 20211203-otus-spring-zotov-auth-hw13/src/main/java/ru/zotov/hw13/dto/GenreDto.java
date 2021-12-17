@@ -15,7 +15,7 @@ public class GenreDto {
     /**
      * Ид
      */
-    private String id;
+    private Long id;
     /**
      * Наименование жанра
      */

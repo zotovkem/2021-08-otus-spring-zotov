@@ -20,7 +20,7 @@ public class BookDto {
     /**
      * Ид книги
      */
-    private String id;
+    private Long id;
     /**
      * Наименование книги
      */
