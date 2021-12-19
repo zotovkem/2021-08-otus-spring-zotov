@@ -51,6 +51,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book create(Book book) {
+        book.setId(null);
         Book savedBook = bookDao.save(book);
         grantedPermissionForAdult(savedBook);
 
@@ -92,8 +93,7 @@ public class BookServiceImpl implements BookService {
     @Nullable
     @PostAuthorize("hasPermission(returnObject, 'READ') or hasAnyRole('ADMIN')")
     public Book findById(Long id) {
-        return bookDao.findById(id)
-                .orElse(null);
+        return bookDao.findById(id).orElse(null);
     }
 
     /**

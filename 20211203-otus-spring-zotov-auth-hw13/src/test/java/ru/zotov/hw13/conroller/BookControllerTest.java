@@ -64,7 +64,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Запрещено создание книги взрослым")
-    @WithMockUser(username = "admin", roles = {"ADULT"})
+    @WithMockUser(username = "adult", roles = {"ADULT"})
     void createBookForbiddenAdultTest() throws Exception {
         BookDto bookDto = BookDto.builder()
                 .authors(Set.of(new AuthorDto(1L, null)))
@@ -82,7 +82,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Запрещено создание книги детям")
-    @WithMockUser(username = "admin", roles = {"CHILD"})
+    @WithMockUser(username = "child", roles = {"CHILD"})
     void createBookForbiddenChildTest() throws Exception {
         BookDto bookDto = BookDto.builder()
                 .authors(Set.of(new AuthorDto(1L, null)))
@@ -110,7 +110,7 @@ class BookControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = {"ADULT"})
+    @WithMockUser(username = "adult", roles = {"ADULT"})
     @DisplayName("Получить все книги взрослым пользователем")
     void bookGetAdultUserAllTest() throws Exception {
         mockMvc.perform(get("/api/books")

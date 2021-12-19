@@ -103,9 +103,9 @@ class CommentServiceImplTest {
         Comment comment = new Comment(1L, book, "текст комментария", "автор", ZonedDateTime.now());
         when(commentRepository.findById(anyLong())).thenReturn(Optional.of(comment));
 
-        Optional<Comment> result = commentService.findById(1L);
+        Comment result = commentService.findById(1L);
 
-        assertThat(result).isPresent();
+        assertThat(result).isNotNull();
 
         verify(commentRepository).findById(anyLong());
     }
