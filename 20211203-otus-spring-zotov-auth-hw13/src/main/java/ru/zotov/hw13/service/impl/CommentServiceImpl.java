@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setCreateDate(ZonedDateTime.now());
         comment.setId(null);
         Comment savedComment = commentRepository.save(comment);
-        setAdminAcl(savedComment);
+        setPermissionOwnerAcl(savedComment);
         return savedComment;
     }
 
@@ -102,7 +102,12 @@ public class CommentServiceImpl implements CommentService {
         });
     }
 
-    private void setAdminAcl(Comment comment) {
+    /**
+     * Устанавливает права на редактирование и удаление на комментарий
+     *
+     * @param comment комментарий
+     */
+    private void setPermissionOwnerAcl(Comment comment) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final Sid owner = new PrincipalSid(authentication);
         ObjectIdentity oid = new ObjectIdentityImpl(comment.getClass(), comment.getId());
