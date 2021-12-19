@@ -15,3 +15,8 @@ spring:
 logging:
   level:
     ROOT: ERROR
+#JWT
+jwt:
+  token:
+    secret: secret
+    expired: 3600000
