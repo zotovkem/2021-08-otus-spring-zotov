@@ -11,6 +11,7 @@ import ru.zotov.hw13.dto.BookDto;
 import ru.zotov.hw13.service.BookService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -57,7 +58,7 @@ public class BookController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<BookDto> getById(@PathVariable("id") Long id) {
-        return bookService.findById(id)
+        return Optional.ofNullable(bookService.findById(id))
                 .map(book -> mapper.map(book, BookDto.class))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -69,6 +70,7 @@ public class BookController {
      * @param bookDto dto книги
      */
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public BookDto updateBook(@RequestBody BookDto bookDto) {
         Book book = mapper.map(bookDto, Book.class);
         return mapper.map(bookService.update(book), BookDto.class);
