@@ -6,10 +6,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.zotov.hw13.Hw13Application;
 import ru.zotov.hw13.dto.AuthorDto;
@@ -26,9 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author Created by ZotovES on 22.11.2021
  */
-@EnableConfigurationProperties
 @SpringBootTest(classes = Hw13Application.class)
 @AutoConfigureMockMvc
+@WithMockUser(username = "admin", roles = {"ADMIN"})
 @DisplayName("Тестирование контроллера авторов")
 class AuthorControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new Jdk8Module())
@@ -78,7 +78,7 @@ class AuthorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id", is("2")))
+                .andExpect(jsonPath("id", is(2)))
                 .andExpect(jsonPath("fio", is("test")))
                 .andReturn();
     }
@@ -86,18 +86,18 @@ class AuthorControllerTest {
     @Test
     @DisplayName("Удалить авторов по списку ид")
     void deleteByListIdsTest() throws Exception {
-        mockMvc.perform(get("/api/authors/{id}", 10))
+        mockMvc.perform(get("/api/authors/{id}", 9))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id", is("10")))
+                .andExpect(jsonPath("id", is(9)))
                 .andReturn();
-        String content = objectMapper.writeValueAsString(List.of("10"));
+        String content = objectMapper.writeValueAsString(List.of(9));
         mockMvc.perform(delete("/api/authors").content(content)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent())
                 .andReturn();
-        mockMvc.perform(get("/api/authors/{id}", 10))
+        mockMvc.perform(get("/api/authors/{id}", 9))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andReturn();
