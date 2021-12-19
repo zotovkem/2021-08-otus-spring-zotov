@@ -42,7 +42,13 @@ class BookServiceImplTest {
                 .genres(Set.of(new Genre(1L, "")))
                 .authors(Set.of(new Author(1L, "")))
                 .build();
-        when(bookDao.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        Book savedBook = Book.builder().name("Книга про тестирование")
+                .id(1L)
+                .releaseYear(2021)
+                .genres(Set.of(new Genre(1L, "")))
+                .authors(Set.of(new Author(1L, "")))
+                .build();
+        when(bookDao.save(any())).thenReturn(savedBook);
         when(aclService.createAcl(any())).thenReturn(mock(MutableAcl.class));
 
         Book result = bookService.create(book);

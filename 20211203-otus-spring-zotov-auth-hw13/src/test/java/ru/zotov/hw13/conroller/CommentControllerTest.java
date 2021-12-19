@@ -262,7 +262,7 @@ class CommentControllerTest {
     @WithMockUser(username = "adult", roles = {"ADULT"})
     @DisplayName("Запрещено удалять чужие комментарии взрослым")
     void deleteByForeignCommentsForbiddenForAdultTest() throws Exception {
-        String content = objectMapper.writeValueAsString(List.of(4));
+        String content = objectMapper.writeValueAsString(List.of(7));
         mockMvc.perform(delete("/api/comments").content(content)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

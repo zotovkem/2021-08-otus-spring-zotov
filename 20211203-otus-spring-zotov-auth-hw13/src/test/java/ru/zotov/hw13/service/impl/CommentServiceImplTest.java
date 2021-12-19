@@ -38,13 +38,16 @@ class CommentServiceImplTest {
     @Test
     @DisplayName("Создание комментария")
     void createTest() {
-        Book book = Book.builder().name("Книга про тестирование")
+        Book book = Book.builder()
+                .id(1L)
+                .name("Книга про тестирование")
                 .releaseYear(2021)
                 .genres(Set.of(new Genre(1L, "")))
                 .authors(Set.of(new Author(1L, "")))
                 .build();
         Comment comment = new Comment(1L, book, "текст комментария", "автор", ZonedDateTime.now());
-        when(commentRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        Comment savedComment = new Comment(1L, book, "текст комментария", "автор", ZonedDateTime.now());
+        when(commentRepository.save(any())).thenReturn(savedComment);
         when(aclService.createAcl(any())).thenReturn(mock(MutableAcl.class));
 
         Comment result = commentService.create(comment);
