@@ -19,6 +19,10 @@ public class CommentDto {
      */
     private Long id;
     /**
+     * Ид книги
+     */
+    private Long bookId;
+    /**
      * Содержимое комментария
      */
     private String content;

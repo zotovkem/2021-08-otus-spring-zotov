@@ -59,15 +59,4 @@ public class AuthorServiceImpl implements AuthorService {
     public List<Author> findByAll() {
         return authorRepository.findAll();
     }
-
-    /**
-     * Поиск авторов по списку ид
-     *
-     * @param ids список ид
-     * @return список авторов
-     */
-    @Override
-    public List<Author> findByIdIn(List<Long> ids) {
-        return authorRepository.findAllById(ids);
-    }
 }

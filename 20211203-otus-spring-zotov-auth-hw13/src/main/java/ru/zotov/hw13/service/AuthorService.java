@@ -39,12 +39,4 @@ public interface AuthorService {
      * @return список авторов
      */
     List<Author> findByAll();
-
-    /**
-     * Поиск авторов по списку ид
-     *
-     * @param ids список ид
-     * @return список авторов
-     */
-    List<Author> findByIdIn(List<Long> ids);
 }
