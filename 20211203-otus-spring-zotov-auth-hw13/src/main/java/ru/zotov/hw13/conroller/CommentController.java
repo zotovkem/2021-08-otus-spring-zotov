@@ -12,6 +12,7 @@ import ru.zotov.hw13.dto.CommentDto;
 import ru.zotov.hw13.service.CommentService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -33,12 +34,16 @@ public class CommentController {
      */
     @PostMapping
     @PreAuthorize("!hasAnyRole('CHILD')")
-    @ResponseStatus(HttpStatus.CREATED)
-    public CommentDto createComment(@RequestBody CommentDto commentDto) {
+    public ResponseEntity<CommentDto> createComment(@RequestBody CommentDto commentDto) {
+        Long bookId = commentDto.getBookId();
+        if (bookId == null) {
+            return ResponseEntity.badRequest().build();
+        }
         Comment comment = mapper.map(commentDto, Comment.class);
-        comment.setBook(Book.builder().id(commentDto.getBookId()).build());
+        comment.setBook(Book.builder().id(bookId).build());
 
-        return mapper.map(commentService.create(comment), CommentDto.class);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(mapper.map(commentService.create(comment), CommentDto.class));
     }
 
     /**
@@ -58,7 +63,7 @@ public class CommentController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<CommentDto> getCommentById(@PathVariable("id") Long commentId) {
-        return commentService.findById(commentId)
+        return Optional.ofNullable(commentService.findById(commentId))
                 .map(comment -> mapper.map(comment, CommentDto.class))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

@@ -1,7 +1,8 @@
 package ru.zotov.hw13.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.domain.GrantedAuthoritySid;
@@ -16,14 +17,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zotov.hw13.dao.CommentRepository;
-import ru.zotov.hw13.domain.Book;
 import ru.zotov.hw13.domain.Comment;
 import ru.zotov.hw13.service.CommentService;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Created by ZotovES on 17.12.2021
@@ -36,36 +34,6 @@ public class CommentServiceImpl implements CommentService {
     private final MutableAclService mutableAclService;
 
     /**
-     * Сохранить список комментариев
-     *
-     * @param incomingBookComments список комментариев
-     * @param bookId               ид книги
-     * @return список сохраненных комментариев
-     */
-    @Override
-    @Transactional
-    public List<Comment> saveListComments(@NonNull List<Comment> incomingBookComments, @NonNull Long bookId) {
-        incomingBookComments.forEach(comment -> {
-            Book book = Book.builder().id(bookId).build();
-            comment.setBook(book);
-            if (comment.getCreateDate() == null) {
-                comment.setCreateDate(ZonedDateTime.now());
-            }
-        });
-
-        List<Long> commentsIds = incomingBookComments.stream().map(Comment::getId).collect(Collectors.toList());
-        List<Long> deletedCommentIds = incomingBookComments.stream()
-                .map(Comment::getId)
-                .filter(id -> !commentsIds.contains(id))
-                .collect(Collectors.toList());
-        if (!deletedCommentIds.isEmpty()) {
-            commentRepository.deleteAllByIdInBatch(deletedCommentIds);
-        }
-
-        return commentRepository.saveAll(incomingBookComments);
-    }
-
-    /**
      * Создать комментарий
      *
      * @param comment комментарий
@@ -75,6 +43,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public Comment create(Comment comment) {
         comment.setCreateDate(ZonedDateTime.now());
+        comment.setId(null);
         Comment savedComment = commentRepository.save(comment);
         setAdminAcl(savedComment);
         return savedComment;
@@ -87,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
      * @return комментарий
      */
     @Override
-    @PreAuthorize("hasPermission(#comment,'WRITE')")
+    @PreAuthorize("hasPermission(#comment,'WRITE') or hasRole('ADMIN')")
     public Comment update(Comment comment) {
         return commentRepository.save(comment);
     }
@@ -109,8 +78,10 @@ public class CommentServiceImpl implements CommentService {
      * @return комментарий
      */
     @Override
-    public Optional<Comment> findById(Long commentId) {
-        return commentRepository.findById(commentId);
+    @Nullable
+    @PostAuthorize("hasPermission(returnObject, 'READ') or !hasAnyRole('CHILD')")
+    public Comment findById(Long commentId) {
+        return commentRepository.findById(commentId).orElse(null);
     }
 
     /**
@@ -123,9 +94,9 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void deleteByIds(List<Long> ids) {
         List<Comment> commentList = commentRepository.findAllById(ids);
-        commentList.forEach(commentRepository::delete);
 
         commentList.forEach(comment -> {
+            commentRepository.delete(comment);
             ObjectIdentity oid = new ObjectIdentityImpl(comment.getClass(), comment.getId());
             mutableAclService.deleteAcl(oid, true);
         });

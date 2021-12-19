@@ -123,7 +123,10 @@ VALUES
 INSERT INTO acl_entry (id, acl_object_identity, ace_order, sid, mask, granting, audit_success, audit_failure)
 VALUES
     --Права ребенка
-    (54, 10, 3, 3, 1, 1, 1, 1);
+    (54, 16, 3, 3, 1, 1, 1, 1),
+    --Права взрослого
+    (55, 7, 3, 2, 2, 1, 1, 1),
+    (56, 7, 4, 2, 8, 1, 1, 1);
 /*public static final Permission READ = new BasePermission(1 << 0, 'R'); // 1
 	public static final Permission WRITE = new BasePermission(1 << 1, 'W'); // 2
 	public static final Permission CREATE = new BasePermission(1 << 2, 'C'); // 4

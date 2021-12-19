@@ -15,10 +15,10 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Override
-    @PostFilter("hasPermission(filterObject, 'READ') || !hasRole('CHILD')")
+    @PostFilter("hasPermission(filterObject, 'READ') or !hasRole('CHILD')")
     List<Comment> findAll();
 
-    @PreAuthorize("hasPermission(#entity,'DELETE') || hasRole('ADMIN')")
     @Override
+    @PreAuthorize("hasPermission(#entity,'DELETE') or hasRole('ADMIN')")
     void delete(Comment entity);
 }
