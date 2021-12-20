@@ -64,6 +64,7 @@ public class BookServiceImpl implements BookService {
      * @param ids список ид
      */
     @Override
+    @Transactional
     public void deleteByIds(List<Long> ids) {
         bookDao.deleteAllByIdInBatch(ids);
 
