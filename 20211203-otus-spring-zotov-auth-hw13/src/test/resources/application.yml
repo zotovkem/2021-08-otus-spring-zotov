@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:bookdb
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+
+    show-sql: true
+
+logging:
+  level:
+    ROOT: ERROR
+#JWT
+jwt:
+  token:
+    secret: secret
+    expired: 3600000
