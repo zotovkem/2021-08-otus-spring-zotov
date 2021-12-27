@@ -1,0 +1,42 @@
+package ru.zotov.hw11.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.Date;
+
+/**
+ * @author Created by ZotovES on 21.10.2021
+ * Комментарий к книге
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Comment {
+    /**
+     * Ид
+     */
+    private String id;
+    /**
+     * Содержимое комментария
+     */
+    private String content;
+    /**
+     * Автор комментария
+     */
+    private String author;
+    /**
+     * Дата создания
+     */
+    private Date createDate;
+
+    @Override
+    public String toString() {
+        return String.format("Ид: %s%nКомментарий: %s%nАвтор: %s%nДата/время: %s%n" +
+                        "=====================================",
+                getId(), getContent(), getAuthor(), getCreateDate().toString());
+    }
+}
