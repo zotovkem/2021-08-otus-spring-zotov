@@ -29,7 +29,7 @@ public class CreateJobContextTasklet implements Tasklet {
 
     @Nullable
     @Override
-    public RepeatStatus execute(@NonNull StepContribution contribution, @NonNull ChunkContext chunkContext) throws Exception {
+    public RepeatStatus execute(@NonNull StepContribution contribution, @NonNull ChunkContext chunkContext) {
         ExecutionContext stepContext = contribution.getStepExecution().getJobExecution().getExecutionContext();
         List<MigrationRegistry> migrationRegistryList = migrationRegistryRepository.findAll();
 
