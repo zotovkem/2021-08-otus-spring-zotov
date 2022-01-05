@@ -1,4 +1,4 @@
-package ru.zotov.hw14.domain;
+package ru.zotov.hw14.domain.mongo;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

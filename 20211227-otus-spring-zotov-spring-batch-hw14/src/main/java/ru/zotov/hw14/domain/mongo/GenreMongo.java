@@ -1,15 +1,15 @@
-package ru.zotov.hw14.domain;
+package ru.zotov.hw14.domain.mongo;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Objects;
 
-
 /**
  * @author Created by ZotovES on 29.09.2021
- * Автор
+ * Жанр
  */
 @Getter
 @Setter
@@ -17,17 +17,18 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Document(collection = "author")
-public class AuthorMongo {
+@Document(collection = "genre")
+public class GenreMongo {
     /**
-     * Ид автора
+     * Ид
      */
     @Id
     private String id;
     /**
-     * ФИО автора
+     * Наименование жанра
      */
-    private String fio;
+    @Field(name = "name")
+    private String name;
 
     @Override
     public boolean equals(Object o) {
@@ -37,12 +38,12 @@ public class AuthorMongo {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        AuthorMongo author = (AuthorMongo) o;
-        return Objects.equals(id, author.id);
+        GenreMongo genre = (GenreMongo) o;
+        return Objects.equals(id, genre.id) && Objects.equals(name, genre.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name);
     }
 }

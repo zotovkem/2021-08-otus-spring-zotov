@@ -1,10 +1,8 @@
-package ru.zotov.hw14.domain;
+package ru.zotov.hw14.domain.jpa;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -17,17 +15,20 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Document(collection = "genre")
-public class GenreMongo {
+@Entity
+@Table(name = "genre")
+public class GenreJpa {
     /**
      * Ид
      */
     @Id
-    private String id;
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     /**
      * Наименование жанра
      */
-    @Field(name = "name")
+    @Column(name = "name")
     private String name;
 
     @Override
@@ -38,7 +39,7 @@ public class GenreMongo {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GenreMongo genre = (GenreMongo) o;
+        GenreJpa genre = (GenreJpa) o;
         return Objects.equals(id, genre.id) && Objects.equals(name, genre.name);
     }
 
