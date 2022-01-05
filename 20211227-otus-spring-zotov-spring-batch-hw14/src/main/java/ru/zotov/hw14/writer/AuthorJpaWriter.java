@@ -6,8 +6,8 @@ import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
-import ru.zotov.hw14.dao.AuthorRepositoryJpa;
-import ru.zotov.hw14.dao.MigrationRegistryRepositoryJpa;
+import ru.zotov.hw14.dao.AuthorRepository;
+import ru.zotov.hw14.dao.MigrationRegistryRepository;
 import ru.zotov.hw14.domain.MigrationRegistry;
 import ru.zotov.hw14.domain.jpa.AuthorJpa;
 
@@ -26,8 +26,8 @@ import static ru.zotov.hw14.utils.BatchJobContextHelper.saveStepExecutionContext
 @RequiredArgsConstructor
 public class AuthorJpaWriter implements ItemWriter<Pair<String, AuthorJpa>> {
     private StepExecution stepExecution;
-    private final AuthorRepositoryJpa authorRepositoryJpa;
-    private final MigrationRegistryRepositoryJpa migrationRegistryRepositoryJpa;
+    private final AuthorRepository authorRepositoryJpa;
+    private final MigrationRegistryRepository migrationRegistryRepositoryJpa;
 
     @Override
     public void write(List<? extends Pair<String, AuthorJpa>> items) {

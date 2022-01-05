@@ -9,5 +9,5 @@ import ru.zotov.hw14.domain.jpa.CommentJpa;
  * Репозиторий комментариев
  */
 @Repository
-public interface CommentRepositoryJpa extends JpaRepository<CommentJpa, Long> {
+public interface CommentRepository extends JpaRepository<CommentJpa, Long> {
 }

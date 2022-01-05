@@ -6,8 +6,8 @@ import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
-import ru.zotov.hw14.dao.CommentRepositoryJpa;
-import ru.zotov.hw14.dao.MigrationRegistryRepositoryJpa;
+import ru.zotov.hw14.dao.CommentRepository;
+import ru.zotov.hw14.dao.MigrationRegistryRepository;
 import ru.zotov.hw14.domain.MigrationRegistry;
 import ru.zotov.hw14.domain.jpa.CommentJpa;
 
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static ru.zotov.hw14.constant.MigrationTableName.BOOK;
 import static ru.zotov.hw14.constant.MigrationTableName.COMMENT;
 import static ru.zotov.hw14.utils.BatchJobContextHelper.saveStepExecutionContext;
 
@@ -27,8 +26,8 @@ import static ru.zotov.hw14.utils.BatchJobContextHelper.saveStepExecutionContext
 @RequiredArgsConstructor
 public class CommentJpaWriter implements ItemWriter<Pair<String, CommentJpa>> {
     private StepExecution stepExecution;
-    private final CommentRepositoryJpa commentRepository;
-    private final MigrationRegistryRepositoryJpa migrationRegistryRepositoryJpa;
+    private final CommentRepository commentRepository;
+    private final MigrationRegistryRepository migrationRegistryRepositoryJpa;
 
     @Override
     public void write(List<? extends Pair<String, CommentJpa>> items) {

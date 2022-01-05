@@ -9,5 +9,5 @@ import ru.zotov.hw14.domain.jpa.BookJpa;
  * Репозиторий Книг
  */
 @Repository
-public interface BookRepositoryJpa extends JpaRepository<BookJpa, Long> {
+public interface BookRepository extends JpaRepository<BookJpa, Long> {
 }

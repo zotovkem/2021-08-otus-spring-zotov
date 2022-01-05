@@ -11,7 +11,7 @@ import java.util.Optional;
  * @author Created by ZotovES on 02.01.2022
  * Репозиторий перенесенных записей
  */
-public interface MigrationRegistryRepositoryJpa extends JpaRepository<MigrationRegistry,Long> {
+public interface MigrationRegistryRepository extends JpaRepository<MigrationRegistry,Long> {
     /**
      * Поиск всех записей по имени таблицы
      * @param tableName имя таблицы

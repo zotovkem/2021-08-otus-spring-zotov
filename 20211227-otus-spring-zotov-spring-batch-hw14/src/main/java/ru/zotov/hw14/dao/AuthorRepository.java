@@ -9,6 +9,6 @@ import ru.zotov.hw14.domain.jpa.AuthorJpa;
  * Репозиторий Авторов книг
  */
 @Repository
-public interface AuthorRepositoryJpa extends JpaRepository<AuthorJpa, Long> {
+public interface AuthorRepository extends JpaRepository<AuthorJpa, Long> {
 
 }

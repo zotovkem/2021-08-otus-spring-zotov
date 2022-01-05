@@ -7,7 +7,7 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import ru.zotov.hw14.dao.GenreRepository;
-import ru.zotov.hw14.dao.MigrationRegistryRepositoryJpa;
+import ru.zotov.hw14.dao.MigrationRegistryRepository;
 import ru.zotov.hw14.domain.MigrationRegistry;
 import ru.zotov.hw14.domain.jpa.GenreJpa;
 
@@ -27,7 +27,7 @@ import static ru.zotov.hw14.utils.BatchJobContextHelper.saveStepExecutionContext
 public class GenreJpaWriter implements ItemWriter<Pair<String, GenreJpa>> {
     private StepExecution stepExecution;
     private final GenreRepository genreRepository;
-    private final MigrationRegistryRepositoryJpa migrationRegistryRepositoryJpa;
+    private final MigrationRegistryRepository migrationRegistryRepositoryJpa;
 
     @Override
     public void write(List<? extends Pair<String, GenreJpa>> items) {
