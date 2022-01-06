@@ -1,15 +1,23 @@
 spring:
+  batch:
+    job:
+      enabled: false
+
+  mongodb:
+    embedded:
+      version: 3.4.0
+
   data:
     mongodb:
-      authentication-database: admin
-      username: root
-      password: example
-      port: 27017
       host: localhost
+      port: 0
       database: bookdb
 
   datasource:
     url: jdbc:h2:mem:bookdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
 
   sql:
     init:
@@ -21,13 +29,6 @@ spring:
       ddl-auto: validate
 
     show-sql: false
-
-  h2:
-    console:
-      path: /h2-console
-      settings:
-        web-allow-others: true
-      enabled: true
 
 mongock:
   runner-type: "InitializingBean"
