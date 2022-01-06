@@ -2,14 +2,12 @@ package ru.zotov.hw14.changelogs;
 
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
+import com.github.cloudyrock.mongock.driver.mongodb.springdata.v3.decorator.impl.MongockTemplate;
 import com.mongodb.client.MongoDatabase;
-import ru.zotov.hw14.dao.AuthorRepositoryMongo;
-import ru.zotov.hw14.dao.BookRepositoryMongo;
-import ru.zotov.hw14.dao.GenreRepositoryMongo;
-import ru.zotov.hw14.domain.AuthorMongo;
-import ru.zotov.hw14.domain.BookMongo;
-import ru.zotov.hw14.domain.CommentMongo;
-import ru.zotov.hw14.domain.GenreMongo;
+import ru.zotov.hw14.domain.mongo.AuthorMongo;
+import ru.zotov.hw14.domain.mongo.BookMongo;
+import ru.zotov.hw14.domain.mongo.CommentMongo;
+import ru.zotov.hw14.domain.mongo.GenreMongo;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -35,7 +33,7 @@ public class DatabaseChangelog {
      * Заполнение коллекции авторов
      */
     @ChangeSet(order = "001", id = "fillAuthor", author = "ezotov")
-    public void fillAuthor(AuthorRepositoryMongo authorRepository) {
+    public void fillAuthor(MongockTemplate mongoTemplate) {
         List<AuthorMongo> authors = Map.of(1, "Роберт Мартин",
                         2, "Мартин Клеппман",
                         3, "Билл Любанович",
@@ -50,14 +48,14 @@ public class DatabaseChangelog {
                 .map(e -> new AuthorMongo(e.getKey().toString(), e.getValue()))
                 .collect(Collectors.toList());
 
-        authorList = authorRepository.saveAll(authors);
+        authorList = mongoTemplate.insert(authors, "author").stream().toList();
     }
 
     /**
      * Заполнение коллекции жанров
      */
     @ChangeSet(order = "002", id = "fillGenre", author = "ezotov")
-    public void fillGenre(GenreRepositoryMongo genreRepository) {
+    public void fillGenre(MongockTemplate mongoTemplate) {
         List<GenreMongo> genres = Map.of(1, "Детектив",
                         2, "Компьютерная литература",
                         3, "Сказки",
@@ -72,7 +70,7 @@ public class DatabaseChangelog {
                 .map(e -> new GenreMongo(e.getKey().toString(), e.getValue()))
                 .collect(Collectors.toList());
 
-        genreList = genreRepository.saveAll(genres);
+        genreList = mongoTemplate.insert(genres, "genre").stream().toList();
     }
 
     /**
@@ -107,7 +105,7 @@ public class DatabaseChangelog {
      * Заполнение коллекции книг
      */
     @ChangeSet(order = "004", id = "fillBooks", author = "ezotov")
-    public void addBooks(BookRepositoryMongo bookRepository) {
+    public void addBooks(MongockTemplate mongoTemplate) {
         List<BookMongo> books = List.of(
                 new BookMongo("1", "Высоконагруженные приложения", 2017, getAuthorSet(Set.of("2", "6")),
                         getGenreSet(Set.of("2", "5")), getCommentList(Set.of("1", "7"))),
@@ -117,11 +115,12 @@ public class DatabaseChangelog {
                         getGenreSet("4"), getCommentList(Set.of("3", "9"))),
                 new BookMongo("4", "Экстремальная археология", 2021, getAuthorSet("5"),
                         getGenreSet("4"), getCommentList(Set.of("4", "10"))),
-                new BookMongo("5", "Сказки пушкина", 2008, getAuthorSet("4"), getGenreSet(Set.of("3", "8")), Collections.emptyList()),
+                new BookMongo("5", "Сказки пушкина", 2008, getAuthorSet("4"), getGenreSet(Set.of("3", "8")),
+                        Collections.emptyList()),
                 new BookMongo("6", "Отдаленные последствия", 2021, getAuthorSet("8"),
                         getGenreSet("1"), getCommentList(Set.of("6", "12"))));
 
-        bookList = bookRepository.saveAll(books);
+        bookList = mongoTemplate.insert(books, "book").stream().toList();
     }
 
     private BookMongo getBookById(String id) {
