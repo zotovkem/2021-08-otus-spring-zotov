@@ -3,6 +3,7 @@ package ru.zotov.hw14.config;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import static ru.zotov.hw14.constant.Constants.*;
  */
 @Slf4j
 @Configuration
+@EnableBatchProcessing
 @RequiredArgsConstructor
 public class JobConfig {
     private final JobBuilderFactory jobBuilderFactory;
