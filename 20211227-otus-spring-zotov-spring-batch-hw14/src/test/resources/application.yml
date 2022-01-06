@@ -1,18 +1,42 @@
 spring:
+  batch:
+    job:
+      enabled: false
+  shell:
+    interactive:
+      enabled: false
+  mongodb:
+    embedded:
+      version: 3.4.0
+
   data:
     mongodb:
+      host: localhost
       port: 0
       database: bookdb
 
+  datasource:
+    url: jdbc:h2:mem:bookdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+
+    show-sql: false
+
 mongock:
-  runner-type: "ApplicationRunner"
+  runner-type: "InitializingBean"
   change-logs-scan-package:
-    - ru.zotov.hw10.changelogs
+    - ru.zotov.hw14.changelogs
   mongo-db:
     write-concern:
       journal: false
     read-concern: local
-
-logging:
-  level:
-    root: ERROR
