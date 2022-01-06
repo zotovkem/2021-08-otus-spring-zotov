@@ -6,13 +6,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import ru.zotov.hw14.domain.mongo.AuthorMongo;
 import ru.zotov.hw14.domain.mongo.BookMongo;
-import ru.zotov.hw14.domain.mongo.CommentMongo;
+import ru.zotov.hw14.domain.mongo.CommentProjectionMongo;
 import ru.zotov.hw14.domain.mongo.GenreMongo;
 
 import java.util.Map;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 import static ru.zotov.hw14.constant.Constants.*;
 import static ru.zotov.hw14.constant.MigrationTableName.*;
 
@@ -82,16 +87,26 @@ public class ReaderConfig {
      * @param mongoTemplate mongo template
      */
     @Bean
-    public ItemReader<CommentMongo> commentsReader(MongoTemplate mongoTemplate) {
-        return new MongoItemReaderBuilder<CommentMongo>()
-                .template(mongoTemplate)
-                .collection(BOOK.name().toLowerCase())
-                .name(COMMENT_ITEM_READER)
-                .jsonQuery("{}")
-                .targetType(CommentMongo.class)
-                .pageSize(CHUNK_SIZE)
-                .sorts(Map.of("id", Sort.Direction.ASC))
-                .build();
+    public ItemReader<CommentProjectionMongo> commentsReader(MongoTemplate mongoTemplate) {
+        CustomMongoItemReader<CommentProjectionMongo> mongoItemReader = new CustomMongoItemReader<>();
+        mongoItemReader.setTemplate(mongoTemplate);
+        mongoItemReader.setQuery("{}");
+        mongoItemReader.setSort(Map.of("id", Sort.Direction.ASC));
+        mongoItemReader.setName(COMMENT_ITEM_READER);
+        mongoItemReader.setTargetType(CommentProjectionMongo.class);
+        mongoItemReader.setOutputType(CommentProjectionMongo.class);
+        mongoItemReader.setCollection(BOOK.name().toLowerCase());
+        mongoItemReader.setMatch(Aggregation.match(new Criteria()));
+        AggregationOperation[] aggregationOperations = {
+                unwind("comments"),
+                project().and("comments._id").as("_id")
+                        .and("comments.content").as("content")
+                        .and("comments.author").as("author")
+                        .and("comments.createDate").as("createDate")
+                        .and("_id").as("book._id")
+        };
+        mongoItemReader.setOperations(aggregationOperations);
+        return mongoItemReader;
     }
 
 }
