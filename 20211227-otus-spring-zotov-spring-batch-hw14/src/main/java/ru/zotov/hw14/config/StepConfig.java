@@ -17,10 +17,7 @@ import ru.zotov.hw14.domain.jpa.AuthorJpa;
 import ru.zotov.hw14.domain.jpa.BookJpa;
 import ru.zotov.hw14.domain.jpa.CommentJpa;
 import ru.zotov.hw14.domain.jpa.GenreJpa;
-import ru.zotov.hw14.domain.mongo.AuthorMongo;
-import ru.zotov.hw14.domain.mongo.BookMongo;
-import ru.zotov.hw14.domain.mongo.CommentMongo;
-import ru.zotov.hw14.domain.mongo.GenreMongo;
+import ru.zotov.hw14.domain.mongo.*;
 
 import static ru.zotov.hw14.constant.Constants.*;
 import static ru.zotov.hw14.constant.Constants.CREATE_JOB_CONTEXT_STEP;
@@ -99,10 +96,11 @@ public class StepConfig {
      */
     @Bean
     @Qualifier(value = COMMENT_MIGRATION_STEP)
-    public Step commentStep(ItemReader<CommentMongo> reader, ItemWriter<Pair<String, CommentJpa>> writer,
-            ItemProcessor<CommentMongo, Pair<String, CommentJpa>> itemProcessor, ExecutionContextPromotionListener promotionListener,
+    public Step commentStep(ItemReader<CommentProjectionMongo> reader, ItemWriter<Pair<String, CommentJpa>> writer,
+            ItemProcessor<CommentProjectionMongo, Pair<String, CommentJpa>> itemProcessor, ExecutionContextPromotionListener promotionListener,
             ChunkListener chunkListener) {
-        return stepBuilderFactory.get(COMMENT_MIGRATION_STEP).<CommentMongo, Pair<String, CommentJpa>>chunk(CHUNK_SIZE)
+
+        return stepBuilderFactory.get(COMMENT_MIGRATION_STEP).<CommentProjectionMongo, Pair<String, CommentJpa>>chunk(CHUNK_SIZE)
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)

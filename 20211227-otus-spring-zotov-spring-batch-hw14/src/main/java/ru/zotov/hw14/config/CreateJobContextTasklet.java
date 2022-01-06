@@ -10,7 +10,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import ru.zotov.hw14.constant.MigrationTableName;
-import ru.zotov.hw14.dao.MigrationRegistryRepositoryJpa;
+import ru.zotov.hw14.dao.MigrationRegistryRepository;
 import ru.zotov.hw14.domain.MigrationRegistry;
 
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class CreateJobContextTasklet implements Tasklet {
-    private final MigrationRegistryRepositoryJpa migrationRegistryRepository;
+    private final MigrationRegistryRepository migrationRegistryRepository;
 
     @Nullable
     @Override

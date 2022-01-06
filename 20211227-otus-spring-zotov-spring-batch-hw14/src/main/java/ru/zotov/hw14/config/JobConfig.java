@@ -13,7 +13,7 @@ import java.util.Map;
 import static ru.zotov.hw14.constant.Constants.*;
 
 /**
- * Конфиг джобы
+ * Конфиг job
  */
 @Slf4j
 @Configuration
@@ -22,7 +22,7 @@ public class JobConfig {
     private final JobBuilderFactory jobBuilderFactory;
 
     /**
-     * Джоба миграции данных
+     * Job миграции данных
      */
     @Bean
     public Job migrationAuthorJob(Map<String, Step> stepMap, JobExecutionListener jobExecutionListener) {
