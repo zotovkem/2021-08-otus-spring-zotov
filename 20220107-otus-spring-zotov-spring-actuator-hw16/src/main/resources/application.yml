@@ -1,11 +1,8 @@
 spring:
   data:
     mongodb:
-      authentication-database: admin
-      username: root
-      password: example
-      port: 27017
       host: localhost
+      port: 0
       database: bookdb
 mongock:
   runner-type: "InitializingBean"
@@ -15,3 +12,15 @@ mongock:
     write-concern:
       journal: false
     read-concern: local
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,loggers
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
