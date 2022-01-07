@@ -3,6 +3,7 @@ package ru.zotov.hw16.dao;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.zotov.hw16.domain.Book;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  * @author Created by ZotovES on 04.10.2021
  * Репозиторий Книг
  */
+@RepositoryRestResource(path = "book")
 public interface BookRepository extends MongoRepository<Book, String>, BookRepositoryCustom {
     /**
      * Найти книгу по наименованию
