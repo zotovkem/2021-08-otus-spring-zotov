@@ -20,4 +20,12 @@ public interface BookRepository extends MongoRepository<Book, String>, BookRepos
      */
     @Query(value = "{'name': { $regex: :#{#name}, $options: 'i' }}")
     List<Book> findByName(@Param("name") String name);
+
+    /**
+     * Поиск книг с не цензурными словами в комментариях
+     *
+     * @param name не цензурное слово
+     */
+    @Query(value = "{'comments.content': { $regex: :#{#name}, $options: 'i' }}")
+    List<Book> findByCommentContent(String name);
 }
