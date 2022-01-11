@@ -23,12 +23,13 @@ public class IntegrationConfig {
 
     protected static final String SPLIT_EPIC_team_lead_service = "splitEpic";
     protected static final String DEVELOP_TASK = "developTask";
+    protected static final String TASK_CHANNEL = "taskChannel";
 
     @Bean(name = PollerMetadata.DEFAULT_POLLER)
     public PollerSpec poller() {
-        return Pollers.fixedRate(500)
-                .errorChannel("myErrors");
+        return Pollers.fixedRate(1000);
     }
+
     /**
      * Канал для эпиков
      */
@@ -39,16 +40,43 @@ public class IntegrationConfig {
     }
 
     /**
+     * Канал для задач
+     */
+    @Bean
+    @Qualifier(value = TASK_CHANNEL)
+    public QueueChannel taskChannel() {
+        return MessageChannels.queue(10).get();
+    }
+
+    /**
+     * Канал код ревью
+     */
+    @Bean
+    @Qualifier(value = "codeReviewChannel")
+    public QueueChannel codeReviewChannel() {
+        return MessageChannels.queue(10).get();
+    }
+
+    /**
      * Флоу разработки эпика
      */
     @Bean
-    public IntegrationFlow cafeFlow(TeamLeadService teamLeadService, DeveloperService developerService) {
+    public IntegrationFlow epicFlow(TeamLeadService teamLeadService, IntegrationFlow taskFlow) {
         return IntegrationFlows.from(EPIC_CHANNEL)
                 .handle(teamLeadService, SPLIT_EPIC_team_lead_service)
                 .split()
-                .handle( developerService, DEVELOP_TASK)
-                .channel( "foodChannel" )
-                .aggregate()
+                .to(taskFlow);
+    }
+
+    /**
+     * Флоу разработки задачи
+     */
+    @Bean
+    public IntegrationFlow taskFlow(DeveloperService developerService) {
+        return IntegrationFlows.from(EPIC_CHANNEL)
+                .channel(TASK_CHANNEL)
+                .handle(developerService, DEVELOP_TASK)
+                .channel("codeReviewChannel")
                 .get();
     }
 }
