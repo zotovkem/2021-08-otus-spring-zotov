@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.actuate.health.Status;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
-import ru.zotov.hw16.dao.BookRepository;
+import ru.zotov.hw16.domain.Book;
 
 /**
  * @author Created by ZotovES on 07.01.2022
@@ -14,12 +15,12 @@ import ru.zotov.hw16.dao.BookRepository;
 @Component
 @RequiredArgsConstructor
 public class BooksMigrationScriptAppliedIndicator implements HealthIndicator {
-    private final BookRepository bookRepository;
+    private final MongoTemplate mongoTemplate;
 
     @Override
     public Health health() {
         return Health
-                .status(bookRepository.count() > 0 ? Status.UP : Status.DOWN)
+                .status(mongoTemplate.collectionExists(Book.class) ? Status.UP : Status.DOWN)
                 .build();
     }
 }
