@@ -25,14 +25,9 @@ public class ForgottenBooksIndicator implements HealthIndicator {
         List<String> booksName = bookRepository.findByCommentContent("плохое слово").stream()
                 .map(Book::getName)
                 .collect(Collectors.toList());
-        if (booksName.isEmpty()) {
-            return Health.up()
-                    .withDetails(Map.of("censured", List.of()))
-                    .build();
-        }
 
-        return Health.down()
-                .withDetails(Map.of("censured", booksName))
-                .build();
+            return Health.up()
+                    .withDetails(Map.of("censured", booksName))
+                    .build();
     }
 }
