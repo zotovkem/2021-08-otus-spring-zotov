@@ -12,10 +12,10 @@ public class Hw15Application {
         ConfigurableApplicationContext context = SpringApplication.run(Hw15Application.class, args);
         AnalystService analystService = context.getBean(AnalystService.class);
 
-        while (true) {
+//        while (true) {
             analystService.createEpic();
-            Thread.sleep(10000);
-        }
+//            Thread.sleep(10000);
+//        }
 
     }
 
