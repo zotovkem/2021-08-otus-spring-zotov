@@ -17,8 +17,8 @@ import java.util.List;
 @Service
 public class TeamLeadService {
     public List<Task> splitEpic(Epic epic) {
-      log.info("[DeveloperFlow] Teamlead разбивает эпик на задачи");
-        return List.of(new Task(), new Task());
+      log.info("[DeveloperFlow] Teamlead разбивает эпик "+epic.getName()+" на задачи ");
+        return List.of(new Task("задача1"), new Task("задача2"));
     }
 
     /**
@@ -28,8 +28,8 @@ public class TeamLeadService {
      * @return замечания по пулл реквесту
      */
     public List<Discussion> codeReview(PullRequest pullRequest) {
-        log.info("[DeveloperFlow] Teamlead проводит код ревью PR");
-        return List.of(new Discussion(), new Discussion());
+        log.info("[DeveloperFlow] Teamlead проводит код ревью PR "+pullRequest.getName());
+        return List.of(new Discussion(pullRequest.getName()+"замечание лида1"), new Discussion(pullRequest.getName()+" замечание лида2"));
     }
 
     /**
@@ -39,8 +39,8 @@ public class TeamLeadService {
      * @return ТЗ на тестирование
      */
     public Epic mergePullRequest(PullRequest pullRequest) {
-        log.info("[DeveloperFlow] Teamlead мерджит PR");
-        return new Epic();
+        log.info("[DeveloperFlow] Teamlead мерджит PR "+pullRequest.getName());
+        return new Epic("эпик1");
     }
 
     /**
@@ -48,7 +48,8 @@ public class TeamLeadService {
      *
      * @param epic эпик фичи
      */
-    public void deploy(Epic epic) {
-        log.info("[DeveloperFlow] Teamlead деплоит фичу");
+    public Epic deploy(Epic epic) {
+        log.info("[DeveloperFlow] Teamlead деплоит фичу "+epic.getName());
+        return epic;
     }
 }

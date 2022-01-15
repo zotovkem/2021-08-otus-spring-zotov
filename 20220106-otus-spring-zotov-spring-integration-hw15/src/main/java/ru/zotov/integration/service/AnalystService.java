@@ -25,7 +25,8 @@ public class AnalystService {
      * @return эпик
      */
     public Epic createEpic() {
-        log.info("[DeveloperFlow] Аналитик создал эпик");
-        return gateway.process(new Epic());
+        String epicName= "Epic1";
+        log.info("[DeveloperFlow] Аналитик создал эпик {}",epicName);
+        return gateway.process(new Epic(epicName));
     }
 }

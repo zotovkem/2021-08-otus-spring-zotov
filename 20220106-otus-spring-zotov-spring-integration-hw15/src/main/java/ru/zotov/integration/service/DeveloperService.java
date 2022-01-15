@@ -1,5 +1,6 @@
 package ru.zotov.integration.service;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.zotov.integration.domain.Bug;
@@ -22,10 +23,9 @@ public class DeveloperService {
      * @param task задача
      * @return пулл реквест на задачу
      */
-    public PullRequest developTask(Task task) throws InterruptedException {
-        Thread.sleep(200000);
-        log.info("[DeveloperFlow] Разработчик завершил задачу");
-        return new PullRequest();
+    public PullRequest developTask(Task task) {
+        log.info("[DeveloperFlow] Разработчик завершил задачу {}",task.getName());
+        return new PullRequest("PR к задаче "+task.getName());
     }
 
     /**
@@ -34,10 +34,9 @@ public class DeveloperService {
      * @param bug баг
      * @return пулл реквест на баг
      */
-    public PullRequest fixBug(Bug bug) throws InterruptedException {
-        Thread.sleep(50000);
-        log.info("[DeveloperFlow] Разработчик фиксит баг");
-        return new PullRequest();
+    public PullRequest fixBug(Bug bug) {
+        log.info("[DeveloperFlow] Разработчик фиксит баг {}", bug.getName());
+        return new PullRequest("PR к багу "+ bug.getName());
     }
 
     /**
@@ -46,10 +45,9 @@ public class DeveloperService {
      * @param discussion Замечание
      * @return пулл реквест с исправлением
      */
-    public PullRequest editPullRequest(Discussion discussion) throws InterruptedException {
-        Thread.sleep(30000);
-        log.info("[DeveloperFlow] Разработчик исправляет замечания по код ревью");
-        return new PullRequest();
+    public PullRequest editPullRequest(Discussion discussion) {
+        log.info("[DeveloperFlow] Разработчик исправляет замечания по код ревью {}",discussion.getName());
+        return new PullRequest("PR к замечанию "+ discussion.getName());
     }
 
     /**
@@ -58,10 +56,9 @@ public class DeveloperService {
      * @param pullRequest пулл реквест
      * @return замечания по пулл реквесту
      */
-    public List<Discussion> codeReview(PullRequest pullRequest) throws InterruptedException {
-        Thread.sleep(100000);
-        log.info("[DeveloperFlow] Разработчик проводит код ревью");
-        return List.of(new Discussion(), new Discussion());
+    public List<Discussion> codeReview(PullRequest pullRequest) {
+        log.info("[DeveloperFlow] Разработчик проводит код ревью {}",pullRequest.getName());
+        return List.of(new Discussion(pullRequest.getName()+ "Замечание разработчика1"), new Discussion(pullRequest.getName()+ "Замечание разработчика2"));
     }
 
 }

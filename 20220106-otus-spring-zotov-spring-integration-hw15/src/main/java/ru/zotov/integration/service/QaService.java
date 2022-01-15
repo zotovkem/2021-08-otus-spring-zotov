@@ -21,8 +21,8 @@ public class QaService {
      * @return список багов
      */
     public List<Bug> testEpic(Epic epic) {
-        log.info("[DeveloperFlow] QA тестирует эпик");
-        return List.of(new Bug(), new Bug());
+        log.info("[DeveloperFlow] QA тестирует эпик "+epic.getName());
+        return List.of(new Bug("баг1"), new Bug("баг2"));
     }
 
     /**
@@ -30,9 +30,9 @@ public class QaService {
      * @param bug баг
      * @return список багов
      */
-    public List<Bug> testBug(Bug bug){
-        log.info("[DeveloperFlow] QA тестирует bug");
+    public Epic testBug(Bug bug){
+        log.info("[DeveloperFlow] QA тестирует bug "+bug.getName());
 
-        return List.of(new Bug(), new Bug());
+        return new Epic("Epic1");
     }
 }
