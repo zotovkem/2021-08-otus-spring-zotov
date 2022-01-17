@@ -1,11 +1,8 @@
 package ru.zotov.integration.config;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.integration.annotation.IntegrationComponentScan;
-import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.dsl.*;
 import org.springframework.integration.scheduling.PollerMetadata;
@@ -15,6 +12,9 @@ import ru.zotov.integration.domain.Task;
 import ru.zotov.integration.service.DeveloperService;
 import ru.zotov.integration.service.QaService;
 import ru.zotov.integration.service.TeamLeadService;
+import ru.zotov.integration.service.impl.DeveloperServiceImpl;
+import ru.zotov.integration.service.impl.QaServiceImpl;
+import ru.zotov.integration.service.impl.TeamLeadServiceImpl;
 
 import static ru.zotov.integration.constants.Constants.*;
 
@@ -77,6 +77,7 @@ public class FlowIntegrationConfig {
     @Bean
     public IntegrationFlow discussionFlow(DeveloperService developerService) {
         return IntegrationFlows.from(DISCUSSION_CHANNEL)
+                .resequence()
                 .handle(developerService, DEVELOPER_EDIT_PULL_REQUEST_METHOD)
                 .<PullRequest, Class>route(payload -> payload.getTask().getClass(),
                         m -> m.channelMapping(Bug.class, BUG_PULL_REQUEST_CHANNEL)
@@ -88,7 +89,8 @@ public class FlowIntegrationConfig {
      * Флоу мерджа пул реквеста на задачу
      */
     @Bean
-    public IntegrationFlow taskPullRequestFlow(TeamLeadService teamLeadService,QaService qaService,DeveloperService developerService) {
+    public IntegrationFlow taskPullRequestFlow(TeamLeadService teamLeadService,QaService qaService,
+            DeveloperService developerService) {
         return IntegrationFlows.from(TASK_PULL_REQUEST_CHANNEL)
                 .aggregate()
                 .handle(teamLeadService, TEAMLEAD_TASK_MERGE_PULL_REQUEST_METHOD)
