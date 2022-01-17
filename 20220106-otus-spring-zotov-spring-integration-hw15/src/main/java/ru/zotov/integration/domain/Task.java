@@ -8,6 +8,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public class Task {
+public class Task implements MergedMarker{
     private String name;
+    private Epic epic;
 }

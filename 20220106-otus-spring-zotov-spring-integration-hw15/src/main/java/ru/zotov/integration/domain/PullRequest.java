@@ -10,4 +10,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PullRequest {
     private String name;
+    private MergedMarker task;
 }

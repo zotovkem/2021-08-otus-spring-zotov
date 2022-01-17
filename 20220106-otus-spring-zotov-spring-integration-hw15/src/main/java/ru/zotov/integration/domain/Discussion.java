@@ -10,4 +10,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Discussion {
     private String name;
+    private PullRequest pullRequest;
 }
