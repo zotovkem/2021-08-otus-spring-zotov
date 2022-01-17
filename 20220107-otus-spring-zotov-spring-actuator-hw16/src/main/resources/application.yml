@@ -4,6 +4,12 @@ spring:
       host: localhost
       port: 0
       database: bookdb
+logging:
+  level:
+    root: INFO
+  file:
+    name: otus_app.log
+
 mongock:
   runner-type: "InitializingBean"
   change-logs-scan-package:
