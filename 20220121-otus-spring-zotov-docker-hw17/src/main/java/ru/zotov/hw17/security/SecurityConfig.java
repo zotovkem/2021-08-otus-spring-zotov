@@ -20,6 +20,7 @@ import ru.zotov.hw17.security.jwt.JwtTokenProvider;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String AUTH_ENDPOINT = "/api/auth/login";
+    private static final String ACTUATOR_ENDPOINT = "/actuator/**";
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -45,8 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers(AUTH_ENDPOINT).permitAll()
+                .antMatchers(AUTH_ENDPOINT,ACTUATOR_ENDPOINT).permitAll()
                 .anyRequest().authenticated();
     }
 }
