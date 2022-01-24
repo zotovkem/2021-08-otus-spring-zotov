@@ -6,12 +6,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.zotov.hw17.Hw17Application;
+import ru.zotov.hw17.AbstractTest;
 import ru.zotov.hw17.dto.GenreDto;
 
 import java.util.List;
@@ -26,11 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author Created by ZotovES on 22.11.2021
  */
-@SpringBootTest(classes = Hw17Application.class)
-@AutoConfigureMockMvc
-@WithMockUser(username = "admin", roles = {"ADMIN"})
 @DisplayName("Тестирование контроллера жанров")
-class GenreControllerTest {
+class GenreControllerTest extends AbstractTest {
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new Jdk8Module())
             .registerModule(new JavaTimeModule());
     @Autowired

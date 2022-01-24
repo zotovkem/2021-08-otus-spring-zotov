@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.acls.model.MutableAcl;
-import org.springframework.security.acls.model.MutableAclService;
-import org.springframework.security.test.context.support.WithMockUser;
 import ru.zotov.hw17.dao.CommentRepository;
 import ru.zotov.hw17.domain.Author;
 import ru.zotov.hw17.domain.Book;
@@ -29,10 +26,8 @@ import static org.mockito.Mockito.*;
  */
 @DisplayName("Тестирование сервиса комментариев")
 @SpringBootTest(classes = CommentServiceImpl.class)
-@WithMockUser("adult")
 class CommentServiceImplTest {
     @MockBean private CommentRepository commentRepository;
-    @MockBean private MutableAclService aclService;
     @Autowired CommentServiceImpl commentService;
 
     @Test
@@ -48,15 +43,12 @@ class CommentServiceImplTest {
         Comment comment = new Comment(1L, book, "текст комментария", "автор", ZonedDateTime.now());
         Comment savedComment = new Comment(1L, book, "текст комментария", "автор", ZonedDateTime.now());
         when(commentRepository.save(any())).thenReturn(savedComment);
-        when(aclService.createAcl(any())).thenReturn(mock(MutableAcl.class));
 
         Comment result = commentService.create(comment);
 
         assertNotNull(result);
 
         verify(commentRepository).save(any());
-        verify(aclService).createAcl(any());
-        verify(aclService).updateAcl(any());
     }
 
     @Test
@@ -116,19 +108,8 @@ class CommentServiceImplTest {
     @Test
     @DisplayName("Удаление комментариев")
     void deleteByIdsTest() {
-        Book book = Book.builder().name("Книга про тестирование")
-                .releaseYear(2021)
-                .genres(Set.of(new Genre(1L, "")))
-                .authors(Set.of(new Author(1L, "")))
-                .build();
-        Comment commentOne = new Comment(1L, book, "текст комментария", "автор", ZonedDateTime.now());
-        Comment commentTwo = new Comment(2L, book, "второй комментарий", "другой автор", ZonedDateTime.now());
-        when(commentRepository.findAllById(anyList())).thenReturn(List.of(commentOne, commentTwo));
-
         commentService.deleteByIds(List.of(1L, 2L));
 
-        verify(commentRepository).findAllById(anyList());
-        verify(aclService, times(2)).deleteAcl(any(), anyBoolean());
-        verify(commentRepository, times(2)).delete(any());
+        verify(commentRepository).deleteAllById(any());
     }
 }

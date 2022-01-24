@@ -1,6 +1,10 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:bookdb
+#    url: jdbc:h2:mem:bookdb;MODE=PostgreSQL
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgresql:12:///test
+    username: sa
+    password: sa
   sql:
     init:
       mode: always
