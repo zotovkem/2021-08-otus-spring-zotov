@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.zotov.hw17.domain.Book;
 import ru.zotov.hw17.dto.BookDto;
@@ -31,7 +30,6 @@ public class BookController {
      * @param bookDto dto книги
      */
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public BookDto createBook(@RequestBody BookDto bookDto) {
         Book book = mapper.map(bookDto, Book.class);
@@ -70,7 +68,6 @@ public class BookController {
      * @param bookDto dto книги
      */
     @PutMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public BookDto updateBook(@RequestBody BookDto bookDto) {
         Book book = mapper.map(bookDto, Book.class);
         return mapper.map(bookService.update(book), BookDto.class);
@@ -82,7 +79,6 @@ public class BookController {
      * @param ids список ид
      */
     @DeleteMapping
-    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@RequestBody List<Long> ids) {
         bookService.deleteByIds(ids);

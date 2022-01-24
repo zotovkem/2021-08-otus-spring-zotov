@@ -1,7 +1,6 @@
 package ru.zotov.hw17.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Repository;
 import ru.zotov.hw17.domain.Book;
 
@@ -14,6 +13,5 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
     @Override
-    @PostFilter("hasPermission(filterObject, 'READ') or hasAnyRole('ADMIN')")
     List<Book> findAll();
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.zotov.hw17.domain.Book;
 import ru.zotov.hw17.domain.Comment;
@@ -33,7 +32,6 @@ public class CommentController {
      * @return дто комментария
      */
     @PostMapping
-    @PreAuthorize("!hasAnyRole('CHILD')")
     public ResponseEntity<CommentDto> createComment(@RequestBody CommentDto commentDto) {
         Long bookId = commentDto.getBookId();
         if (bookId == null) {
@@ -75,7 +73,6 @@ public class CommentController {
      * @return комментарий
      */
     @PutMapping
-    @PreAuthorize("!hasRole('CHILD')")
     public CommentDto updateComment(@RequestBody CommentDto commentDto) {
         Comment comment = mapper.map(commentDto, Comment.class);
         comment.setBook(Book.builder().id(commentDto.getId()).build());
@@ -87,7 +84,6 @@ public class CommentController {
      * Удалить комментарии по списку ид
      */
     @DeleteMapping
-    @PreAuthorize("!hasRole('CHILD')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByIds(@RequestBody List<Long> ids) {
         commentService.deleteByIds(ids);
