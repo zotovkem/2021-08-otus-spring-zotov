@@ -7,6 +7,7 @@ VALUES (1, 'Детектив'),
        (6, 'Базы данных'),
        (7, 'Архитектура ИС'),
        (8, 'Аудио книги');
+SELECT setval('genre_id_seq', 9);
 
 INSERT INTO author (id, fio)
 VALUES (1, 'Роберт Мартин'),
@@ -17,6 +18,7 @@ VALUES (1, 'Роберт Мартин'),
        (6, 'А. Тумаркин'),
        (7, 'Александр Киселев'),
        (8, 'Александра Маринина');
+SELECT setval('author_id_seq', 9);
 
 INSERT INTO book (id, name, release_year)
 VALUES (1, 'Высоконагруженные приложения', 2017),
@@ -25,6 +27,7 @@ VALUES (1, 'Высоконагруженные приложения', 2017),
        (4, 'Экстремальная археология', 2021),
        (5, 'Сказки пушкина', 2008),
        (6, 'Отдаленные последствия', 2021);
+SELECT setval('book_id_seq', 7);
 
 INSERT INTO comment_for_book (id, book_id, content, author, create_date)
 VALUES (1, 1, 'Вроде не чего, еще не дочитал', 'ЗотовЕС', '2020-02-01 19:10:25-07'),
@@ -37,6 +40,7 @@ VALUES (1, 1, 'Вроде не чего, еще не дочитал', 'Зото�
        (9, 3, 'Еще один комментарий', 'Сидоров', '2020-02-01 19:10:25-07'),
        (10, 5, 'Как много комментарием нужно написать', 'Тестов', '2020-02-01 19:10:25-07'),
        (11, 6, 'Последний комментарий', 'Лютый критик', '2020-02-01 19:10:25-07');
+SELECT setval('comment_for_book_id_seq', 9);
 
 
 INSERT INTO mtm_book_author (id, book_id, author_id)
@@ -48,6 +52,7 @@ VALUES (1, 1, 2),
        (6, 4, 5),
        (7, 5, 4),
        (8, 6, 8);
+SELECT setval('mtm_book_author_id_seq', 9);
 
 INSERT INTO mtm_book_genre (id, book_id, genre_id)
 VALUES (1, 1, 2),
@@ -59,76 +64,10 @@ VALUES (1, 1, 2),
        (7, 5, 3),
        (8, 5, 8),
        (9, 6, 1);
+SELECT setval('mtm_book_genre_id_seq', 9);
+
 INSERT INTO user_library (id, username, password, role)
 VALUES (1, 'admin', '$2a$10$dX/ry6AS3VlctY/jbvu3NeKjSXKm4qjiHcjAebObrmt5CqKj743Q2', 'ROLE_ADMIN'),
        (2, 'adult', '$2a$10$dX/ry6AS3VlctY/jbvu3NeKjSXKm4qjiHcjAebObrmt5CqKj743Q2', 'ROLE_ADULT'),
        (3, 'child', '$2a$10$dX/ry6AS3VlctY/jbvu3NeKjSXKm4qjiHcjAebObrmt5CqKj743Q2', 'ROLE_CHILD');
--- ACL
-INSERT INTO acl_sid (id, principal, sid)
-VALUES (1, 0, 'ROLE_ADMIN'),
-       (2, 0, 'ROLE_ADULT'),
-       (3, 0, 'ROLE_CHILD');
-
-INSERT INTO acl_class (id, class)
-VALUES (1, 'ru.zotov.hw17.domain.Book'),
-       (2, 'ru.zotov.hw17.domain.Comment');
-
-INSERT INTO acl_object_identity (id, object_id_class, object_id_identity, parent_object, owner_sid, entries_inheriting)
-VALUES
-    -- Книги
-    (1, 1, 1, NULL, 1, 0),
-    (2, 1, 2, NULL, 1, 0),
-    (3, 1, 3, NULL, 1, 0),
-    (4, 1, 4, NULL, 1, 0),
-    (5, 1, 5, NULL, 1, 0),
-    (6, 1, 6, NULL, 1, 0),
-    -- Комментарии
-    (7, 2, 1, NULL, 1, 0),
-    (8, 2, 2, NULL, 1, 0),
-    (9, 2, 3, NULL, 1, 0),
-    (10, 2, 4, NULL, 1, 0),
-    (11, 2, 5, NULL, 1, 0),
-    (12, 2, 6, NULL, 1, 0),
-    (13, 2, 7, NULL, 1, 0),
-    (14, 2, 8, NULL, 1, 0),
-    (15, 2, 9, NULL, 1, 0),
-    (16, 2, 10, NULL, 1, 0),
-    (17, 2, 11, NULL, 1, 0);
-
--- Книги
-INSERT INTO acl_entry (id, acl_object_identity, ace_order, sid, mask, granting, audit_success, audit_failure)
-VALUES
-    --Права админа
-    (1, 1, 1, 1, 16, 1, 1, 1),
-    (2, 2, 1, 1, 16, 1, 1, 1),
-    (3, 3, 1, 1, 16, 1, 1, 1),
-    (4, 4, 1, 1, 16, 1, 1, 1),
-    (5, 5, 1, 1, 16, 1, 1, 1),
-    (6, 6, 1, 1, 16, 1, 1, 1),
-    --Права взрослого
-    (7, 1, 2, 2, 1, 1, 1, 1),
-    (8, 2, 2, 2, 1, 1, 1, 1),
-    (9, 3, 2, 2, 1, 1, 1, 1),
-    (10, 4, 2, 2, 1, 1, 1, 1),
-    (11, 5, 2, 2, 1, 1, 1, 1),
-    (12, 6, 2, 2, 1, 1, 1, 1),
-    --Права ребенка
-    (13, 1, 3, 3, 1, 0, 1, 1),
-    (14, 2, 3, 3, 1, 0, 1, 1),
-    (15, 3, 3, 3, 1, 0, 1, 1),
-    (17, 4, 3, 3, 1, 0, 1, 1),
-    (18, 5, 3, 3, 1, 1, 1, 1),
-    (19, 6, 3, 3, 1, 0, 1, 1);
--- Комментарии
-INSERT INTO acl_entry (id, acl_object_identity, ace_order, sid, mask, granting, audit_success, audit_failure)
-VALUES
-    --Права ребенка
-    (54, 16, 3, 3, 1, 1, 1, 1),
-    --Права взрослого
-    (55, 7, 3, 2, 2, 1, 1, 1),
-    (56, 7, 4, 2, 8, 1, 1, 1);
-/*public static final Permission READ = new BasePermission(1 << 0, 'R'); // 1
-	public static final Permission WRITE = new BasePermission(1 << 1, 'W'); // 2
-	public static final Permission CREATE = new BasePermission(1 << 2, 'C'); // 4
-	public static final Permission DELETE = new BasePermission(1 << 3, 'D'); // 8
-	public static final Permission ADMINISTRATION = new BasePermission(1 << 4, 'A'); // 16*/
+SELECT setval('user_library_id_seq', 4);
