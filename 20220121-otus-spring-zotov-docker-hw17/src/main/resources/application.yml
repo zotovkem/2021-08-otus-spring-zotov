@@ -17,11 +17,6 @@ spring:
 
     show-sql: false
 
-  h2:
-    console:
-      enabled: false
-  port: 8080
-
 logging:
   level:
     root: INFO
@@ -38,8 +33,3 @@ management:
   health:
     defaults:
       enabled: true
-#JWT
-jwt:
-  token:
-    secret: secret
-    expired: 3600000

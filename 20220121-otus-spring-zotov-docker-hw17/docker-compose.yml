@@ -12,7 +12,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/otus17
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_JWT_TOKEN_SECRET=secret
     depends_on:
       - postgres
     networks:

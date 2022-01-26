@@ -1,0 +1,15 @@
+apiVersion: skaffold/v2beta13
+kind: Config
+build:
+  tagPolicy:
+    sha256: { }
+  artifacts:
+    - image: library
+      context: .
+  local: {}
+deploy:
+  helm:
+    releases:
+      - name: library
+        chartPath: library_chart
+        skipBuildDependencies: true
