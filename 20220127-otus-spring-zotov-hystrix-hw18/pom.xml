@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>ru.zotov</groupId>
-    <artifactId>hw17</artifactId>
+    <artifactId>hw18</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>otus-spring-zotov-auth-hw17</name>
-    <description>otus-spring-zotov-auth-hw17</description>
+    <name>otus-spring-zotov-auth-hw1</name>
+    <description>otus-spring-zotov-auth-hw18</description>
     <properties>
         <java.version>11</java.version>
         <jjwt.version>0.9.1</jjwt.version>
