@@ -1,0 +1,26 @@
+spring:
+  datasource:
+#    url: jdbc:h2:mem:bookdb;MODE=PostgreSQL
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgresql:12:///test
+    username: sa
+    password: sa
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+
+    show-sql: true
+
+logging:
+  level:
+    ROOT: ERROR
+#JWT
+jwt:
+  token:
+    secret: secret
+    expired: 3600000
