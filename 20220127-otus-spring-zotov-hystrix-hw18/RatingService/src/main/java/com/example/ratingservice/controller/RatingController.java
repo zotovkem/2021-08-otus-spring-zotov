@@ -2,13 +2,15 @@ package com.example.ratingservice.controller;
 
 import com.example.ratingservice.domain.BookRating;
 import com.example.ratingservice.dto.BookRatingDto;
+import com.example.ratingservice.service.FailureService;
 import com.example.ratingservice.service.RatingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -19,8 +21,8 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 @RequestMapping(value = "ratings")
 public class RatingController {
-    private static final List<Integer> delayTimerList = Arrays.asList(1, 1, 1, 1,5, 10, 100, 1000, 10000, 1000000);
     private final RatingService ratingService;
+    private final FailureService failureService;
 
     /**
      * Получить рейтинг книги
@@ -29,8 +31,7 @@ public class RatingController {
      */
     @PostMapping("/book/{id}")
     public ResponseEntity<BookRatingDto> getBookRating(@PathVariable Long id) throws InterruptedException {
-        //Помехи для проверки Hystrix
-        Thread.sleep(delayTimerList.get((int) (Math.random() * 10)));
+        Thread.sleep(failureService.getRandomSleep());
 
         return ratingService.calculateRatings(id)
                 .map(mappingToDto())
@@ -41,7 +42,7 @@ public class RatingController {
     /**
      * Маппинг из сущности в дто
      */
-    private Function<BookRating,BookRatingDto> mappingToDto() {
-        return bookRating-> new BookRatingDto(bookRating.getBookId(), bookRating.getRating());
+    private Function<BookRating, BookRatingDto> mappingToDto() {
+        return bookRating -> new BookRatingDto(bookRating.getBookId(), bookRating.getRating());
     }
 }
