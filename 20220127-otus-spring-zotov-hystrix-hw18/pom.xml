@@ -22,6 +22,8 @@
         <ehcache-core.version>2.6.11</ehcache-core.version>
         <testcontainers.version>1.15.3</testcontainers.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-cloud-starter-netflix-hystrix.version>2.2.10.RELEASE</spring-cloud-starter-netflix-hystrix.version>
+        <spring-cloud-starter-openfeign.version>3.1.0</spring-cloud-starter-openfeign.version>
     </properties>
     <dependencies>
         <dependency>
@@ -39,7 +41,18 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <version>3.1.0</version>
+            <version>${spring-cloud-starter-openfeign.version}</version>
+        </dependency>
+        <!--        Hystrix-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+            <version>${spring-cloud-starter-netflix-hystrix.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+            <version>${spring-cloud-starter-netflix-hystrix.version}</version>
         </dependency>
 
         <dependency>

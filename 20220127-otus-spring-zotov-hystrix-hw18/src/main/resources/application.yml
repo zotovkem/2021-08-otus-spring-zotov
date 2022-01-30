@@ -26,14 +26,19 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,loggers
+        include: health,loggers,hystrix.stream
   endpoint:
     health:
       show-details: always
-  health:
-    defaults:
-      enabled: true
 
 integration:
   rating:
     url: http://localhost:8081
+
+feign:
+  circuitbreaker:
+    enabled: true
+
+hystrix:
+  dashboard:
+    proxyStreamAllowList: "*"
