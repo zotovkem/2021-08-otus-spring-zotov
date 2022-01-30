@@ -19,7 +19,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 @RequestMapping(value = "ratings")
 public class RatingController {
-    private static final List<Integer> delayTimerList = Arrays.asList(1, 1, 1, 1, 10, 100, 1000, 10000, 1000000);
+    private static final List<Integer> delayTimerList = Arrays.asList(1, 1, 1, 1,5, 10, 100, 1000, 10000, 1000000);
     private final BookRatingRepository bookRatingRepository;
 
     /**
@@ -30,7 +30,7 @@ public class RatingController {
     @GetMapping("/book/{id}")
     public ResponseEntity<ResponseBookRating> getBookRating(@PathVariable Long id) throws InterruptedException {
         //Помехи для проверки Hystrix
-        Thread.sleep(delayTimerList.get((int) (Math.random() * 10)));
+//        Thread.sleep(delayTimerList.get((int) (Math.random() * 10)));
 
         return bookRatingRepository.findByBookId(id)
                 .map(ResponseEntity::ok)

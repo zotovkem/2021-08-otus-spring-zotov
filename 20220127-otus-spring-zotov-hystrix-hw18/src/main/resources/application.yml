@@ -33,3 +33,7 @@ management:
   health:
     defaults:
       enabled: true
+
+integration:
+  rating:
+    url: http://localhost:8081
