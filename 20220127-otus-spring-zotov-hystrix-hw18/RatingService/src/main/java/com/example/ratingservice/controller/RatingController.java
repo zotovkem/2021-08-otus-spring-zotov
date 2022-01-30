@@ -1,15 +1,15 @@
 package com.example.ratingservice.controller;
 
-import com.example.ratingservice.dao.BookRatingRepository;
-import com.example.ratingservice.dto.ResponseBookRating;
+import com.example.ratingservice.domain.BookRating;
+import com.example.ratingservice.dto.BookRatingDto;
+import com.example.ratingservice.service.RatingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import java.util.function.Function;
 
 /**
  * @author Created by ZotovES on 11.09.2021
@@ -20,20 +20,28 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "ratings")
 public class RatingController {
     private static final List<Integer> delayTimerList = Arrays.asList(1, 1, 1, 1,5, 10, 100, 1000, 10000, 1000000);
-    private final BookRatingRepository bookRatingRepository;
+    private final RatingService ratingService;
 
     /**
-     * Получить кошелек игрока
+     * Получить рейтинг книги
      *
      * @return рейтинг книги
      */
-    @GetMapping("/book/{id}")
-    public ResponseEntity<ResponseBookRating> getBookRating(@PathVariable Long id) throws InterruptedException {
+    @PostMapping("/book/{id}")
+    public ResponseEntity<BookRatingDto> getBookRating(@PathVariable Long id) throws InterruptedException {
         //Помехи для проверки Hystrix
-//        Thread.sleep(delayTimerList.get((int) (Math.random() * 10)));
+        Thread.sleep(delayTimerList.get((int) (Math.random() * 10)));
 
-        return bookRatingRepository.findByBookId(id)
+        return ratingService.calculateRatings(id)
+                .map(mappingToDto())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Маппинг из сущности в дто
+     */
+    private Function<BookRating,BookRatingDto> mappingToDto() {
+        return bookRating-> new BookRatingDto(bookRating.getBookId(), bookRating.getRating());
     }
 }
