@@ -11,13 +11,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.zotov.hw18.AbstractTest;
 import ru.zotov.hw18.dto.AuthorDto;
 import ru.zotov.hw18.dto.BookDto;
+import ru.zotov.hw18.dto.BookRatingDto;
 import ru.zotov.hw18.dto.GenreDto;
+import ru.zotov.hw18.integration.RatingBookFeign;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -80,6 +85,25 @@ class BookControllerTest extends AbstractTest {
                 .andExpect(jsonPath("authors").isNotEmpty())
                 .andExpect(jsonPath("genres").isNotEmpty())
                 .andExpect(jsonPath("comments").isNotEmpty())
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("Получить детальную информацию о книге по ид")
+    void getBookDetailByIdTest() throws Exception {
+        when(ratingBookFeign.getBookRating(anyLong())).thenReturn(Optional.of(new BookRatingDto(1L,1L)));
+
+        mockMvc.perform(get("/api/books/{id}/detail", "2")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id", is(2)))
+                .andExpect(jsonPath("name", is("Чистая архитектура")))
+                .andExpect(jsonPath("releaseYear", is(2018)))
+                .andExpect(jsonPath("authors").isNotEmpty())
+                .andExpect(jsonPath("genres").isNotEmpty())
+                .andExpect(jsonPath("comments").isNotEmpty())
+                .andExpect(jsonPath("rating").isNotEmpty())
                 .andReturn();
     }
 

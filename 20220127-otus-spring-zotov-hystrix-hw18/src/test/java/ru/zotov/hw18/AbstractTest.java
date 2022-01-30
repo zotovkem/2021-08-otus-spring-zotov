@@ -1,12 +1,16 @@
 package ru.zotov.hw18;
 
 import org.junit.ClassRule;
+import org.mockito.Mock;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
+import ru.zotov.hw18.integration.RatingBookFeign;
 
 /**
  * @author Created by ZotovES on 25.02.2021
@@ -14,8 +18,12 @@ import org.testcontainers.containers.PostgreSQLContainer;
  */
 @SpringBootTest(classes = Hw18Application.class)
 @AutoConfigureMockMvc
+//@EnableAutoConfiguration(exclude = RatingBookFeign.class)
 @ContextConfiguration(initializers = {AbstractTest.Initializer.class})
 public abstract class AbstractTest {
+    @MockBean
+    protected RatingBookFeign ratingBookFeign;
+
     @ClassRule
     public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:12")
             .withDatabaseName("test")

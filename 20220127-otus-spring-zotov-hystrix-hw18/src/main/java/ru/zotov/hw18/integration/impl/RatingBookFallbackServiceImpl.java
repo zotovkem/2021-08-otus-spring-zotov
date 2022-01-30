@@ -15,7 +15,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RatingBookFallbackService implements RatingBookFeign {
+public class RatingBookFallbackServiceImpl implements RatingBookFeign {
     private final ConcurrentMapCacheManager cacheManager;
     /**
      * Получить рейтинг из внешнего сервиса

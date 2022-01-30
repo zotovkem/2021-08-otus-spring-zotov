@@ -1,8 +1,7 @@
 spring:
   datasource:
-#    url: jdbc:h2:mem:bookdb;MODE=PostgreSQL
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:postgresql:12:///test
+    url: jdbc:tc:postgresql:10:///test
     username: sa
     password: sa
   sql:
@@ -24,3 +23,6 @@ jwt:
   token:
     secret: secret
     expired: 3600000
+integration:
+  rating:
+    url: http://localhost:8081

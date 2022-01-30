@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.zotov.hw18.dto.BookRatingDto;
-import ru.zotov.hw18.integration.impl.RatingBookFallbackService;
+import ru.zotov.hw18.integration.impl.RatingBookFallbackServiceImpl;
 
 import java.util.Optional;
 
@@ -14,7 +14,7 @@ import java.util.Optional;
  * Feign клиент для интеграции с внещним сервисом рейтингов книг
  */
 @FeignClient(name = "bookRatingServiceClient", url = "${integration.rating.url}"
-        , fallback = RatingBookFallbackService.class
+        , fallback = RatingBookFallbackServiceImpl.class
 )
 @CachePut(value = "bookRatings")
 public interface RatingBookFeign {
