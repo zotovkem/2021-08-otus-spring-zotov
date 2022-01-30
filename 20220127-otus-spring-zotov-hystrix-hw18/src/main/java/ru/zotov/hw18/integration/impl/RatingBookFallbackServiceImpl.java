@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.stereotype.Service;
 import ru.zotov.hw18.dto.BookRatingDto;
-import ru.zotov.hw18.integration.RatingBookFeign;
+import ru.zotov.hw18.integration.RatingBookFeignClient;
 
 import java.util.Optional;
 
@@ -15,7 +15,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RatingBookFallbackServiceImpl implements RatingBookFeign {
+public class RatingBookFallbackServiceImpl implements RatingBookFeignClient {
     private final ConcurrentMapCacheManager cacheManager;
     /**
      * Получить рейтинг из внешнего сервиса

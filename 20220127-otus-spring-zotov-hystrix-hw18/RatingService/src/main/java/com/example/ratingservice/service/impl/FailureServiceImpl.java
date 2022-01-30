@@ -14,11 +14,10 @@ import java.util.List;
 public class FailureServiceImpl implements FailureService {
     private static final List<Integer> delayTimerList = Arrays.asList(1, 1, 1, 1,5, 10, 100, 1000, 10000, 1000000);
     /**
-     * Засыпает на рандомное время
+     * Рандомное время
      */
     @Override
     public Integer getRandomSleep() {
-        //Помехи для проверки Hystrix
         return delayTimerList.get((int) (Math.random() * 10));
     }
 }

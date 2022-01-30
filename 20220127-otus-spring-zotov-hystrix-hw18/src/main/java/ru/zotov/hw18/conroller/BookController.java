@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.zotov.hw18.domain.Book;
 import ru.zotov.hw18.dto.BookDetailDto;
 import ru.zotov.hw18.dto.BookDto;
-import ru.zotov.hw18.integration.RatingBookFeign;
+import ru.zotov.hw18.integration.RatingBookFeignClient;
 import ru.zotov.hw18.service.BookService;
 
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class BookController {
     private final ModelMapper mapper;
     private final BookService bookService;
-    private final RatingBookFeign bookFeign;
+    private final RatingBookFeignClient bookFeign;
 
     /**
      * Создание книги

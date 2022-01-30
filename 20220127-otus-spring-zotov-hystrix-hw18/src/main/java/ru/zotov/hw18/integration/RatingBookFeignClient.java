@@ -17,7 +17,7 @@ import java.util.Optional;
         , fallback = RatingBookFallbackServiceImpl.class
 )
 @CachePut(value = "bookRatings")
-public interface RatingBookFeign {
+public interface RatingBookFeignClient {
     /**
      * Получить рейтинг из внешнего сервиса
      * @param bookId ид книги

@@ -31,6 +31,7 @@ public class RatingController {
      */
     @PostMapping("/book/{id}")
     public ResponseEntity<BookRatingDto> getBookRating(@PathVariable Long id) throws InterruptedException {
+//        Засыпает на рандомное время для проверки Hystrix
         Thread.sleep(failureService.getRandomSleep());
 
         return ratingService.calculateRatings(id)

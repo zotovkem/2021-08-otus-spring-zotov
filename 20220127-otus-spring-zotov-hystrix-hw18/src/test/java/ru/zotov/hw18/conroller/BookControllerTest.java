@@ -13,7 +13,6 @@ import ru.zotov.hw18.dto.AuthorDto;
 import ru.zotov.hw18.dto.BookDto;
 import ru.zotov.hw18.dto.BookRatingDto;
 import ru.zotov.hw18.dto.GenreDto;
-import ru.zotov.hw18.integration.RatingBookFeign;
 
 import java.util.List;
 import java.util.Optional;

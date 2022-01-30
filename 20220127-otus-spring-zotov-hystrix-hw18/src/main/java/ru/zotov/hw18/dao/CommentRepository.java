@@ -12,9 +12,4 @@ import java.util.List;
  */
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    @Override
-    List<Comment> findAll();
-
-    @Override
-    void delete(Comment entity);
 }
