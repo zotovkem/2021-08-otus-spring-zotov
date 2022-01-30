@@ -1,8 +1,7 @@
-package ru.zotov.hw18;
+package com.example.ratingservice;
 
+import com.example.ratingservice.service.FailureService;
 import org.junit.ClassRule;
-import org.mockito.Mock;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -10,18 +9,17 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
-import ru.zotov.hw18.integration.RatingBookFeign;
 
 /**
  * @author Created by ZotovES on 25.02.2021
  * Абстрактный класс для E2E тестов. Поднимает контекст Spring для полной проверки приложения.
  */
-@SpringBootTest(classes = Hw18Application.class)
+@SpringBootTest(classes = RatingServiceApplication.class)
 @AutoConfigureMockMvc
 @ContextConfiguration(initializers = {AbstractTest.Initializer.class})
 public abstract class AbstractTest {
     @MockBean
-    protected RatingBookFeign ratingBookFeign;
+    protected FailureService failureService;
 
     @ClassRule
     public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:12")
