@@ -1,0 +1,31 @@
+replicaCount: 2
+
+image:
+  repository: library
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: NodePort
+  port: 9000
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  hosts:
+    - host: otus.homework
+      paths: ["/lib"]
+
+postgresql:
+  enabled: true
+  postgresqlUsername: root
+  postgresqlPassword: root
+  postgresqlDatabase: otus17
+  postgresqlMaxConnections: "1000"
+  postgresqlPostgresConnectionLimit: "1000"
+  postgresqlDbUserConnectionLimit": "1000"
+  service:
+    port: "5432"
+  persistence:
+    size: 1Gi
+

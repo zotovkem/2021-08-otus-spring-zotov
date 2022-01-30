@@ -35,4 +35,6 @@
 
 ДЗ16 20220107-otus-spring-zotov-actuator-hw16
 
+ДЗ17 20220121-otus-spring-zotov-docker-hw17
+
 ДЗ18 20220127-otus-spring-zotov-hystrix-hw18

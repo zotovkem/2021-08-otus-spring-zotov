@@ -1,0 +1,30 @@
+version: "3"
+services:
+  library:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    privileged: true
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/otus17
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - postgres
+    networks:
+      - nw
+  postgres:
+    image: "postgres:12.9"
+    ports:
+      - "5432:5433"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=otus17
+    networks:
+      - nw
+networks:
+  nw:

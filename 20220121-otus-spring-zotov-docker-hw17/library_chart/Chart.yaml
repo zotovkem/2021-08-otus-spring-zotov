@@ -1,0 +1,14 @@
+apiVersion: v2
+name: library
+description: Otus HW 17 theme Docker
+
+type: application
+
+version: 0.1.1
+
+appVersion: "V1"
+dependencies:
+  - name: postgresql
+    version: 10.9.5
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
