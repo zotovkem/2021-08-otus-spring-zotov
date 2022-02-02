@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/otus17
+    username: root
+    password: root
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      encoding: UTF-8
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+
+    show-sql: false
+
+logging:
+  level:
+    root: INFO
+  file:
+    name: otus_app.log
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,loggers,hystrix.stream
+  endpoint:
+    health:
+      show-details: always
+
+integration:
+  rating:
+    url: http://localhost:8081
+
+feign:
+  circuitbreaker:
+    enabled: true
+
+hystrix:
+  dashboard:
+    proxyStreamAllowList: "*"
