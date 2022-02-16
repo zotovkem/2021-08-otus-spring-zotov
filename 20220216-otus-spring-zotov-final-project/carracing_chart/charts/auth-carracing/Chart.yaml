@@ -1,0 +1,7 @@
+apiVersion: v2
+name: auth-carracing
+description: Lab 9 Otus SAGA auth module
+
+type: application
+
+version: 0.1.1
