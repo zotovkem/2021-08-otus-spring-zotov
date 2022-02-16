@@ -38,3 +38,5 @@
 ДЗ17 20220121-otus-spring-zotov-docker-hw17
 
 ДЗ18 20220127-otus-spring-zotov-hystrix-hw18
+
+Выпускной проект 20220216-otus-spring-zotov-final-project
