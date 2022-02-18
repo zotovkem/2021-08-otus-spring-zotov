@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import ru.zotov.carracing.anticheat.entity.CheatReview;
+import ru.zotov.carracing.anticheat.entity.RaceResult;
 import ru.zotov.carracing.anticheat.service.CheatReviewService;
 import ru.zotov.carracing.common.constant.Constants;
 import ru.zotov.carracing.event.RaceFinishEvent;
@@ -18,7 +18,7 @@ import static ru.zotov.carracing.common.constant.Constants.KAFKA_GROUP_ID;
 
 /**
  * @author Created by ZotovES on 17.08.2021
- * Слушатель событий
+ * Слушатель событий проверки на атичит
  */
 @Slf4j
 @Component
@@ -30,15 +30,13 @@ public class FinishRaceListener {
     public void finishRace(RaceFinishEvent finishEvent) throws InterruptedException {
         log.info(String.format("Received event  -> %s", finishEvent));
 
-        //Эмулируем долгий интеллектуальный алгоритм нейросети
-//        Thread.sleep(10000);
         Optional.of(finishEvent)
                 .map(buildCheatView())
                 .ifPresent(cheatReviewService::reviewRaceResult);
     }
 
-    private Function<RaceFinishEvent, CheatReview> buildCheatView() {
-        return event -> CheatReview.builder()
+    private Function<RaceFinishEvent, RaceResult> buildCheatView() {
+        return event -> RaceResult.builder()
                 .externalRaceId(UUID.fromString(event.getExternalId()))
                 .profileId(UUID.fromString(event.getProfileId()))
                 .raceStartTime(event.getStartTime())
