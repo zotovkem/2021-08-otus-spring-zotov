@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.zotov.auth.entity.UserTokenInfo;
+import ru.zotov.auth.exception.JwtAuthenticationException;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;

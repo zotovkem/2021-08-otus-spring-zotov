@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.index.Indexed;
 
 /**
  * @author Created by ZotovES on 08.09.2021
+ * Информация о игроке с токеном
  */
 @Data
 @Builder

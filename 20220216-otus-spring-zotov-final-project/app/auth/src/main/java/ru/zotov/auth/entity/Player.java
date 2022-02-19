@@ -11,6 +11,7 @@ import java.util.UUID;
 
 /**
  * @author Created by ZotovES on 28.08.2021
+ * Аккаунт игрока
  */
 @Entity
 @Data
@@ -19,6 +20,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "users", schema = "auth_schema")
 public class Player implements Serializable {
+    /**
+     * Ид
+     */
     @Id
     @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +42,9 @@ public class Player implements Serializable {
      */
     @Column(name = "email")
     private String email;
-
+    /**
+     * Пароль
+     */
     @Column(name = "password")
     private String password;
 }

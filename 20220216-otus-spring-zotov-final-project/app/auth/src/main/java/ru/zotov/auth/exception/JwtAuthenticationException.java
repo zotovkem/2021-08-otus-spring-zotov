@@ -1,4 +1,4 @@
-package ru.zotov.auth.service.impl;
+package ru.zotov.auth.exception;
 
 import org.springframework.security.core.AuthenticationException;
 
