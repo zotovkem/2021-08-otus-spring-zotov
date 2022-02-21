@@ -67,7 +67,7 @@ class AuthControllerTest extends AbstractE2ETest {
     @DisplayName("Рефреш токена")
     void refreshTest() throws Exception {
         var refreshToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QG1haWwucnUiLCJpYXQiOjE2NDU0MjQ2NjAsImV4cCI6MTA0MTY0NDUyMDB9" +
-                        ".hOTGPvy6278DbRK03gazf_nbLuTF5DUav6FYCHIHVkg";
+                ".hOTGPvy6278DbRK03gazf_nbLuTF5DUav6FYCHIHVkg";
         mockMvc.perform(post("/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(refreshToken))
@@ -81,9 +81,9 @@ class AuthControllerTest extends AbstractE2ETest {
     @Test
     @DisplayName("Аутентификация")
     void authTest() throws Exception {
-        var token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOltdLCJlbWFpbCI6InRlc3RAbWFpbC5ydSIsInVzZXJJZCI6ImFjZTk" +
-                        "0MmExLTIyMGMtNGIyNS05ZmRhLWJmNTgwZjJiZmM4ZiIsImlhdCI6MTY0NTQyNDY2MCwiZXhwIjoxNjQ1NDI4MjYwfQ" +
-                        ".-2pBKs26MSHF-tP55jr8VXL0ozPYgTyFKZHXopWPPFo";
+        var token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOltdLCJlbWFpbCI6InRlc3RAbWFpbC5ydSIsInVzZ" +
+                "XJJZCI6ImFjZTk0MmExLTIyMGMtNGIyNS05ZmRhLWJmNTgwZjJiZmM4ZiIsImlhdCI6MTY0NTQzODE0MCwiZXhwIjoxMDQx" +
+                "NjQ0NTIwMH0.ZCiAeey7TGpua1qvi7m-7vRvFiWe6QRB3bDBblO-rtU";
         mockMvc.perform(get("/auth")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-TOKEN", token)
@@ -99,7 +99,7 @@ class AuthControllerTest extends AbstractE2ETest {
     @Test
     @DisplayName("Аутентификация с неверным токеном ")
     void authFailTest() throws Exception {
-        String token ="";
+        String token = "";
         mockMvc.perform(get("/auth")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-TOKEN", token)

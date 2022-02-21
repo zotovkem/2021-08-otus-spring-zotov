@@ -46,21 +46,14 @@ public abstract class AbstractE2ETest {
             .withDatabaseName("carracing-otus")
             .withUsername("sa")
             .withPassword("sa");
-//    @ClassRule
-//    protected static GenericContainer redis = new GenericContainer("redis:6.2.3")
-//            .withExposedPorts(6379);
 
     static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-//            redis.start();
             postgreSQLContainer.start();
             TestPropertyValues.of(
                     "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
                     "spring.datasource.username=" + postgreSQLContainer.getUsername(),
                     "spring.datasource.password=" + postgreSQLContainer.getPassword()
-//                    "spring.flyway.locations=classpath:migration,classpath:test-data"
-//                    "spring.redis.host=" + redis.getHost(),
-//                    "spring.redis.port=" + redis.getFirstMappedPort()
             ).applyTo(configurableApplicationContext.getEnvironment());
         }
     }
