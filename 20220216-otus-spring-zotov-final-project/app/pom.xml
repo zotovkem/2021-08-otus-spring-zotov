@@ -43,6 +43,7 @@
         <spring-data-redis.version>2.5.4</spring-data-redis.version>
         <spring-cloud-dependencies.version>2020.0.3</spring-cloud-dependencies.version>
         <jedis.version>3.6.3</jedis.version>
+        <testcontainers.version>1.16.2</testcontainers.version>
     </properties>
 
     <dependencies>
@@ -54,6 +55,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
         <!-- Маппер -->
