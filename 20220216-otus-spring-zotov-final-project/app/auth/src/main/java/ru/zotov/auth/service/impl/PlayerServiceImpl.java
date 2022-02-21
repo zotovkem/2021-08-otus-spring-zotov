@@ -39,6 +39,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     /**
      * Создание аккаунта
+     *
      * @param player аккаунт
      * @return аккаунт
      */
@@ -63,8 +64,10 @@ public class PlayerServiceImpl implements PlayerService {
         kafkaTemplate.send(Constants.KAFKA_CREATE_PROFILE_TOPIC, playerEvent);
         return playerRepo.save(player);
     }
+
     /**
      * Восстановить пароль
+     *
      * @param email почта
      * @return аккаунт
      */
@@ -80,17 +83,23 @@ public class PlayerServiceImpl implements PlayerService {
         });
         return player;
     }
+
     /**
      * Обновить токен
+     *
      * @param refreshToken токен
      * @return информация о игроке
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Optional<UserTokenInfo> refreshToken(@NonNull String refreshToken) {
-        Optional<UserTokenInfo> token = userTokenInfoRepo.findById(refreshToken);
+        Optional<UserTokenInfo> token = Optional.ofNullable(userTokenInfoRepo.findById(refreshToken)
+                .orElseGet(() -> playerRepo.findByEmail(jwtTokenProvider.getEmail(refreshToken))
+                        .map(this::buildUserTokenInfo)
+                        .orElse(null)));
+
         token.ifPresent(t -> {
-            t.setRefreshToken(jwtTokenProvider.createRefreshToken(t.getNickName()));
+            t.setRefreshToken(jwtTokenProvider.createRefreshToken(t.getEmail()));
             t.setToken(jwtTokenProvider.createToken(t.getNickName(), t.getEmail(), t.getUserId()));
             userTokenInfoRepo.save(t);
             userTokenInfoRepo.deleteById(refreshToken);
@@ -98,9 +107,11 @@ public class PlayerServiceImpl implements PlayerService {
 
         return token;
     }
+
     /**
      * Логин игрока
-     * @param email почта
+     *
+     * @param email    почта
      * @param password пароль
      * @return токен
      */
@@ -118,8 +129,10 @@ public class PlayerServiceImpl implements PlayerService {
         userTokenInfo.ifPresent(userTokenInfoRepo::save);
         return userTokenInfo;
     }
+
     /**
      * Поиск аккаунта по почте
+     *
      * @param email почта
      * @return аккаунт
      */
@@ -139,6 +152,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     /**
      * Сгенерировать код для подтверждения почты
+     *
      * @return код
      */
     private String generateAuthCode() {
@@ -151,6 +165,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     /**
      * Маппинг модели аккаунта игрока в информацию о пользователе
+     *
      * @param player аккаунт
      * @return информация о пользователи
      */
@@ -159,7 +174,7 @@ public class PlayerServiceImpl implements PlayerService {
                 .userId(player.getProfileId().toString())
                 .nickName(player.getNickname())
                 .email(player.getEmail())
-                .refreshToken(jwtTokenProvider.createRefreshToken(player.getNickname()))
+                .refreshToken(jwtTokenProvider.createRefreshToken(player.getEmail()))
                 .token(jwtTokenProvider.createToken(player.getNickname(), player.getEmail(), player.getProfileId().toString()))
                 .password(player.getPassword())
                 .build();
