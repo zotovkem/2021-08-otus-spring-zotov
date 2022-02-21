@@ -1,5 +1,7 @@
 package ru.zotov.carracing.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +16,10 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(value = "RegisterUserDto: Информация о регистрации пользователя ")
 public class LoginDto {
+    @ApiModelProperty(value = "Почта", example = "test@mail.ru")
     private String email;
+    @ApiModelProperty(value = "Пароль", example = "password")
     private String password;
 }

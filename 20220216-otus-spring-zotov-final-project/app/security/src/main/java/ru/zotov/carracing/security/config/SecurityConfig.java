@@ -22,6 +22,9 @@ import ru.zotov.carracing.security.filter.UserIdFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String METRICS_ENDPOINT = "/metrics/**";
     private static final String AUTH_ENDPOINT = "/auth/**";
+    private static final String SWAGGER_ENDPOINT = "/swagger-ui/**";
+    private static final String API_DOCS_ENDPOINT = "/v2/api-docs/**";
+    protected static final String SWAGGER_RESOURCES = "/swagger-resources/**";
 
     @Bean
     @Override
@@ -43,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(AUTH_ENDPOINT, METRICS_ENDPOINT).permitAll()
+                .antMatchers(AUTH_ENDPOINT, METRICS_ENDPOINT,SWAGGER_ENDPOINT,SWAGGER_RESOURCES,API_DOCS_ENDPOINT).permitAll()
                 .anyRequest().authenticated();
     }
 }

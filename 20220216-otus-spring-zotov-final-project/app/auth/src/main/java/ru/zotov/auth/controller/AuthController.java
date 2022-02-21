@@ -1,9 +1,12 @@
 package ru.zotov.auth.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.zotov.auth.config.SpringfoxConfig;
 import ru.zotov.auth.dto.TokenDto;
 import ru.zotov.auth.entity.Player;
 import ru.zotov.auth.service.PlayerService;
@@ -24,6 +27,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequiredArgsConstructor
+@Api(value = "Auth", tags = {SpringfoxConfig.AUTH})
 @RequestMapping(value = "auth", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
 public class AuthController {
     private static final String X_USER_ID = "X-User-Id";
@@ -33,6 +37,7 @@ public class AuthController {
     private final Mapper mapper;
     private final JwtTokenProvider tokenProvider;
 
+    @ApiOperation("Регистрация игрока")
     @PostMapping(value = "/register")
     public ResponseEntity<RegisterUserDto> registerUser(@RequestBody RegisterUserDto registerUserDto) {
         return Optional.ofNullable(registerUserDto)
@@ -43,6 +48,7 @@ public class AuthController {
                 .orElse(ResponseEntity.badRequest().build());
     }
 
+    @ApiOperation("Логин")
     @PostMapping(value = "/login")
     public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto) {
         return playerService.login(loginDto.getEmail(), loginDto.getPassword())
@@ -51,6 +57,7 @@ public class AuthController {
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
+    @ApiOperation("Обновить токен")
     @PostMapping(value = "/refresh")
     public ResponseEntity<TokenDto> refresh(@RequestBody String refreshToken) {
         return playerService.refreshToken(refreshToken)
@@ -59,8 +66,9 @@ public class AuthController {
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
+    @ApiOperation("Аутентификация по токену")
     @GetMapping
-    public ResponseEntity<Void> auth(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> auth(HttpServletRequest request, HttpServletResponse response) {
         Optional.of(tokenProvider.resolveToken(request))
                 .filter(tokenProvider::validateToken)
                 .map(tokenProvider::getUserTokenInfo)
@@ -72,8 +80,9 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiOperation("Восстановить пароль")
     @PostMapping(value = "/recovery")
-    public ResponseEntity<Void> recovery(@RequestBody String email) {
+    public ResponseEntity<?> recovery(@RequestBody String email) {
         playerService.recoveryPassword(email);
         return ResponseEntity.ok().build();
     }
