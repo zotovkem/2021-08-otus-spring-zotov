@@ -15,6 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class RegisterUserDto {
+    private Long id;
     private String nickname;
     private UUID profileId;
     private String email;

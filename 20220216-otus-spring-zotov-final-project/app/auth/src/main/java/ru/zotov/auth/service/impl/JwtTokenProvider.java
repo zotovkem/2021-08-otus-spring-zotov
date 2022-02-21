@@ -8,9 +8,7 @@ import ru.zotov.auth.exception.JwtAuthenticationException;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 
 @Component
@@ -24,7 +22,7 @@ public class JwtTokenProvider {
 
     @PostConstruct
     protected void init() {
-        secret = Base64.getEncoder().encodeToString(secret.getBytes());
+        secret = new String(Base64.getDecoder().decode(secret));
     }
 
     public String createToken(String username, String email, String profileId) {
@@ -47,7 +45,7 @@ public class JwtTokenProvider {
 
     public String createRefreshToken(String email) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + Long.MAX_VALUE);
+        Date validity = new GregorianCalendar(2300, Calendar.FEBRUARY, 1).getTime();
         Claims claims = Jwts.claims().setSubject(email);
 
         return Jwts.builder()
@@ -78,6 +76,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
+
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
 
             if (claims.getBody().getExpiration().before(new Date())) {

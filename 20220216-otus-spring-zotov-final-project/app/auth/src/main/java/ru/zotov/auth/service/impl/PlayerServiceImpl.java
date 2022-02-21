@@ -93,6 +93,10 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Optional<UserTokenInfo> refreshToken(@NonNull String refreshToken) {
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            return Optional.empty();
+        }
+
         Optional<UserTokenInfo> token = Optional.ofNullable(userTokenInfoRepo.findById(refreshToken)
                 .orElseGet(() -> playerRepo.findByEmail(jwtTokenProvider.getEmail(refreshToken))
                         .map(this::buildUserTokenInfo)
