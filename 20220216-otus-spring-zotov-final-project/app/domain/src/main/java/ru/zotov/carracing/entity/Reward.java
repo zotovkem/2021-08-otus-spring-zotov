@@ -19,14 +19,27 @@ import javax.persistence.*;
 @Entity
 @Table(name = "reward", schema = "dictionary_schema")
 public class Reward {
+    /**
+     * Ид
+     */
     @Id
     @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    /**
+     * Тип награды
+     */
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private RewardType rewardType;
+    /**
+     * Наименование
+     */
     @Column(name = "name")
     private String name;
+    /**
+     * Кол-во
+     */
     @Column(name = "total")
     private Integer total;
 }

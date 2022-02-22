@@ -10,7 +10,7 @@ import java.util.UUID;
 
 /**
  * @author Created by ZotovES on 27.04.2021
- * Класс автомобиля
+ * Справочник авто
  */
 @Data
 @Builder
@@ -19,6 +19,9 @@ import java.util.UUID;
 @Entity
 @Table(name = "car", schema = "dictionary_schema")
 public class Car {
+    /**
+     * Ид
+     */
     @Id
     @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

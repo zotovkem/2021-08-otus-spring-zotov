@@ -3,6 +3,8 @@ package ru.zotov.carracing.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.zotov.carracing.common.mapper.Mapper;
+import ru.zotov.carracing.dto.RewardDto;
 import ru.zotov.carracing.entity.Reward;
 import ru.zotov.carracing.repo.RewardRepo;
 
@@ -21,6 +23,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "rewards", produces = APPLICATION_JSON_VALUE)
 public class RewardController {
     private final RewardRepo rewardRepo;
+    private final Mapper mapper;
 
     /**
      * Создать награду
@@ -29,9 +32,11 @@ public class RewardController {
      * @return награда
      */
     @PostMapping
-    public ResponseEntity<Reward> createReward(@RequestBody Reward reward) {
+    public ResponseEntity<RewardDto> createReward(@RequestBody RewardDto reward) {
         return Optional.ofNullable(reward)
+                .map(r -> mapper.map(r, Reward.class))
                 .map(rewardRepo::save)
+                .map(r -> mapper.map(r, RewardDto.class))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
     }
@@ -43,8 +48,9 @@ public class RewardController {
      * @return награда
      */
     @GetMapping("{rewardId}")
-    public ResponseEntity<Reward> getById(@PathVariable("rewardId") Long rewardId) {
+    public ResponseEntity<RewardDto> getById(@PathVariable("rewardId") Long rewardId) {
         return rewardRepo.findById(rewardId)
+                .map(r -> mapper.map(r, RewardDto.class))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
     }
@@ -55,8 +61,8 @@ public class RewardController {
      * @return награда
      */
     @GetMapping
-    public ResponseEntity<List<Reward>> getAllRewards() {
-        return ResponseEntity.ok(rewardRepo.findAll());
+    public ResponseEntity<List<RewardDto>> getAllRewards() {
+        return ResponseEntity.ok(mapper.mapList(rewardRepo.findAll(),RewardDto.class));
     }
 
     /**
@@ -66,10 +72,12 @@ public class RewardController {
      * @return награда
      */
     @PutMapping("{rewardId}")
-    public ResponseEntity<Reward> updateReward(@PathVariable("rewardId") Long rewardId, @RequestBody Reward reward) {
+    public ResponseEntity<RewardDto> updateReward(@PathVariable("rewardId") Long rewardId, @RequestBody RewardDto rewardDto) {
         return rewardRepo.findById(rewardId)
-                .map(updateFieldReward(reward))
+                .map(r -> mapper.map(r, Reward.class))
+                .map(updateFieldReward(rewardDto))
                 .map(rewardRepo::save)
+                .map(r -> mapper.map(r, RewardDto.class))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
     }
@@ -90,7 +98,7 @@ public class RewardController {
      *
      * @param incomeReward дто награды
      */
-    private Function<Reward, Reward> updateFieldReward(Reward incomeReward) {
+    private Function<Reward, Reward> updateFieldReward(RewardDto incomeReward) {
         return reward -> {
             reward.setName(incomeReward.getName());
             reward.setRewardType(incomeReward.getRewardType());
