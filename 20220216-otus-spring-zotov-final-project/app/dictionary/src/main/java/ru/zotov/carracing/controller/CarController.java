@@ -88,7 +88,7 @@ public class CarController {
     public ResponseEntity<Void> deleteByIdCar(@PathVariable("carId") UUID carId) {
         carRepo.findByCarId(carId).ifPresent(carRepo::delete);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     /**
