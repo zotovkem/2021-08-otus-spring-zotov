@@ -22,6 +22,12 @@ public class ProfileServiceImpl implements ProfileService {
     private final ProfileRepository profileRepository;
     private final SecurityService securityService;
 
+    /**
+     * Создание игрока
+     *
+     * @param externalId внешний ид
+     * @return профиль
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Profile create(UUID externalId) {
@@ -36,6 +42,12 @@ public class ProfileServiceImpl implements ProfileService {
         return profileRepository.save(profile);
     }
 
+
+    /**
+     * Получить текущий профиль
+     *
+     * @return профиль
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<Profile> getCurrentProfile() {
@@ -45,6 +57,12 @@ public class ProfileServiceImpl implements ProfileService {
                 .flatMap(profileRepository::findByExternalId);
     }
 
+    /**
+     * Добавить игровых очков в профиль
+     *
+     * @param externalId внешний ид
+     * @param score      кол-во очков
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void progressIncrement(UUID externalId, Long score) {
@@ -55,6 +73,12 @@ public class ProfileServiceImpl implements ProfileService {
         });
     }
 
+    /**
+     * Убавить игровых очков в профиль
+     *
+     * @param externalId внешний ид
+     * @param score      кол-во очков
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void regressProgress(UUID externalId, Long score) {
