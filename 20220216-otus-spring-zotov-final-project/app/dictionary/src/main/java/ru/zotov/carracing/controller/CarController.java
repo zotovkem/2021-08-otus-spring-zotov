@@ -1,9 +1,12 @@
 package ru.zotov.carracing.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.zotov.carracing.config.SpringfoxConfig;
 import ru.zotov.carracing.dto.CarDto;
 import ru.zotov.carracing.entity.Car;
 import ru.zotov.carracing.repo.CarRepo;
@@ -22,17 +25,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequiredArgsConstructor
+@Api(value = "Car", tags = {SpringfoxConfig.CAR})
 @RequestMapping(value = "cars", produces = APPLICATION_JSON_VALUE)
 public class CarController {
     private final CarRepo carRepo;
     private final ModelMapper mapper = new ModelMapper();
 
-    /**
-     * Создать авто
-     *
-     * @param carDto дто авто
-     * @return dto авто
-     */
+    @ApiOperation("Создать авто")
     @PostMapping
     public ResponseEntity<CarDto> createCar(@RequestBody CarDto carDto) {
         return Optional.ofNullable(carDto)
@@ -43,12 +42,7 @@ public class CarController {
                 .orElse(ResponseEntity.badRequest().build());
     }
 
-    /**
-     * Получить авто по ид
-     *
-     * @param carId ид авто
-     * @return dto авто
-     */
+    @ApiOperation("Получить авто по ид")
     @GetMapping("{carId}")
     public ResponseEntity<CarDto> getByCarId(@PathVariable("carId") UUID carId) {
         return carRepo.findByCarId(carId)
@@ -57,13 +51,7 @@ public class CarController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Рeдактировать авто по ид
-     *
-     * @param carId  ид авто
-     * @param carDto dto авто
-     * @return dto авто
-     */
+    @ApiOperation("Рeдактировать авто по ид")
     @PutMapping("{carId}")
     public ResponseEntity<CarDto> updateByCarId(@PathVariable("carId") UUID carId, @RequestBody CarDto carDto) {
         if (carDto == null || !carDto.getCarId().equals(carId)) {
@@ -78,12 +66,7 @@ public class CarController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Удалить авто по ид
-     *
-     * @param carId ид авто
-     * @return dto авто
-     */
+    @ApiOperation("Удалить авто по ид")
     @DeleteMapping("{carId}")
     public ResponseEntity<Void> deleteByIdCar(@PathVariable("carId") UUID carId) {
         carRepo.findByCarId(carId).ifPresent(carRepo::delete);
@@ -91,11 +74,7 @@ public class CarController {
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Получить все авто
-     *
-     * @return dto авто
-     */
+    @ApiOperation("Получить все авто")
     @GetMapping()
     public ResponseEntity<List<CarDto>> getAllCars() {
         List<CarDto> listCar = carRepo.findAll().stream()

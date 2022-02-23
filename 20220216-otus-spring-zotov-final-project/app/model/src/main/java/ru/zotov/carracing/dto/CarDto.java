@@ -1,5 +1,7 @@
 package ru.zotov.carracing.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,25 +17,16 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(value = "CarDto: Авто ")
 public class CarDto {
+    @ApiModelProperty(value = "Ид", example = "1")
     private Long id;
-    /**
-     * Внешний ид
-     */
+    @ApiModelProperty(value = "Внешний ид", example = "de8c2ad1-9562-4c3c-a89c-0979fcee338b")
     private UUID carId;
-
-    /**
-     * Наименование авто
-     */
+    @ApiModelProperty(value = "Наименование авто", example = "Kia rio")
     private String name;
-
-    /**
-     * Мощьность
-     */
+    @ApiModelProperty(value = "Мощность", example = "144")
     private Integer power;
-
-    /**
-     * Максимальная скорость
-     */
+    @ApiModelProperty(value = "Максимальная скорость", example = "100")
     private Integer maxSpeed;
 }

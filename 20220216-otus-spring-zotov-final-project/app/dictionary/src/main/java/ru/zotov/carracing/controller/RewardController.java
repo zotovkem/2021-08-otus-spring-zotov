@@ -1,9 +1,12 @@
 package ru.zotov.carracing.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.zotov.carracing.common.mapper.Mapper;
+import ru.zotov.carracing.config.SpringfoxConfig;
 import ru.zotov.carracing.dto.RewardDto;
 import ru.zotov.carracing.entity.Reward;
 import ru.zotov.carracing.repo.RewardRepo;
@@ -20,17 +23,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequiredArgsConstructor
+@Api(value = "Reward", tags = {SpringfoxConfig.REWARD})
 @RequestMapping(value = "rewards", produces = APPLICATION_JSON_VALUE)
 public class RewardController {
     private final RewardRepo rewardRepo;
     private final Mapper mapper;
 
-    /**
-     * Создать награду
-     *
-     * @param reward награда
-     * @return награда
-     */
+    @ApiOperation("Создать награду")
     @PostMapping
     public ResponseEntity<RewardDto> createReward(@RequestBody RewardDto reward) {
         return Optional.ofNullable(reward)
@@ -41,12 +40,7 @@ public class RewardController {
                 .orElse(ResponseEntity.badRequest().build());
     }
 
-    /**
-     * Получить награду по ид
-     *
-     * @param rewardId ид награды
-     * @return награда
-     */
+    @ApiOperation("Получить награду по ид")
     @GetMapping("{rewardId}")
     public ResponseEntity<RewardDto> getById(@PathVariable("rewardId") Long rewardId) {
         return rewardRepo.findById(rewardId)
@@ -55,22 +49,13 @@ public class RewardController {
                 .orElse(ResponseEntity.badRequest().build());
     }
 
-    /**
-     * Получить все награды
-     *
-     * @return награда
-     */
+    @ApiOperation(" Получить все награды")
     @GetMapping
     public ResponseEntity<List<RewardDto>> getAllRewards() {
         return ResponseEntity.ok(mapper.mapList(rewardRepo.findAll(),RewardDto.class));
     }
 
-    /**
-     * Редактировать награду по ид
-     *
-     * @param rewardId ид награды
-     * @return награда
-     */
+    @ApiOperation("Редактировать награду по ид")
     @PutMapping("{rewardId}")
     public ResponseEntity<RewardDto> updateReward(@PathVariable("rewardId") Long rewardId, @RequestBody RewardDto rewardDto) {
         return rewardRepo.findById(rewardId)
@@ -82,11 +67,7 @@ public class RewardController {
                 .orElse(ResponseEntity.badRequest().build());
     }
 
-    /**
-     * Удалить награду по ид
-     *
-     * @param rewardId ид награды
-     */
+    @ApiOperation("Удалить награду по ид")
     @DeleteMapping("{rewardId}")
     public ResponseEntity<Void> deleteById(@PathVariable("rewardId") Long rewardId) {
         rewardRepo.deleteById(rewardId);
