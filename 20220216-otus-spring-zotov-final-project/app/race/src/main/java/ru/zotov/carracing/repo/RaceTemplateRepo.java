@@ -5,6 +5,7 @@ import ru.zotov.carracing.entity.RaceTemplate;
 
 /**
  * @author Created by ZotovES on 10.08.2021
+ * Репозиторий шаблонов заездов
  */
 public interface RaceTemplateRepo extends JpaRepository<RaceTemplate, Long> {
 }

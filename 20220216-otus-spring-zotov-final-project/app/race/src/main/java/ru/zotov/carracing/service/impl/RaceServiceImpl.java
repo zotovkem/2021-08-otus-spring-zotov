@@ -41,14 +41,20 @@ public class RaceServiceImpl implements RaceService {
     private final RaceRepo raceRepo;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
+    /**
+     * Создать заезд
+     *
+     * @param raceTemplate шаблон заезда
+     * @return заезд
+     */
     @Override
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public Race createRace(RaceTemplate raceTemplate) {
         UUID profileId = UUID.fromString(securityService.getUserTh().getId());
-        List<Race> notFinishRaces =
-                raceRepo.findByProfileIdAndStateIn(profileId, List.of(RaceState.LOAD, RaceState.LOADED, RaceState.START));
-        List<Race> loadedRaces =
-                notFinishRaces.stream().filter(r -> RaceState.LOADED.equals(r.getState())).collect(Collectors.toList());
+        List<RaceState> raceStates = List.of(RaceState.LOAD, RaceState.LOADED, RaceState.START);
+        List<Race> notFinishRaces = raceRepo.findByProfileIdAndStateIn(profileId, raceStates);
+        List<Race> loadedRaces = notFinishRaces.stream()
+                .filter(r -> RaceState.LOADED.equals(r.getState())).collect(Collectors.toList());
 
         notFinishRaces.forEach(r -> r.setState(RaceState.CANCEL));
         raceRepo.saveAll(notFinishRaces);
@@ -68,6 +74,12 @@ public class RaceServiceImpl implements RaceService {
         return savedRace;
     }
 
+    /**
+     * Стартовать заезд
+     *
+     * @param raceId ид заезда
+     * @return заезд
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Race start(Long raceId) {
@@ -79,12 +91,24 @@ public class RaceServiceImpl implements RaceService {
                 .orElse(race.orElseThrow());
     }
 
+    /**
+     * Найти заезд по ид
+     *
+     * @param id ид заезда
+     * @return заезд
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Optional<Race> findById(Long id) {
         return raceRepo.findById(id);
     }
 
+    /**
+     * Финишировать заезд
+     *
+     * @param raceId ид заезда
+     * @return заезд
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Race finish(Long raceId, String externalId) {
@@ -116,6 +140,12 @@ public class RaceServiceImpl implements RaceService {
         return oRace.orElseThrow();
     }
 
+    /**
+     * Отменить заезд
+     *
+     * @param raceId ид заезда
+     * @return заезд
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Race cancel(Long raceId) {
@@ -124,7 +154,7 @@ public class RaceServiceImpl implements RaceService {
                 .filter(r -> !RaceState.FINISH_SUCCESS.equals(r.getState()));
 
         race.filter(r -> RaceState.LOADED.equals(r.getState()))
-                .map(r -> buildAddFuelMessage(profileId))
+                .map(buildAddFuelMessage(profileId))
                 .ifPresent(fuelExpandEvent -> kafkaTemplate.send(Constants.KAFKA_RACE_START_TOPIC, fuelExpandEvent)
                         .addCallback(m -> log.info("Send complete"), e -> {
                             throw new KafkaException("Send message error");
@@ -132,6 +162,12 @@ public class RaceServiceImpl implements RaceService {
         return race.map(changeState(RaceState.CANCEL)).orElseThrow();
     }
 
+    /**
+     * Изменить статус заезда
+     *
+     * @param state  статус заезда
+     * @param raceId ид звезда
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void changeState(RaceState state, Long raceId) {
@@ -142,6 +178,12 @@ public class RaceServiceImpl implements RaceService {
         });
     }
 
+    /**
+     * Изменить статус заезда
+     *
+     * @param state          статус заезда
+     * @param externalRaceId внешний ид заезда
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void changeState(RaceState state, UUID externalRaceId) {
@@ -152,6 +194,13 @@ public class RaceServiceImpl implements RaceService {
         });
     }
 
+    /**
+     * Собрать модель заезда
+     *
+     * @param profileId    ид профиля игрока
+     * @param raceTemplate шаблон заезда
+     * @return заезд
+     */
     private Race buildRace(UUID profileId, RaceTemplate raceTemplate) {
         return Race.builder()
                 .raceTemplate(raceTemplate)
@@ -160,6 +209,9 @@ public class RaceServiceImpl implements RaceService {
                 .build();
     }
 
+    /**
+     * Старт заезда
+     */
     private Function<Race, Race> startRace() {
         return race -> {
             race.setExternalId(UUID.randomUUID());
@@ -168,6 +220,12 @@ public class RaceServiceImpl implements RaceService {
         };
     }
 
+    /**
+     * Собрать модель результата зазеда
+     *
+     * @param race заезд
+     * @return результат зазеда
+     */
     private RaceFinishEvent buildFinishEvent(Race race) {
         return RaceFinishEvent.builder()
                 .profileId(race.getProfileId().toString())
@@ -178,6 +236,11 @@ public class RaceServiceImpl implements RaceService {
                 .build();
     }
 
+    /**
+     * Изменить состояние зазезда
+     *
+     * @param raceState новое состояние заезда
+     */
     private Function<Race, Race> changeState(RaceState raceState) {
         return race -> {
             race.setState(raceState);
@@ -185,6 +248,12 @@ public class RaceServiceImpl implements RaceService {
         };
     }
 
+    /**
+     * Собрать модель награды
+     *
+     * @param race заезд
+     * @return награда
+     */
     private RewardEvent buildRewardEvent(Race race) {
         return RewardEvent.builder()
                 .rewardId(race.getRaceTemplate().getRewardId())
@@ -192,6 +261,13 @@ public class RaceServiceImpl implements RaceService {
                 .build();
     }
 
+    /**
+     * Собрать модель сообщения о расходе топлива
+     *
+     * @param profileId внешний ид профиля игрока
+     * @param race      заезд
+     * @return информация о расходе топлива
+     */
     private FuelExpandEvent buildMessage(UUID profileId, Race race) {
         return FuelExpandEvent.builder()
                 .raceId(race.getId())
@@ -199,10 +275,16 @@ public class RaceServiceImpl implements RaceService {
                 .fuel(race.getRaceTemplate().getFuelConsume()).build();
     }
 
+    /**
+     * Собрать модель сообщения о добавления топлива
+     *
+     * @param profileId внешний ид профиля игрока
+     */
     private Function<Race, FuelExpandEvent> buildAddFuelMessage(UUID profileId) {
         return race -> FuelExpandEvent.builder()
                 .raceId(race.getId())
                 .profileId(profileId.toString())
-                .fuel(-race.getRaceTemplate().getFuelConsume()).build();
+                .fuel(-race.getRaceTemplate().getFuelConsume())
+                .build();
     }
 }

@@ -10,6 +10,7 @@ import java.util.UUID;
 
 /**
  * @author Created by ZotovES on 18.08.2021
+ * Репозиторий заездов
  */
 public interface RaceRepo extends JpaRepository<Race, Long> {
     List<Race> findByProfileIdAndStateIn(UUID profileId, List<RaceState> states);
