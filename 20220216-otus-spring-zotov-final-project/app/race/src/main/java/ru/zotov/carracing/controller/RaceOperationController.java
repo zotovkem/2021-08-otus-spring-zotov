@@ -1,14 +1,15 @@
 package ru.zotov.carracing.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import ru.zotov.carracing.config.SpringfoxConfig;
 import ru.zotov.carracing.dto.RaceFinishDto;
 import ru.zotov.carracing.dto.RaceOperationDto;
 import ru.zotov.carracing.repo.RaceTemplateRepo;
-import ru.zotov.carracing.security.filter.CustomUser;
 import ru.zotov.carracing.service.RaceService;
 
 import javax.websocket.server.PathParam;
@@ -22,17 +23,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequiredArgsConstructor
+@Api(value = "Race", tags = {SpringfoxConfig.RACE})
 @RequestMapping(value = "race", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
 public class RaceOperationController {
     private final RaceService raceService;
     private final RaceTemplateRepo raceTemplateRepo;
     private final ModelMapper mapper = new ModelMapper();
 
-    /**
-     * Загрузить заезд
-     *
-     * @return dto заезда
-     */
+    @ApiOperation("Загрузить заезд")
     @PostMapping(value = "/{raceId}/load")
     public ResponseEntity<RaceOperationDto> raceLoad(@PathVariable("raceId") Long raceId) {
         return raceTemplateRepo.findById(raceId)
@@ -42,11 +40,7 @@ public class RaceOperationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Стартовать заезд
-     *
-     * @return dto заезда
-     */
+    @ApiOperation("Стартовать заезд")
     @PostMapping("/{raceId}/start")
     public ResponseEntity<RaceOperationDto> raceStart(@PathVariable("raceId") Long raceId) {
         return Optional.of(raceService.start(raceId))
@@ -55,24 +49,16 @@ public class RaceOperationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Финиш заезда
-     *
-     * @return dto заезда
-     */
+    @ApiOperation("Финиш заезда")
     @PostMapping("/finish")
     public ResponseEntity<RaceOperationDto> raceFinish(@RequestBody RaceFinishDto raceFinishDto) {
-        return Optional.of(raceService.finish(raceFinishDto.getId(), raceFinishDto.getExternalId()))
+        return Optional.of(raceService.finish(raceFinishDto.getId(), raceFinishDto.getRaceExternalId()))
                 .map(race -> mapper.map(race, RaceOperationDto.class))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Отмена заезда
-     *
-     * @return dto заезда
-     */
+    @ApiOperation("Отмена заезда")
     @PostMapping("/{raceId}/cancel")
     public ResponseEntity<RaceOperationDto> raceCancel(@PathVariable("raceId") Long raceId) {
         return Optional.of(raceService.cancel(raceId))
@@ -81,12 +67,7 @@ public class RaceOperationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Получить заезд ро ид
-     *
-     * @param raceId ид заезда
-     * @return dto заезда
-     */
+    @ApiOperation("Получить заезд по ид")
     @GetMapping
     public ResponseEntity<RaceOperationDto> getRaceById(@PathParam("raceId") Long raceId) {
         return raceService.findById(raceId)

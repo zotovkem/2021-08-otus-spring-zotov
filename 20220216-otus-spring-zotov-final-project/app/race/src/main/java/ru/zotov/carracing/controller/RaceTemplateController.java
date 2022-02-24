@@ -1,10 +1,14 @@
 package ru.zotov.carracing.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.zotov.carracing.dto.RaceTemplateDto;
 import ru.zotov.carracing.common.mapper.Mapper;
+import ru.zotov.carracing.config.SpringfoxConfig;
+import ru.zotov.carracing.dto.RaceTemplateDto;
 import ru.zotov.carracing.entity.RaceTemplate;
 import ru.zotov.carracing.repo.RaceTemplateRepo;
 
@@ -21,17 +25,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequiredArgsConstructor
+@Api(value = "RaceTemplate", tags = {SpringfoxConfig.RACE_TEMPLATE})
 @RequestMapping(value = "templates", produces = APPLICATION_JSON_VALUE)
 public class RaceTemplateController {
     private final RaceTemplateRepo raceRepo;
     private final Mapper mapper;
 
-    /**
-     * Создать шаблон заезда
-     *
-     * @param raceTemplate шаблон заезда
-     * @return шаблон заезда
-     */
+    @ApiOperation("Создать шаблон заезда")
     @PostMapping
     public ResponseEntity<RaceTemplateDto> createRaceTemplate(@RequestBody RaceTemplateDto raceTemplate) {
         return Optional.ofNullable(raceTemplate)
@@ -41,13 +41,7 @@ public class RaceTemplateController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
     }
-
-    /**
-     * Получить шаблон заезда по ид
-     *
-     * @param raceId ид шаблона заезда
-     * @return шаблон заезда
-     */
+    @ApiOperation("Получить шаблон заезда по ид")
     @GetMapping("{raceId}")
     public ResponseEntity<RaceTemplateDto> getById(@PathVariable("raceId") Long raceId) {
         return raceRepo.findById(raceId)
@@ -55,12 +49,7 @@ public class RaceTemplateController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
     }
-
-    /**
-     * Получить все шаблоны заездов
-     *
-     * @return заезд
-     */
+    @ApiOperation("Получить все шаблоны заездов")
     @GetMapping
     public ResponseEntity<List<RaceTemplateDto>> getAllRaceTemplates() {
         List<RaceTemplateDto> raceDtos = raceRepo.findAll().stream()
@@ -68,13 +57,7 @@ public class RaceTemplateController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(raceDtos);
     }
-
-    /**
-     * Редактировать шаблон заезда по ид
-     *
-     * @param raceId ид шаблон заезда
-     * @return шаблон заезда
-     */
+    @ApiOperation("Редактировать шаблон заезда по ид")
     @PutMapping("{raceId}")
     public ResponseEntity<RaceTemplateDto> updateRaceTemplate(@PathVariable("raceId") Long raceId, @RequestBody
             RaceTemplateDto race) {
@@ -87,11 +70,7 @@ public class RaceTemplateController {
                 .orElse(ResponseEntity.badRequest().build());
     }
 
-    /**
-     * Удалить шаблон заезда по ид
-     *
-     * @param raceId ид шаблон заезда
-     */
+    @ApiOperation("Удалить шаблон заезда по ид")
     @DeleteMapping("{raceId}")
     public ResponseEntity<Void> deleteById(@PathVariable("raceId") Long raceId) {
         raceRepo.deleteById(raceId);
