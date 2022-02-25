@@ -1,9 +1,12 @@
 package ru.zotov.carracing.store.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.zotov.carracing.common.mapper.Mapper;
+import ru.zotov.carracing.store.config.SpringfoxConfig;
 import ru.zotov.carracing.store.dto.RequestPaymentCheckedDto;
 import ru.zotov.carracing.store.dto.ResponsePaymentCheckedDto;
 import ru.zotov.carracing.store.entity.PurchaseTransaction;
@@ -19,17 +22,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "payments", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+@Api(value = "Purchase", tags = {SpringfoxConfig.STORE})
+@RequestMapping(value = "purchase", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
 public class CheckPayController {
     private final Mapper mapper;
     private final PurchaseTransactionService purchaseTransactionService;
 
-    /**
-     * Создать покупку
-     *
-     * @return кошелек игрока
-     */
     @PostMapping
+    @ApiOperation("Создать покупку")
     public ResponseEntity<ResponsePaymentCheckedDto> createPurchase(@RequestBody RequestPaymentCheckedDto paymentCheckedDto) {
         purchaseTransactionService.createPurchaseTransaction(paymentCheckedDto.getId(), paymentCheckedDto.getToken());
 
@@ -41,10 +41,8 @@ public class CheckPayController {
         return ResponseEntity.ok(responsePaymentCheckedDto);
     }
 
-    /**
-     * Переключить возвращаемый результат проверки
-     */
     @GetMapping("/notChecked")
+    @ApiOperation("Получить все покупки в ожидании проверки ")
     public ResponseEntity<List<ResponsePaymentCheckedDto>> getAllNotCheckedPurchaseTransactions() {
         List<ResponsePaymentCheckedDto> purchaseTransactionList =
                 mapper.mapList(purchaseTransactionService.findAllNotCheckedPurchaseTransactions(),
