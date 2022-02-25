@@ -34,6 +34,7 @@ import static ru.zotov.carracing.common.constant.Constants.PURCHASE_TRANSACTION_
 
 /**
  * @author Created by ZotovES on 11.09.2021
+ * Реализация сервиса покупок
  */
 @Slf4j
 @Service
@@ -43,9 +44,12 @@ public class PurchaseTransactionServiceImpl implements PurchaseTransactionServic
     private final PurchaseTransactionRepository purchaseTransactionRepository;
     private final ProductRepository productRepository;
     private final KafkaTemplate<PurchaseTransaction, Object> kafkaTemplate;
-    private final Mapper mapper;
     private final SecurityService securityService;
-
+    /**
+     * Создать транзакцию на покупку
+     * @param externalId внешний ид
+     * @param token токен покупки
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createPurchaseTransaction(@NonNull String externalId, @NonNull String token) {
@@ -73,39 +77,43 @@ public class PurchaseTransactionServiceImpl implements PurchaseTransactionServic
         kafkaTemplate.send(PURCHASE_FUEL_ADD, fuelAddEvent);
     }
 
+    /**
+     * Получить список всех покупок
+     * @return список покупок
+     */
     @Override
     @Transactional(readOnly = true)
     public List<PurchaseTransaction> findAllNotCheckedPurchaseTransactions() {
         return purchaseTransactionRepository.findByValidateStateIn(Set.of(ValidateState.ERROR_TRY, ValidateState.WAITING));
     }
 
+    /**
+     * Проверить валидность покупки
+     @param purchaseTransaction транзакция покупки
+     */
     @Override
     @Retryable(value = FeignException.class, maxAttempts = 2, backoff = @Backoff(delay = 1000))
     @Transactional(rollbackFor = Exception.class)
-    public void checkValidPayment(@NonNull PurchaseTransactionEvent purchaseTransactionEvent) {
-        log.info("Попытка проверить покупку {} в GoogleStore", purchaseTransactionEvent.getExternalId());
-        RequestPaymentCheckedDto requestPaymentCheckedDto = RequestPaymentCheckedDto.builder()
-                .id(purchaseTransactionEvent.getExternalId())
-                .token(purchaseTransactionEvent.getToken())
-                .build();
-        ResponsePaymentCheckedIntegrationDto resultDto = googleStoreIntegration.checkPayment(requestPaymentCheckedDto);
-        Optional<PurchaseTransaction> purchaseTransaction =
-                purchaseTransactionRepository.findById(purchaseTransactionEvent.getId());
-        purchaseTransaction.ifPresent(purchase -> {
+    public void checkValidPayment(@NonNull PurchaseTransaction purchaseTransaction) {
+        log.info("Попытка проверить покупку {} в GoogleStore", purchaseTransaction.getExternalId());
+        var resultDto = googleStoreIntegration.checkPayment(getRequestPaymentCheckedDto(purchaseTransaction));
+        Optional<PurchaseTransaction> persistPurchaseTransaction =
+                purchaseTransactionRepository.findById(purchaseTransaction.getId());
+        persistPurchaseTransaction.ifPresent(purchase -> {
             purchase.setValidateState(resultDto.getResultChecked() ? ValidateState.VALIDATE : ValidateState.INVALIDATE);
             purchaseTransactionRepository.save(purchase);
             if (!resultDto.getResultChecked()) {
                 log.info("Проверка покупки прошла не успешно. Списываем топливо");
                 PurchaseFuelAddEvent fuelAddEvent = PurchaseFuelAddEvent.builder()
                         .fuel(-purchase.getProduct().getCount())
-                        .profileId(purchaseTransactionEvent.getProfileId())
+                        .profileId(purchaseTransaction.getProfileId())
                         .build();
 
                 kafkaTemplate.send(PURCHASE_FUEL_ADD, fuelAddEvent);
             }
         });
 
-        purchaseTransaction.filter(p -> ValidateState.WAITING.equals(p.getValidateState())).ifPresent(p -> {
+        persistPurchaseTransaction.filter(p -> ValidateState.WAITING.equals(p.getValidateState())).ifPresent(p -> {
             PurchaseTransactionEvent returnPurchaseTransactionEvent = PurchaseTransactionEvent.builder()
                     .id(p.getId())
                     .externalId(p.getProduct().getExternalId())
@@ -114,6 +122,13 @@ public class PurchaseTransactionServiceImpl implements PurchaseTransactionServic
 
             kafkaTemplate.send(PURCHASE_TRANSACTION_VALIDATE, returnPurchaseTransactionEvent);
         });
+    }
+
+    private RequestPaymentCheckedDto getRequestPaymentCheckedDto(PurchaseTransaction purchaseTransaction) {
+        return RequestPaymentCheckedDto.builder()
+                .id(purchaseTransaction.getExternalId())
+                .token(purchaseTransaction.getToken())
+                .build();
     }
 
     private Function<Product, PurchaseTransaction> buildProductPurchaseTransactionFunction(String token) {

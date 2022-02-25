@@ -9,6 +9,7 @@ import java.util.UUID;
 
 /**
  * @author Created by ZotovES on 28.08.2021
+ * Событие создания профиля игрока
  */
 @Data
 @Builder

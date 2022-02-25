@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Репозиторий покупок
+ */
 public interface PurchaseTransactionRepository extends JpaRepository<PurchaseTransaction, Long> {
     List<PurchaseTransaction> findByValidateStateIn(Set<ValidateState> validateState);
 }

@@ -45,4 +45,7 @@ public class PurchaseTransaction {
 
     @Column(name = "token")
     private String token;
+
+    @Column(name = "external_id")
+    private String externalId;
 }

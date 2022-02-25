@@ -6,6 +6,9 @@ import ru.zotov.carracing.store.entity.Product;
 
 import java.util.Optional;
 
+/**
+ * Репозиторий товаров
+ */
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByExternalId(@NonNull String externalId);
 }
