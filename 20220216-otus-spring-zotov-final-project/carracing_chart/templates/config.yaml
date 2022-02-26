@@ -14,3 +14,4 @@ data:
   KAFKA_PORT: {{ .Values.kafka.port | b64enc | quote }}
   REDIS_HOST: {{ (include "redis.fullname" .) | b64enc | quote }}
   REDIS_PORT: {{ .Values.redis.port | b64enc | quote }}
+  KAFKA_SERVER: {{ printf "%s:%s" (include "kafka.fullname" .) .Values.kafka.port | b64enc | quote }}
