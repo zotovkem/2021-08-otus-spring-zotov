@@ -19,9 +19,6 @@ build:
     - image: mail-carracing
       context: artifacts/mail
 deploy:
-#  kubectl:
-#    manifests:
-#      - kubectl/*.yaml
   helm:
     releases:
       - name: carracing

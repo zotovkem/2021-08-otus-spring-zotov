@@ -29,22 +29,17 @@ spec:
                 secretKeyRef:
                   name: carracing-secret
                   key: DB_HOST
-            - name: DB_PORT
+            - name: SPRING_DATASOURCE_URL
               valueFrom:
                 secretKeyRef:
                   name: carracing-secret
-                  key: DB_PORT
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: carracing-secret
-                  key: DB_NAME
-            - name: DB_USERNAME
+                  key: DB_HOST
+            - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: carracing-secret
                   key: DB_USERNAME
-            - name: DB_PASSWORD
+            - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: carracing-secret
@@ -54,17 +49,17 @@ spec:
                 secretKeyRef:
                   name: carracing-secret
                   key: KAFKA_HOST
-            - name: KAFKA_PORT
+            - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP-SERVERS
               valueFrom:
                 secretKeyRef:
                   name: carracing-secret
-                  key: KAFKA_PORT
-            - name: REDIS_HOST
+                  key: KAFKA_SERVER
+            - name: SPRING_REDIS_HOST
               valueFrom:
                 secretKeyRef:
                   name: carracing-secret
                   key: REDIS_HOST
-            - name: REDIS_PORT
+            - name: SPRING_REDIS_PORT
               valueFrom:
                 secretKeyRef:
                   name: carracing-secret
