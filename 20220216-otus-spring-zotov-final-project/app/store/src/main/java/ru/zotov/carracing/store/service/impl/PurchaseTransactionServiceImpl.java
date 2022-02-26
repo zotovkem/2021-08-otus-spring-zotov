@@ -9,12 +9,10 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.zotov.carracing.common.mapper.Mapper;
 import ru.zotov.carracing.event.PurchaseFuelAddEvent;
 import ru.zotov.carracing.event.PurchaseTransactionEvent;
 import ru.zotov.carracing.security.utils.SecurityService;
 import ru.zotov.carracing.store.dto.RequestPaymentCheckedDto;
-import ru.zotov.carracing.store.dto.ResponsePaymentCheckedIntegrationDto;
 import ru.zotov.carracing.store.entity.Product;
 import ru.zotov.carracing.store.entity.PurchaseTransaction;
 import ru.zotov.carracing.store.enums.ValidateState;
@@ -45,10 +43,12 @@ public class PurchaseTransactionServiceImpl implements PurchaseTransactionServic
     private final ProductRepository productRepository;
     private final KafkaTemplate<PurchaseTransaction, Object> kafkaTemplate;
     private final SecurityService securityService;
+
     /**
      * Создать транзакцию на покупку
+     *
      * @param externalId внешний ид
-     * @param token токен покупки
+     * @param token      токен покупки
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -60,25 +60,25 @@ public class PurchaseTransactionServiceImpl implements PurchaseTransactionServic
 
         PurchaseTransaction savedPurchase = purchaseTransactionRepository.save(purchaseTransaction);
 
-        String profileId = securityService.getUserTh().getId();
         PurchaseTransactionEvent purchaseTransactionEvent = PurchaseTransactionEvent.builder()
                 .id(savedPurchase.getId())
                 .externalId(externalId)
                 .token(token)
-                .profileId(profileId)
+                .profileId(purchaseTransaction.getProfileId())
                 .build();
 
         kafkaTemplate.send(PURCHASE_TRANSACTION_VALIDATE, purchaseTransactionEvent);
 
         PurchaseFuelAddEvent fuelAddEvent = PurchaseFuelAddEvent.builder()
                 .fuel(product.map(Product::getCount).orElseThrow())
-                .profileId(profileId).build();
+                .profileId(purchaseTransaction.getProfileId()).build();
 
         kafkaTemplate.send(PURCHASE_FUEL_ADD, fuelAddEvent);
     }
 
     /**
      * Получить список всех покупок
+     *
      * @return список покупок
      */
     @Override
@@ -89,7 +89,8 @@ public class PurchaseTransactionServiceImpl implements PurchaseTransactionServic
 
     /**
      * Проверить валидность покупки
-     @param purchaseTransaction транзакция покупки
+     *
+     * @param purchaseTransaction транзакция покупки
      */
     @Override
     @Retryable(value = FeignException.class, maxAttempts = 2, backoff = @Backoff(delay = 1000))
@@ -97,8 +98,13 @@ public class PurchaseTransactionServiceImpl implements PurchaseTransactionServic
     public void checkValidPayment(@NonNull PurchaseTransaction purchaseTransaction) {
         log.info("Попытка проверить покупку {} в GoogleStore", purchaseTransaction.getExternalId());
         var resultDto = googleStoreIntegration.checkPayment(getRequestPaymentCheckedDto(purchaseTransaction));
-        Optional<PurchaseTransaction> persistPurchaseTransaction =
-                purchaseTransactionRepository.findById(purchaseTransaction.getId());
+        var persistPurchaseTransaction = purchaseTransactionRepository.findById(purchaseTransaction.getId());
+        if (resultDto == null) {
+            persistPurchaseTransaction.filter(pt -> ValidateState.WAITING.equals(pt.getValidateState()))
+                    .ifPresent(returnPurchaseTransactionEvent ->
+                            kafkaTemplate.send(PURCHASE_TRANSACTION_VALIDATE, buildPurchaseTransactionEvent(returnPurchaseTransactionEvent)));
+            return;
+        }
         persistPurchaseTransaction.ifPresent(purchase -> {
             purchase.setValidateState(resultDto.getResultChecked() ? ValidateState.VALIDATE : ValidateState.INVALIDATE);
             purchaseTransactionRepository.save(purchase);
@@ -112,16 +118,14 @@ public class PurchaseTransactionServiceImpl implements PurchaseTransactionServic
                 kafkaTemplate.send(PURCHASE_FUEL_ADD, fuelAddEvent);
             }
         });
+    }
 
-        persistPurchaseTransaction.filter(p -> ValidateState.WAITING.equals(p.getValidateState())).ifPresent(p -> {
-            PurchaseTransactionEvent returnPurchaseTransactionEvent = PurchaseTransactionEvent.builder()
-                    .id(p.getId())
-                    .externalId(p.getProduct().getExternalId())
-                    .token(p.getToken())
-                    .build();
-
-            kafkaTemplate.send(PURCHASE_TRANSACTION_VALIDATE, returnPurchaseTransactionEvent);
-        });
+    private PurchaseTransactionEvent buildPurchaseTransactionEvent(PurchaseTransaction purchaseTransactionEvent) {
+        return PurchaseTransactionEvent.builder()
+                .id(purchaseTransactionEvent.getId())
+                .externalId(purchaseTransactionEvent.getProduct().getExternalId())
+                .token(purchaseTransactionEvent.getToken())
+                .build();
     }
 
     private RequestPaymentCheckedDto getRequestPaymentCheckedDto(PurchaseTransaction purchaseTransaction) {
