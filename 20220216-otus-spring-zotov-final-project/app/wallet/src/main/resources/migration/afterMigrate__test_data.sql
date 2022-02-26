@@ -5,6 +5,7 @@ ON CONFLICT DO NOTHING;
 INSERT INTO wallet_schema.reward
 VALUES (1, 'MONEY', 'Награда за заезд', 100)
 ON CONFLICT DO NOTHING;
+COMMIT;
 
 SELECT setval('wallet_schema.reward_id_seq', 1);
 SELECT setval('wallet_schema.wallet_id_seq', 1);

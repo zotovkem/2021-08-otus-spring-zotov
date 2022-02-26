@@ -34,6 +34,11 @@ public class WalletServiceImpl implements WalletService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final SecurityService securityService;
 
+    /**
+     * Создать кошелек
+     *
+     * @param profileId внешний ид игрока
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createWallet(@NonNull UUID profileId) {
@@ -46,6 +51,11 @@ public class WalletServiceImpl implements WalletService {
         walletRepo.save(wallet);
     }
 
+    /**
+     * Получить кошелек игрока
+     *
+     * @return кошелек игрока
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<Wallet> getWallet() {
@@ -53,29 +63,38 @@ public class WalletServiceImpl implements WalletService {
         return walletRepo.findByProfileId(profileId);
     }
 
+    /**
+     * Выдать награду
+     *
+     * @param profileId внешний ид игрока
+     * @param rewardId  ид награды
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void toReward(UUID profileId, Long rewardId) {
         rewardRepo.findById(rewardId)
-                .ifPresent(reward -> {
-                    walletRepo.findByProfileId(profileId)
-                            .ifPresent(wallet -> {
-                                wallet.setMoney(wallet.getMoney() + reward.getTotal());
-                                walletRepo.save(wallet);
-                            });
-                });
+                .ifPresent(reward -> walletRepo.findByProfileId(profileId)
+                        .ifPresent(wallet -> {
+                            wallet.setMoney(wallet.getMoney() + reward.getTotal());
+                            walletRepo.save(wallet);
+                        }));
     }
 
+    /**
+     * Вернуть награду
+     *
+     * @param profileId внешний ид профиля игрока
+     * @param rewardId  ид награды
+     */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void returnReward(UUID profileId, Long rewardId) {
         rewardRepo.findById(rewardId)
-                .ifPresent(reward -> {
-                    walletRepo.findByProfileId(profileId)
-                            .ifPresent(wallet -> {
-                                wallet.setMoney(wallet.getMoney() - reward.getTotal());
-                                walletRepo.save(wallet);
-                            });
-                });
+                .ifPresent(reward -> walletRepo.findByProfileId(profileId)
+                        .ifPresent(wallet -> {
+                            wallet.setMoney(wallet.getMoney() - reward.getTotal());
+                            walletRepo.save(wallet);
+                        }));
     }
 
     /**
@@ -103,6 +122,12 @@ public class WalletServiceImpl implements WalletService {
 
     }
 
+    /**
+     * Добавить топливо
+     *
+     * @param profileId внешний ид провиля игрока
+     * @param fuel      кол-во топлива
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void addFuel(@NonNull UUID profileId, @NonNull Integer fuel) {
@@ -115,6 +140,13 @@ public class WalletServiceImpl implements WalletService {
                 });
     }
 
+    /**
+     * Отправить событие о мписании топлива
+     *
+     * @param profileId внешний ид игрока
+     * @param fuel      кол-во топлива
+     * @param raceId    ид заезда
+     */
     private Runnable sendFailExpandFuel(@NonNull String profileId, @NonNull Integer fuel, @NonNull Long raceId) {
         return () -> {
             log.info("Отправляем сообщение об ошибке списания топлива ");
