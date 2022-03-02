@@ -1,0 +1,7 @@
+apiVersion: v2
+name: race-carracing
+description: Lab 9 Otus SAGA race module
+
+type: application
+
+version: 0.1.1

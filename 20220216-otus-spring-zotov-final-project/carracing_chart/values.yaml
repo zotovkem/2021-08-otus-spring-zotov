@@ -1,0 +1,44 @@
+replicaCount: 2
+
+image:
+  repository: race-carracing
+  pullPolicy: IfNotPresent
+  tag: ""
+
+service:
+  type: NodePort
+  port: 9000
+  targetPort: 8085
+
+ingress:
+  enabled: true
+  hosts:
+    - host: arch.homework
+      paths: ["/race"]
+
+postgresql:
+  enabled: true
+  postgresqlUsername: myuser
+  postgresqlPassword: passwd
+  postgresqlDatabase: carracing-otus
+  postgresqlMaxConnections: "1000"
+  postgresqlPostgresConnectionLimit: "1000"
+  postgresqlDbUserConnectionLimit": "1000"
+  service:
+    port: "5432"
+  persistence:
+    size: 1Gi
+
+metrics:
+  serviceMonitor:
+    enabled: true
+kafka:
+  enabled: true
+  port: "9092"
+redis:
+  enabled: true
+  port: "6379"
+  auth:
+    enabled: false
+  replica:
+    replicaCount: 1
